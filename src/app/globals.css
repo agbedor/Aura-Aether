@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #FCFBF9;
+    --foreground: #1C1917;
+    --primary: #1C1917;
+    --accent-olive: #4B5945;
+    --accent-coral: #E86A5D;
+    --accent-gold: #C59B4B;
+    --card-bg: #FFFFFF;
+    --border-subtle: #EFE9E2;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: #EADBC8;
+    color: #1C1917;
+  }
+}
+
+/* Custom luxury typography classes */
+.font-serif-luxury {
+  font-family: var(--font-playfair), 'Playfair Display', Didot, 'Bodoni MT', 'Times New Roman', serif;
+}
+
+.font-sans-clean {
+  font-family: var(--font-sans), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Subtle luxury animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom delicate scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5EFEB;
+}
+::-webkit-scrollbar-thumb {
+  background: #D7CBC2;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B5A498;
+}
