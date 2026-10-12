@@ -35,9 +35,6 @@ export default function AnnouncementBar() {
             className="hover:underline hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
           >
             <span>{announcement}</span>
-            <span className="hidden sm:inline text-[#E8B58F] font-medium text-[11px] underline">
-              • EXTRA 20% OFF FIRST ORDER
-            </span>
           </Link>
         </div>
 
