@@ -97,6 +97,20 @@ export default function StorefrontContentPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [activeSection, setActiveSection] = useState("home");
+  const sections = [
+    { id: "home", title: "Homepage", description: "Hero, featured products and promotional sections", icon: "⌂" },
+    { id: "brand", title: "Brand & navigation", description: "Logo, colours, announcement bar and footer", icon: "✦" },
+    { id: "shop", title: "Shop", description: "Shop page headings and introduction", icon: "◇" },
+    { id: "gifts", title: "Gift Sets", description: "Gift collection page content", icon: "♡" },
+    { id: "about", title: "About", description: "Your brand story", icon: "◌" },
+    { id: "contact", title: "Contact", description: "Contact page text and public details", icon: "✉" },
+  ];
+
+  useEffect(() => {
+    const section = new URLSearchParams(window.location.search).get("section");
+    if (section && sections.some((item) => item.id === section)) setActiveSection(section);
+  }, []);
 
   useEffect(() => {
     fetch("/api/site-settings").then(async (res) => {
@@ -141,8 +155,27 @@ export default function StorefrontContentPage() {
           <div><p className="text-[10px] uppercase tracking-[0.3em] text-[#8B6658]">Administrator workspace</p><h1 className="font-serif-luxury text-4xl sm:text-5xl mt-1">Website content</h1><p className="mt-3 text-sm text-[#65534D] leading-6">Manage brand settings and editable content across the homepage, About, Shop, Gift Sets, Contact, announcement bar, and footer. Products and orders remain in the main admin dashboard.</p></div>
         </div>
 
-        <form onSubmit={saveSettings} className="mt-10 space-y-6">
-          {groups.map((group) => (
+        <div className="mt-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {sections.map((section) => (
+            <Link key={section.id} href={"/admin/content?section=" + section.id} className={`border p-4 transition-colors ${activeSection === section.id ? "border-[#B77F60] bg-[#F7EEE8]" : "border-[#E8D9CE] bg-white hover:border-[#B77F60]"}`}>
+              <span className="text-xl text-[#8B6658]">{section.icon}</span>
+              <h2 className="mt-2 font-serif-luxury text-xl">{section.title}</h2>
+              <p className="mt-1 text-xs leading-5 text-[#7B6B62]">{section.description}</p>
+              <span className="mt-3 block text-[10px] uppercase tracking-widest text-[#8B6658]">Edit section →</span>
+            </Link>
+          ))}
+        </div>
+
+        <form onSubmit={saveSettings} className="mt-8 space-y-6">
+          {groups.filter((group) => {
+            if (activeSection === "brand") return group.title === "Brand identity & appearance";
+            if (activeSection === "home") return group.title === "Homepage hero" || group.title === "Homepage sections";
+            if (activeSection === "shop") return group.title === "Shop page";
+            if (activeSection === "gifts") return group.title === "Gift Sets page";
+            if (activeSection === "about") return group.title === "About page";
+            if (activeSection === "contact") return group.title === "Contact page";
+            return false;
+          }).map((group) => (
             <section key={group.title} className="bg-white border border-[#E8D9CE] p-5 sm:p-8">
               <h2 className="font-serif-luxury text-2xl">{group.title}</h2>
               <p className="mt-2 mb-6 text-sm leading-6 text-[#7B6B62]">{group.description}</p>
@@ -164,7 +197,7 @@ export default function StorefrontContentPage() {
           {message && <p role="status" className="text-sm text-[#65534D] flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-[#6C854B]" />{message}</p>}
           <div className="flex flex-col sm:flex-row gap-3"><button disabled={saving} className="inline-flex items-center justify-center gap-2 bg-[#17110F] text-white px-6 py-3 text-xs uppercase tracking-widest disabled:opacity-60"><Save className="w-4 h-4" />{saving ? "Saving…" : "Save website changes"}</button><Link href="/" className="inline-flex items-center justify-center border border-[#B77F60] px-6 py-3 text-xs uppercase tracking-widest">View storefront</Link></div>
         </form>
-        <p className="mt-5 text-xs leading-5 text-[#8B7A72]">Image fields accept public paths or URLs; the image file itself must already be hosted or added to the site's public/images folder. Existing product and order management is unchanged.</p>
+        <p className="mt-5 text-xs leading-5 text-[#8B7A72]">Image fields currently accept public image paths or URLs. The file must already be hosted or added to the website; direct persistent uploads still require connecting an image-storage service. Product and order management remain in the main admin dashboard.</p>
       </div>
     </div>
   );
