@@ -10,6 +10,7 @@ type HeroContent = {
   heroDescription: string;
   motto: string;
   heroImageUrl?: string;
+  heroCtaLabel: string;
 };
 
 const defaults: HeroContent = {
@@ -17,6 +18,7 @@ const defaults: HeroContent = {
   heroDescription: "Fragrance that says something about you. Find the scent that feels like yours.",
   motto: "PARFUMS · Your scent. Your signature.",
   heroImageUrl: "/images/hero-editorial.svg",
+  heroCtaLabel: "Explore the collection",
 };
 
 const categories = [
@@ -74,7 +76,7 @@ export default function HeroSection() {
               href="/shop"
               className="group mt-8 inline-flex items-center gap-4 border border-[#E8BD9E] bg-[#17110F]/30 px-7 py-4 text-[10px] sm:text-xs uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-colors hover:bg-[#B77F60] hover:border-[#B77F60]"
             >
-              Explore the collection
+              {content.heroCtaLabel}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
