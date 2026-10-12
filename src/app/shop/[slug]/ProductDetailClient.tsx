@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, ShoppingBag, Check, Zap } from "lucide-react";
+import { Plus, Minus, ShoppingCart, Check, Zap } from "lucide-react";
 import { Product } from "@/types";
 import { useCart } from "@/context/CartContext";
 
@@ -86,12 +86,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           {added ? (
             <>
               <Check className="w-4 h-4" />
-              <span>Added to Bag</span>
+              <span>Added to Cart</span>
             </>
           ) : (
             <>
-              <ShoppingBag className="w-4 h-4" />
-              <span>Add to Bag</span>
+              <ShoppingCart className="w-4 h-4" />
+              <span>Add to Cart</span>
             </>
           )}
         </button>
