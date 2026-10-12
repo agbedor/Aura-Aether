@@ -110,7 +110,7 @@ export default function CheckoutPage() {
             className="inline-flex items-center gap-1.5 text-xs text-[#78716C] hover:text-[#1C1917] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Return to Shopping Bag</span>
+            <span>Return to Cart</span>
           </Link>
         </div>
 
