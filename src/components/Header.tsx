@@ -33,8 +33,6 @@ export default function Header() {
     { name: "HOME", href: "/" },
     { name: "ABOUT", href: "/about" },
     { name: "SHOP", href: "/shop" },
-    { name: "FOR HER", href: "/for-her" },
-    { name: "FOR HIM", href: "/for-him" },
     { name: "GIFT SETS", href: "/gift-sets" },
     { name: "CONTACT", href: "/contact" },
   ];
