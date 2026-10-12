@@ -55,13 +55,13 @@ export default function HeroSection() {
             fill
             priority={index === 0}
             sizes="100vw"
-            className={`object-cover object-center transition-opacity duration-[1400ms] ease-in-out ${activeSlide === index ? "opacity-100 scale-100" : "opacity-0 scale-[1.035]"}`}
+            className={`object-cover object-center transition-all duration-[1400ms] ease-in-out ${activeSlide === index ? "opacity-100 scale-100" : "opacity-0 scale-[1.035]"}`}
           />
         ))}
         <div className="absolute inset-0 bg-gradient-to-r from-[#17110F]/75 via-[#17110F]/35 to-[#17110F]/15" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#17110F]/55 via-transparent to-[#17110F]/10" />
 
-        <div className="relative z-10 flex min-h-[620px] sm:min-h-[700px] lg:min-h-[min(780px,calc(100vh-112px))] items-center justify-center px-5 py-20 sm:px-10 lg:px-16">
+        <div className="relative z-10 flex min-h-[620px] sm:min-h-[700px] lg:min-h-[min(780px,calc(100vh-112px))] items-center justify-center px-5 py-20 sm:px-10 lg:px-16 animate-fade-up">
           <div className="w-full max-w-6xl text-center text-white">
             <p className="mb-5 text-[10px] sm:text-xs uppercase tracking-[0.45em] text-[#E8BD9E]">
               A signature in every note
