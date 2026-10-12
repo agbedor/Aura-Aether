@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AboutIntro from "@/components/AboutIntro";
 import { ArrowRight, Heart, Sparkles, Wind } from "lucide-react";
 
 export const metadata = {
@@ -13,7 +14,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[10px] uppercase tracking-[0.32em] text-[#8B6658] mb-5">A little about us</p>
           <h1 className="font-serif-luxury text-5xl sm:text-7xl leading-tight">Fragrance is personal.<br /><span className="italic text-[#B77F60]">Make it yours.</span></h1>
-          <p className="max-w-2xl mx-auto mt-7 text-sm sm:text-base leading-7 text-[#65534D]">Aura &amp; Aether was created for the moments, moods, and memories that make you who you are. We believe the right fragrance is more than something you wear — it becomes part of your story.</p>
+          <AboutIntro />
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-24 grid md:grid-cols-2 gap-12 items-center">
