@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex gap-2 overflow-x-auto border-b border-[#E7E9EE] bg-white px-4 py-3 lg:hidden">
           {navigation.map((item) => <Link key={item.label} href={item.href} className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold ${pathname.startsWith("/admin/content") === item.href.startsWith("/admin/content") ? "bg-[#20242B] text-white" : "bg-[#F3F4F6] text-[#626976]"}`}>{item.label}</Link>)}
         </nav>
-        <main className="min-h-[calc(100vh-72px)] p-4 sm:p-7 lg:p-9">{children}</main>
+        <div className="min-h-[calc(100vh-72px)] p-4 sm:p-7 lg:p-9">{children}</div>
       </div>
     </div>
   );
