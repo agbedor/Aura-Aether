@@ -1,9 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, Phone, MapPin, CheckCircle2, Send, Clock, Sparkles } from "lucide-react";
 
 export default function ContactPage() {
+  const [siteContent, setSiteContent] = useState({
+    contactEyebrow: "WE ARE HERE TO HELP",
+    contactTitle: "Contact Aura & Aether",
+    contactDescription: "Questions about a fragrance or an order? We would love to hear from you.",
+    contactEmail: "{siteContent.contactEmail}",
+    contactPhone: "{siteContent.contactPhone}",
+    contactAddress: "Suite 4B, The Meridian Galleria, Airport Residential Area, Accra, Ghana",
+  });
+
+  useEffect(() => {
+    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+      if (data?.settings) setSiteContent((current) => ({ ...current, ...data.settings }));
+    }).catch(() => undefined);
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,14 +46,13 @@ export default function ContactPage() {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A] block mb-2">
-            CLIENT CONCIERGE
+            {siteContent.contactEyebrow}
           </span>
           <h1 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1C1917]">
-            Connect with <span className="italic font-serif-luxury">Aura &amp; Aether.</span>
+            {siteContent.contactTitle}
           </h1>
           <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
-            For personal fragrance consultations, bespoke wedding coffrets, or order inquiries,
-            our olfactory concierge is at your service.
+            {siteContent.contactDescription}
           </p>
         </div>
 
@@ -58,9 +72,7 @@ export default function ContactPage() {
                   <div>
                     <h5 className="font-bold text-[#1C1917] text-sm">Flagship Boutique</h5>
                     <p className="mt-0.5 leading-relaxed text-[#78716C]">
-                      Suite 4B, The Meridian Galleria
-                      <br />
-                      Airport Residential Area, Accra, Ghana
+                      {siteContent.contactAddress}
                     </p>
                   </div>
                 </div>
