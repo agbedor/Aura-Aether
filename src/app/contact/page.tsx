@@ -83,7 +83,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="font-bold text-[#1C1917] text-sm">Concierge Telephone</h5>
-                    <p className="mt-0.5 text-[#78716C]">+233 (0) 24 892 4110</p>
+                    <p className="mt-0.5 text-[#78716C]">{siteContent.contactPhone}</p>
                     <p className="text-[11px] text-[#A89F95]">Mon - Sat: 9:00 AM - 6:30 PM GMT</p>
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="font-bold text-[#1C1917] text-sm">Electronic Mail</h5>
-                    <p className="mt-0.5 text-[#78716C]">concierge@aura-aether.com</p>
+                    <p className="mt-0.5 text-[#78716C]">{siteContent.contactEmail}</p>
                     <p className="text-[11px] text-[#A89F95]">orders@aura-aether.com</p>
                   </div>
                 </div>
