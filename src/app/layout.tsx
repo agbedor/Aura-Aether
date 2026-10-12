@@ -3,9 +3,7 @@ import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import AnnouncementBar from "@/components/AnnouncementBar";
+import SiteChrome, { StorefrontFooter } from "@/components/SiteChrome";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -49,10 +47,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans-clean bg-[#FCFBF9] text-[#1C1917] selection:bg-[#EADBC8] selection:text-[#1C1917]">
         <AuthProvider>
           <CartProvider>
-            <AnnouncementBar />
-            <Header />
+            <SiteChrome />
             <main className="flex-1">{children}</main>
-            <Footer />
+            <StorefrontFooter />
           </CartProvider>
         </AuthProvider>
       </body>
