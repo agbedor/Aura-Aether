@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, PanelsTopLeft, Package, ShoppingCart, ExternalLink, Sparkles } from "lucide-react";
 
@@ -13,6 +14,10 @@ const navigation = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return <div className="grid min-h-screen place-items-center bg-[#F6F7F9] text-sm text-[#747B87]">Loading admin workspace…</div>;
+  if (!user || user.role !== "ADMIN") return <div className="grid min-h-screen place-items-center bg-[#F6F7F9] p-6 text-center"><div className="max-w-md rounded-2xl border border-[#E5E7EB] bg-white p-8"><h1 className="text-2xl font-bold text-[#20242B]">Admin access required</h1><p className="mt-2 text-sm leading-6 text-[#747B87]">Sign in with an administrator account to open the store management portal.</p><Link href="/login" className="mt-5 inline-flex rounded-lg bg-[#20242B] px-4 py-2.5 text-sm font-semibold text-white">Go to sign in</Link></div></div>;
 
   return (
     <div className="admin-shell min-h-screen bg-[#F6F7F9] text-[#20242B]">
