@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Save, Upload, Image as ImageIcon, House, Palette, ShoppingBag, Gift, Heart, UserRound, Mail, Sparkles, ExternalLink } from "lucide-react";
+import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Heart, UserRound, Mail, Sparkles, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
