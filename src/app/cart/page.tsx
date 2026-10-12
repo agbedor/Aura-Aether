@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, Plus, Minus, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck } from "lucide-react";
+import { Trash2, Plus, Minus, ArrowRight, ArrowLeft, ShoppingCart, ShieldCheck } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatGhs } from "@/lib/paystack";
 
@@ -15,10 +15,10 @@ export default function CartPage() {
       <div className="min-h-[70vh] bg-[#FCFBF9] flex items-center justify-center px-4 py-16">
         <div className="text-center max-w-md bg-white p-8 sm:p-12 rounded-3xl border border-[#ECE5DD] shadow-sm">
           <div className="w-16 h-16 mx-auto rounded-full bg-[#FAF5EE] flex items-center justify-center text-[#8C827A] mb-4">
-            <ShoppingBag className="w-8 h-8 text-[#C59B4B]" />
+            <ShoppingCart className="w-8 h-8 text-[#C59B4B]" />
           </div>
           <h1 className="font-serif-luxury text-2xl sm:text-3xl font-medium text-[#1C1917] mb-2">
-            Your shopping bag is empty
+            Your cart is empty
           </h1>
           <p className="text-sm text-[#78716C] mb-8 font-light leading-relaxed">
             Discover our artisanal perfumes and limited-edition gift coffrets to begin your
