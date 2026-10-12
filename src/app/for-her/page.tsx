@@ -16,7 +16,8 @@ export default async function ForHerPage() {
   const genderTerms = ["her", "women", "woman", "female"];
   const tagged = allProducts.filter((product) => {
     const label = `${product.category?.name || ""} ${product.category?.slug || ""}`.toLowerCase();
-    return genderTerms.some((term) => label.includes(term));
+    const words = label.split(/[^a-z]+/).filter(Boolean);
+    return genderTerms.some((term) => words.includes(term));
   });
   const products = tagged.length ? tagged : allProducts;
   const title = settings.herTitle || "Fragrances for Her";
