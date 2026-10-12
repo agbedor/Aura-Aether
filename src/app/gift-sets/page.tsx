@@ -1,6 +1,6 @@
 import React from "react";
 import ProductCard from "@/components/ProductCard";
-import { getProducts } from "@/lib/db";
+import { getProducts, prisma } from "@/lib/db";
 import { Gift, Sparkles, ShieldCheck } from "lucide-react";
 
 export const metadata = {
@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 export default async function GiftSetsPage() {
-  const giftSets = await getProducts({ giftSets: true });
+  const [giftSets, settingsRows] = await Promise.all([\n    getProducts({ giftSets: true }),\n    prisma.siteSetting.findMany().catch(() => []),\n  ]);\n  const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
 
   return (
     <div className="min-h-screen bg-[#FCFBF9] py-12 sm:py-16">
@@ -19,10 +19,10 @@ export default async function GiftSetsPage() {
         <div className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF4ED] border border-[#E8DEC0] text-[#9B7036] text-[10px] font-bold uppercase tracking-widest mb-3">
             <Gift className="w-3.5 h-3.5" />
-            <span>EXCLUSIVE COFFRETS</span>
+            <span>{settings.giftSetsEyebrow || "GIFT WITH MEANING"}</span>
           </div>
           <h1 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1C1917]">
-            Curated <span className="italic font-serif-luxury">Gift Sets.</span>
+            {settings.giftSetsTitle || "Gift Sets"}
           </h1>
           <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
             Presented in bespoke gold-embossed presentation boxes with signature wax seals.
