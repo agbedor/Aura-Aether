@@ -10,7 +10,11 @@ export const metadata = {
 };
 
 export default async function GiftSetsPage() {
-  const [giftSets, settingsRows] = await Promise.all([\n    getProducts({ giftSets: true }),\n    prisma.siteSetting.findMany().catch(() => []),\n  ]);\n  const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
+  const [giftSets, settingsRows] = await Promise.all([
+    getProducts({ giftSets: true }),
+    prisma.siteSetting.findMany().catch(() => []),
+  ]);
+  const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
 
   return (
     <div className="min-h-screen bg-[#FCFBF9] py-12 sm:py-16">
@@ -25,8 +29,7 @@ export default async function GiftSetsPage() {
             {settings.giftSetsTitle || "Gift Sets"}
           </h1>
           <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
-            Presented in bespoke gold-embossed presentation boxes with signature wax seals.
-            The pinnacle of fragrance gifting for connoisseurs and intimate celebrations.
+            {settings.giftSetsDescription || "Discover thoughtful fragrance gifts made for celebrations, everyday moments, and people you love."}
           </p>
         </div>
 
