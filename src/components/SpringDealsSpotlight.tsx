@@ -1,11 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Tag } from "lucide-react";
 
 export default function SpringDealsSpotlight() {
+  const [content, setContent] = useState({ title: "Find your next signature", description: "Explore fragrances for every mood, moment, and version of you." });
+
+  useEffect(() => {
+    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+      if (data?.settings) setContent((current) => ({ title: data.settings.homePromoTitle || current.title, description: data.settings.homePromoDescription || current.description }));
+    }).catch(() => undefined);
+  }, []);
+
   return (
     <section className="bg-white py-20 lg:py-24 border-y border-[#EFE9E2] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,27 +38,24 @@ export default function SpringDealsSpotlight() {
           <div className="lg:col-span-5 text-center lg:text-left space-y-6 max-w-lg mx-auto lg:mx-0">
             {/* Eyebrow */}
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#8C827A] block">
-              SPRING DEALS
+              AURA & AETHER
             </span>
 
             {/* Heading matching Reference 1 */}
             <h2 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1C1917] leading-tight uppercase tracking-tight">
-              MOST POPULAR <br />
-              <span className="text-[#38332E]">PERFUME BRANDS</span>
+              {content.title}
             </h2>
 
             {/* Paragraph matching Reference 1 */}
             <p className="text-sm sm:text-base text-[#6B635B] leading-relaxed font-light">
-              Experience the harmony of freshly bloomed Grasse florals and warm ambered woods.
-              Distilled with artisanal precision in small batches, our signature collection
-              delivers enduring longevity and unforgettable sillage.
+              {content.description}
             </p>
 
             {/* Coral/Salmon CTA button matching Reference 1 */}
             <div className="pt-2">
               <Link
                 href="/shop"
-                className="inline-flex items-center justify-center gap-2 px-9 py-4 rounded-xl sm:rounded-2xl bg-[#E86A5D] hover:bg-[#D95B4E] text-white text-xs font-bold uppercase tracking-widest transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 px-9 py-4 rounded-xl sm:rounded-2xl bg-[#B77F60] hover:bg-[#8E5E45] text-white text-xs font-bold uppercase tracking-widest transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
               >
                 <span>SHOP NOW</span>
                 <ArrowRight className="w-4 h-4" />
