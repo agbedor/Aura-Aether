@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Sparkles, HeartHandshake, ShieldCheck, Truck } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
-import PressLogos from "@/components/PressLogos";
 import SpringDealsSpotlight from "@/components/SpringDealsSpotlight";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, prisma } from "@/lib/db";
@@ -20,9 +19,6 @@ export default async function HomePage() {
     <div className="min-h-screen bg-[#FCFBF9]">
       {/* 1. Hero Section matching Reference 2 */}
       <HeroSection />
-
-      {/* 2. Press Logos matching Reference 2 */}
-      <PressLogos />
 
       {/* 3. Featured Fragrances Grid matching Reference 2 */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
