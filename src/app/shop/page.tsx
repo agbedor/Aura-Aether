@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { getProducts, getCategories } from "@/lib/db";
+import { getProducts, getCategories, prisma } from "@/lib/db";
 import { SlidersHorizontal } from "lucide-react";
 
 interface ShopPageProps {
@@ -34,10 +34,10 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A] block mb-2">
-            COMPLETE FRAGRANCE CATALOG
+            {settings.shopEyebrow || "THE COLLECTION"}
           </span>
           <h1 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1C1917]">
-            The Artisanal <span className="italic font-serif-luxury">Collection.</span>
+            {settings.shopTitle || "Find your fragrance."}
           </h1>
           <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
             Explore our signature extraits and eaux de parfum, handcrafted in small batches
