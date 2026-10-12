@@ -98,6 +98,7 @@ export default function StorefrontContentPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [activeSection, setActiveSection] = useState("home");
+  const [uploadingKey, setUploadingKey] = useState("");
   const sections = [
     { id: "home", title: "Homepage", description: "Hero, featured products and promotional sections", icon: "⌂" },
     { id: "brand", title: "Brand & navigation", description: "Logo, colours, announcement bar and footer", icon: "✦" },
@@ -122,6 +123,25 @@ export default function StorefrontContentPage() {
       }
     }).catch(() => setMessage("Could not load saved settings.")).finally(() => setLoading(false));
   }, []);
+
+  async function uploadImage(key: string, file?: File) {
+    if (!file) return;
+    setUploadingKey(key);
+    setMessage("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/admin/media", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Image upload failed");
+      setSettings((current) => ({ ...current, [key]: data.url }));
+      setMessage("Image uploaded. Save website changes to publish the new image URL.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Image upload failed.");
+    } finally {
+      setUploadingKey("");
+    }
+  }
 
   async function saveSettings(e: React.FormEvent) {
     e.preventDefault();
@@ -189,6 +209,13 @@ export default function StorefrontContentPage() {
                     ) : (
                       <input type={field.type || "text"} value={settings[field.key] ?? ""} onChange={(e) => setSettings({ ...settings, [field.key]: e.target.value })} className="mt-3 w-full border border-[#E8D8CF] bg-[#FFFCFA] px-4 py-3 text-sm outline-none focus:border-[#B77F60]" />
                     )}
+                    {["logoUrl", "heroImageUrl"].includes(field.key) && (
+                      <span className="mt-3 block rounded border border-dashed border-[#D8C4B7] bg-[#FFFCFA] p-3">
+                        <span className="block text-[11px] text-[#7B6B62]">Or upload JPG, PNG, WebP, GIF or AVIF (max 10 MB)</span>
+                        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingKey === field.key} onChange={(e) => { void uploadImage(field.key, e.target.files?.[0]); e.currentTarget.value = ""; }} className="mt-2 block w-full text-xs file:mr-3 file:border-0 file:bg-[#17110F] file:px-3 file:py-2 file:text-white" />
+                        {uploadingKey === field.key && <span className="mt-2 block text-xs text-[#8B6658]">Uploading image…</span>}
+                      </span>
+                    )}
                   </label>
                 ))}
               </div>
@@ -197,7 +224,7 @@ export default function StorefrontContentPage() {
           {message && <p role="status" className="text-sm text-[#65534D] flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-[#6C854B]" />{message}</p>}
           <div className="flex flex-col sm:flex-row gap-3"><button disabled={saving} className="inline-flex items-center justify-center gap-2 bg-[#17110F] text-white px-6 py-3 text-xs uppercase tracking-widest disabled:opacity-60"><Save className="w-4 h-4" />{saving ? "Saving…" : "Save website changes"}</button><Link href="/" className="inline-flex items-center justify-center border border-[#B77F60] px-6 py-3 text-xs uppercase tracking-widest">View storefront</Link></div>
         </form>
-        <p className="mt-5 text-xs leading-5 text-[#8B7A72]">Image fields currently accept public image paths or URLs. The file must already be hosted or added to the website; direct persistent uploads still require connecting an image-storage service. Product and order management remain in the main admin dashboard.</p>
+        <p className="mt-5 text-xs leading-5 text-[#8B7A72]">Uploaded images are stored in Cloudinary. Configure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET in the deployment environment before uploading. Product images are managed from the product catalogue.</p>
       </div>
     </div>
   );
