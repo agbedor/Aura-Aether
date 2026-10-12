@@ -37,9 +37,9 @@ const initial: Settings = {
   contactEyebrow: "WE ARE HERE TO HELP",
   contactTitle: "Contact Aura & Aether",
   contactDescription: "Questions about a fragrance or an order? We would love to hear from you.",
-  contactEmail: "",
-  contactPhone: "",
-  contactAddress: "",
+  contactEmail: "concierge@aura-aether.com",
+  contactPhone: "+233 (0) 24 892 4110",
+  contactAddress: "Suite 4B, The Meridian Galleria, Airport Residential Area, Accra, Ghana",
 };
 
 const groups: { title: string; description: string; fields: { key: string; label: string; help?: string; multiline?: boolean; type?: string }[] }[] = [
