@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 : pathname === "/admin" && item.label === "Overview & orders";
               const Icon = item.icon;
               return (
-                <Link key={item.label} href={item.href} className={`admin-nav-link flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-semibold transition-all duration-200 ${active ? "bg-[#F0F2F6] text-[#20242B]" : "text-[#747B87] hover:bg-[#F7F8FA] hover:text-[#20242B]"}`}>
+                <a key={item.label} href={item.href} className={`admin-nav-link flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-semibold transition-all duration-200 ${active ? "bg-[#F0F2F6] text-[#20242B]" : "text-[#747B87] hover:bg-[#F7F8FA] hover:text-[#20242B]"}`}>
                   <Icon size={17} strokeWidth={1.8} />
                   {item.label}
                   {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#B77F60]" />}
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/" target="_blank" className="inline-flex items-center gap-2 rounded-lg border border-[#E2E5EA] px-3 py-2 text-xs font-semibold text-[#5E6571] transition-colors hover:border-[#C7A48F] hover:text-[#8B5D45]"><ExternalLink size={14} /> View storefront</Link>
         </header>
         <nav className="flex gap-2 overflow-x-auto border-b border-[#E7E9EE] bg-white px-4 py-3 lg:hidden">
-          {navigation.map((item) => <Link key={item.label} href={item.href} className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold ${pathname.startsWith("/admin/content") === item.href.startsWith("/admin/content") ? "bg-[#20242B] text-white" : "bg-[#F3F4F6] text-[#626976]"}`}>{item.label}</Link>)}
+          {navigation.map((item) => <a key={item.label} href={item.href} className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold ${pathname.startsWith("/admin/content") === item.href.startsWith("/admin/content") ? "bg-[#20242B] text-white" : "bg-[#F3F4F6] text-[#626976]"}`}>{item.label}</a>)}
         </nav>
         <div className="min-h-[calc(100vh-72px)] p-4 sm:p-7 lg:p-9">{children}</div>
       </div>
