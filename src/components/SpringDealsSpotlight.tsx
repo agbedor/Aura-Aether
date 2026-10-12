@@ -6,11 +6,11 @@ import Image from "next/image";
 import { ArrowRight, Tag } from "lucide-react";
 
 export default function SpringDealsSpotlight() {
-  const [content, setContent] = useState({ title: "Find your next signature", description: "Explore fragrances for every mood, moment, and version of you." });
+  const [content, setContent] = useState({ title: "Find your next signature", description: "Explore fragrances for every mood, moment, and version of you.", imageUrl: "/images/spring-peonies.svg" });
 
   useEffect(() => {
     fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
-      if (data?.settings) setContent((current) => ({ title: data.settings.homePromoTitle || current.title, description: data.settings.homePromoDescription || current.description }));
+      if (data?.settings) setContent((current) => ({ title: data.settings.homePromoTitle || current.title, description: data.settings.homePromoDescription || current.description, imageUrl: data.settings.homePromoImageUrl || current.imageUrl }));
     }).catch(() => undefined);
   }, []);
 
@@ -22,7 +22,7 @@ export default function SpringDealsSpotlight() {
           <div className="lg:col-span-7 relative flex justify-center">
             <div className="relative w-full max-w-lg aspect-square rounded-3xl overflow-hidden bg-[#FAF7F5] border border-[#ECE5DD] shadow-sm">
               <Image
-                src="/images/spring-peonies.svg"
+                src={content.imageUrl}
                 alt="Spring Peonies and Aura & Aether Perfume Flacons"
                 fill
                 className="object-cover object-center"
