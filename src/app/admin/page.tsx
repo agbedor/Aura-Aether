@@ -193,9 +193,10 @@ export default function AdminDashboardPage() {
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Refresh</span>
             </button>
+            <Link href="/admin/content" className="px-4 py-2 rounded-full border border-[#D9A17E] text-[#5C554F] text-xs font-semibold uppercase tracking-wider hover:bg-white transition-colors">Edit Storefront</Link>
             <Link
               href="/"
-              className="px-4 py-2 rounded-full bg-[#1C1917] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#38332E] transition-colors"
+              className="px-4 py-2 rounded-full bg-[#17110F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#38332E] transition-colors"
             >
               View Live Store
             </Link>
