@@ -1,11 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function HeroSection() {
+  const [content, setContent] = useState({ heroTitle: "Your scent. Your signature.", heroDescription: "{content.heroDescription}", motto: "Your scent. Your signature." });
+
+  useEffect(() => {
+    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+      if (data?.settings) setContent((current) => ({ ...current, ...data.settings }));
+    }).catch(() => undefined);
+  }, []);
+
+  const titleParts = content.heroTitle.split(/\\s+/);
+  const firstLine = titleParts.slice(0, Math.max(1, Math.ceil(titleParts.length / 2))).join(" ");
+  const secondLine = titleParts.slice(Math.max(1, Math.ceil(titleParts.length / 2))).join(" ");
+
   return (
     <section className="relative overflow-hidden bg-[#FFF0F6] border-b border-[#F0DCE5]">
       <div className="absolute inset-0 opacity-35 pointer-events-none">
@@ -18,8 +30,8 @@ export default function HeroSection() {
               <Sparkles className="w-4 h-4 text-[#D9A17E]" /> Artistry in every drop
             </p>
             <h1 className="font-serif-luxury text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[0.98] tracking-[-0.045em] text-[#17110F] font-normal">
-              Your scent.<br />
-              <span className="italic text-[#B77F60]">Your signature.</span>
+              {firstLine}<br />
+              <span className="italic text-[#B77F60]">{secondLine}</span>
             </h1>
             <p className="mt-7 text-sm sm:text-base leading-7 text-[#65534D] max-w-lg mx-auto lg:mx-0">
               Discover fragrances that feel like you. Find your signature scent, mark a moment, and leave a little magic wherever you go.
@@ -32,7 +44,7 @@ export default function HeroSection() {
                 Our story
               </Link>
             </div>
-            <p className="mt-8 font-serif-luxury italic text-lg text-[#8B6658]">Aura &amp; Aether Parfums</p>
+            <p className="mt-8 font-serif-luxury italic text-lg text-[#8B6658]">{content.motto}</p>
           </div>
           <div className="relative max-w-xl mx-auto w-full">
             <div className="absolute -inset-4 border border-[#DDB69F] translate-x-2 translate-y-2" />
