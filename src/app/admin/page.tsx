@@ -46,6 +46,7 @@ export default function AdminDashboardPage() {
   });
 
   const [statusMessage, setStatusMessage] = useState("");
+  const [uploadingProductImage, setUploadingProductImage] = useState(false);
 
   const fetchData = async () => {
     setIsDataLoading(true);
@@ -90,6 +91,25 @@ export default function AdminDashboardPage() {
       }
     } catch {
       // error
+    }
+  };
+
+  const handleProductImageUpload = async (file?: File) => {
+    if (!file) return;
+    setUploadingProductImage(true);
+    setStatusMessage("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/admin/media", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Image upload failed");
+      setNewProduct((current) => ({ ...current, image: data.url }));
+      setStatusMessage("Product image uploaded. Save the fragrance to use it.");
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Image upload failed.");
+    } finally {
+      setUploadingProductImage(false);
     }
   };
 
@@ -478,6 +498,13 @@ export default function AdminDashboardPage() {
             </h2>
 
             <form onSubmit={handleCreateProduct} className="space-y-4">
+              <div className="border border-dashed border-[#DDD6CD] rounded-xl p-4 bg-[#FFFCFA]">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-2">Product image</label>
+                <p className="text-xs text-[#78716C] mb-3">Upload JPG, PNG, WebP, GIF or AVIF (max 10 MB).</p>
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingProductImage} onChange={(e) => { void handleProductImageUpload(e.target.files?.[0]); e.currentTarget.value = ""; }} className="block w-full text-xs file:mr-3 file:border-0 file:bg-[#1C1917] file:px-3 file:py-2 file:text-white" />
+                {uploadingProductImage && <p className="mt-2 text-xs text-[#8B6658]">Uploading image…</p>}
+                <p className="mt-2 break-all text-[11px] text-[#78716C]">Selected image: {newProduct.image}</p>
+              </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">
                   Perfume Name *
