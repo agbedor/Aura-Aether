@@ -16,7 +16,8 @@ export default async function ForHimPage() {
   const genderTerms = ["him", "men", "man", "male"];
   const tagged = allProducts.filter((product) => {
     const label = `${product.category?.name || ""} ${product.category?.slug || ""}`.toLowerCase();
-    return genderTerms.some((term) => label.includes(term));
+    const words = label.split(/[^a-z]+/).filter(Boolean);
+    return genderTerms.some((term) => words.includes(term));
   });
   const products = tagged.length ? tagged : allProducts;
   const title = settings.himTitle || "Fragrances for Him";
