@@ -16,8 +16,17 @@ const DEFAULTS: Record<string, string> = {
   heroTitle: "Aura & Aether",
   heroDescription: "Fragrance that says something about you. Find the scent that feels like yours.",
   motto: "Your scent. Your signature.",
-  heroImageUrl: "/images/hero-editorial.svg",
+  heroImageUrl: "/images/hero-placeholder-1.svg",
+  heroImageUrl2: "/images/hero-placeholder-2.svg",
+  heroImageUrl3: "/images/hero-placeholder-3.svg",
   heroCtaLabel: "Explore the collection",
+  // Collection landing page copy
+  herTitle: "Fragrances for Her",
+  herDescription: "Discover your next signature scent.",
+  herImageUrl: "/images/hero-placeholder-2.svg",
+  himTitle: "Fragrances for Him",
+  himDescription: "Find a scent that makes its own statement.",
+  himImageUrl: "/images/hero-placeholder-3.svg",
   // Homepage sections
   homeFeaturedEyebrow: "OUR COLLECTION",
   homeFeaturedTitle: "Featured fragrances.",
