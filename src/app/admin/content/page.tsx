@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CheckCircle2, Save, Upload, Image as ImageIcon, House, Palette, ShoppingBag, Gift, Heart, UserRound, Mail, Sparkles, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, Save, Settings2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
 
 type Settings = Record<string, string>;
+type Field = { key: string; label: string; help?: string; multiline?: boolean; type?: string; image?: boolean };
+type EditorGroup = { title: string; description: string; fields: Field[] };
 
 const initial: Settings = {
   brandName: "Aura & Aether Parfums",
@@ -18,7 +21,9 @@ const initial: Settings = {
   heroTitle: "Aura & Aether",
   heroDescription: "Fragrance that says something about you. Find the scent that feels like yours.",
   motto: "Your scent. Your signature.",
-  heroImageUrl: "/images/hero-editorial.svg",
+  heroImageUrl: "/images/hero-placeholder-1.svg",
+  heroImageUrl2: "/images/hero-placeholder-2.svg",
+  heroImageUrl3: "/images/hero-placeholder-3.svg",
   heroCtaLabel: "Explore the collection",
   homeFeaturedEyebrow: "OUR COLLECTION",
   homeFeaturedTitle: "Featured fragrances.",
@@ -26,11 +31,18 @@ const initial: Settings = {
   homeGiftDescription: "Thoughtfully chosen fragrances for meaningful moments and memorable gifts.",
   homePromoTitle: "Find your next signature",
   homePromoDescription: "Explore fragrances for every mood, moment, and version of you.",
+  homePromoImageUrl: "/images/spring-peonies.svg",
   aboutTitle: "Our story",
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
   shopEyebrow: "THE COLLECTION",
   shopTitle: "Find your fragrance.",
   shopDescription: "Explore scents for every mood, moment, and personal signature.",
+  herTitle: "Fragrances for Her",
+  herDescription: "Discover your next signature scent.",
+  herImageUrl: "/images/hero-placeholder-2.svg",
+  himTitle: "Fragrances for Him",
+  himDescription: "Find a scent that makes its own statement.",
+  himImageUrl: "/images/hero-placeholder-3.svg",
   giftSetsEyebrow: "GIFT WITH MEANING",
   giftSetsTitle: "Gift Sets",
   giftSetsDescription: "Discover thoughtful fragrance gifts made for celebrations, everyday moments, and people you love.",
@@ -39,56 +51,79 @@ const initial: Settings = {
   contactDescription: "Questions about a fragrance or an order? We would love to hear from you.",
   contactEmail: "concierge@aura-aether.com",
   contactPhone: "+233 (0) 24 892 4110",
-  contactAddress: "Suite 4B, The Meridian Galleria, Airport Residential Area, Accra, Ghana",
+  contactAddress: "Accra, Ghana",
 };
 
-const groups: { title: string; description: string; fields: { key: string; label: string; help?: string; multiline?: boolean; type?: string }[] }[] = [
-  { title: "Brand identity & appearance", description: "These settings shape the site's shared brand presentation.", fields: [
+const groups: Record<string, EditorGroup[]> = {
+  home: [
+    { title: "Hero content", description: "Change the main headline, description and call-to-action.", fields: [
+      { key: "heroTitle", label: "Main heading" },
+      { key: "heroDescription", label: "Description", multiline: true },
+      { key: "motto", label: "Tagline" },
+      { key: "heroCtaLabel", label: "Button label" },
+    ]},
+    { title: "Homepage sections", description: "The copy shown around featured fragrances and promotions.", fields: [
+      { key: "homeFeaturedEyebrow", label: "Featured eyebrow" },
+      { key: "homeFeaturedTitle", label: "Featured heading" },
+      { key: "homeGiftTitle", label: "Gift sets heading" },
+      { key: "homeGiftDescription", label: "Gift sets description", multiline: true },
+      { key: "homePromoTitle", label: "Promotion heading" },
+      { key: "homePromoDescription", label: "Promotion description", multiline: true },
+      { key: "homePromoImageUrl", label: "Promotion image", image: true },
+    ]},
+  ],
+  brand: [{ title: "Brand, navigation & footer", description: "Shared identity and site-wide presentation.", fields: [
     { key: "brandName", label: "Brand name" },
-    { key: "logoUrl", label: "Logo image URL or public path", help: "Use a path such as /images/your-logo.png after the logo file has been added to the website." },
+    { key: "logoUrl", label: "Logo image", image: true },
     { key: "primaryColor", label: "Primary colour (hex)" },
-    { key: "accentColor", label: "Signature copper / accent colour (hex)" },
-    { key: "backgroundColor", label: "Page background colour (hex)" },
-    { key: "announcement", label: "Announcement bar message" },
-    { key: "footerDescription", label: "Footer brand description", multiline: true },
-  ]},
-  { title: "Homepage hero", description: "The full-screen background image and oversized title overlay.", fields: [
-    { key: "heroTitle", label: "Large hero title" },
-    { key: "heroDescription", label: "Hero description", multiline: true },
-    { key: "motto", label: "Brand motto" },
-    { key: "heroImageUrl", label: "Hero background image URL or public path", help: "For example /images/hero.jpg. Add the image to public/images first." },
-    { key: "heroCtaLabel", label: "Hero button label" },
-  ]},
-  { title: "Homepage sections", description: "Headings and supporting text for the main storefront sections.", fields: [
-    { key: "homeFeaturedEyebrow", label: "Featured section small heading" },
-    { key: "homeFeaturedTitle", label: "Featured section title" },
-    { key: "homeGiftTitle", label: "Gift sets section title" },
-    { key: "homeGiftDescription", label: "Gift sets section description", multiline: true },
-    { key: "homePromoTitle", label: "Promotion title" },
-    { key: "homePromoDescription", label: "Promotion description", multiline: true },
-  ]},
-  { title: "About page", description: "Brand story content.", fields: [
-    { key: "aboutTitle", label: "About page title" },
-    { key: "aboutIntro", label: "About page introduction", multiline: true },
-  ]},
-  { title: "Shop page", description: "The introductory content above the product catalogue.", fields: [
+    { key: "accentColor", label: "Accent colour (hex)" },
+    { key: "backgroundColor", label: "Background colour (hex)" },
+    { key: "announcement", label: "Announcement bar message", multiline: true },
+    { key: "footerDescription", label: "Footer description", multiline: true },
+  ]}],
+  shop: [{ title: "Shop page", description: "Edit the text at the top of the shop catalogue.", fields: [
     { key: "shopEyebrow", label: "Small heading" },
-    { key: "shopTitle", label: "Shop page title" },
-    { key: "shopDescription", label: "Shop page description", multiline: true },
-  ]},
-  { title: "Gift Sets page", description: "The introductory content above gift products.", fields: [
+    { key: "shopTitle", label: "Page heading" },
+    { key: "shopDescription", label: "Page description", multiline: true },
+  ]}],
+  her: [{ title: "For Her collection", description: "Content prepared for the For Her collection page.", fields: [
+    { key: "herTitle", label: "Page heading" },
+    { key: "herDescription", label: "Page description", multiline: true },
+    { key: "herImageUrl", label: "Collection image", image: true },
+  ]}],
+  him: [{ title: "For Him collection", description: "Content prepared for the For Him collection page.", fields: [
+    { key: "himTitle", label: "Page heading" },
+    { key: "himDescription", label: "Page description", multiline: true },
+    { key: "himImageUrl", label: "Collection image", image: true },
+  ]}],
+  gifts: [{ title: "Gift Sets page", description: "Edit the heading and introduction above your gift collection.", fields: [
     { key: "giftSetsEyebrow", label: "Small heading" },
-    { key: "giftSetsTitle", label: "Gift Sets page title" },
-    { key: "giftSetsDescription", label: "Gift Sets page description", multiline: true },
-  ]},
-  { title: "Contact page", description: "Contact page copy and customer-facing contact details.", fields: [
+    { key: "giftSetsTitle", label: "Page heading" },
+    { key: "giftSetsDescription", label: "Page description", multiline: true },
+  ]}],
+  about: [{ title: "About page", description: "Edit your public brand story introduction.", fields: [
+    { key: "aboutTitle", label: "Page heading" },
+    { key: "aboutIntro", label: "Introduction", multiline: true },
+  ]}],
+  contact: [{ title: "Contact page", description: "Customer-facing contact details and introductory copy.", fields: [
     { key: "contactEyebrow", label: "Small heading" },
-    { key: "contactTitle", label: "Contact page title" },
-    { key: "contactDescription", label: "Contact page description", multiline: true },
-    { key: "contactEmail", label: "Public contact email", type: "email" },
-    { key: "contactPhone", label: "Public contact phone" },
-    { key: "contactAddress", label: "Public address / delivery location", multiline: true },
-  ]},
+    { key: "contactTitle", label: "Page heading" },
+    { key: "contactDescription", label: "Page description", multiline: true },
+    { key: "contactEmail", label: "Contact email", type: "email" },
+    { key: "contactPhone", label: "Contact phone" },
+    { key: "contactAddress", label: "Contact address", multiline: true },
+  ]}],
+};
+
+const pages = [
+  { id: "home", label: "Homepage", description: "Hero slides, featured products and promotion", icon: House },
+  { id: "brand", label: "Brand & navigation", description: "Logo, colours, announcement and footer", icon: Palette },
+  { id: "shop", label: "Shop", description: "Shop page introduction", icon: ShoppingBag },
+  { id: "her", label: "For Her", description: "Women’s collection content", icon: Heart },
+  { id: "him", label: "For Him", description: "Men’s collection content", icon: UserRound },
+  { id: "gifts", label: "Gift Sets", description: "Gift collection introduction", icon: Gift },
+  { id: "about", label: "About", description: "Brand story introduction", icon: Sparkles },
+  { id: "contact", label: "Contact", description: "Contact details and copy", icon: Mail },
 ];
 
 export default function StorefrontContentPage() {
@@ -99,29 +134,21 @@ export default function StorefrontContentPage() {
   const [message, setMessage] = useState("");
   const [activeSection, setActiveSection] = useState("home");
   const [uploadingKey, setUploadingKey] = useState("");
-  const sections = [
-    { id: "home", title: "Homepage", description: "Hero, featured products and promotional sections", icon: "⌂" },
-    { id: "brand", title: "Brand & navigation", description: "Logo, colours, announcement bar and footer", icon: "✦" },
-    { id: "shop", title: "Shop", description: "Shop page headings and introduction", icon: "◇" },
-    { id: "gifts", title: "Gift Sets", description: "Gift collection page content", icon: "♡" },
-    { id: "about", title: "About", description: "Your brand story", icon: "◌" },
-    { id: "contact", title: "Contact", description: "Contact page text and public details", icon: "✉" },
-  ];
 
   useEffect(() => {
     const section = new URLSearchParams(window.location.search).get("section");
-    if (section && ["home", "brand", "shop", "gifts", "about", "contact"].includes(section)) setActiveSection(section);
+    if (section && pages.some((page) => page.id === section)) setActiveSection(section);
   }, []);
 
   useEffect(() => {
-    fetch("/api/site-settings").then(async (res) => {
-      if (res.ok) {
+    fetch("/api/site-settings")
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Could not load saved settings.");
         const data = await res.json();
         setSettings({ ...initial, ...data.settings });
-      } else {
-        setMessage("Could not load saved settings.");
-      }
-    }).catch(() => setMessage("Could not load saved settings.")).finally(() => setLoading(false));
+      })
+      .catch((error) => setMessage(error instanceof Error ? error.message : "Could not load saved settings."))
+      .finally(() => setLoading(false));
   }, []);
 
   async function uploadImage(key: string, file?: File) {
@@ -135,7 +162,7 @@ export default function StorefrontContentPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Image upload failed");
       setSettings((current) => ({ ...current, [key]: data.url }));
-      setMessage("Image uploaded. Save website changes to publish the new image URL.");
+      setMessage("Upload complete. Select Save changes to publish this image.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Image upload failed.");
     } finally {
@@ -143,8 +170,8 @@ export default function StorefrontContentPage() {
     }
   }
 
-  async function saveSettings(e: React.FormEvent) {
-    e.preventDefault();
+  async function saveSettings(event: React.FormEvent) {
+    event.preventDefault();
     setSaving(true);
     setMessage("");
     try {
@@ -155,77 +182,102 @@ export default function StorefrontContentPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Save failed");
-      setMessage("Saved. Refresh the storefront to see the changes.");
+      setMessage("Changes saved successfully.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Could not save settings.");
+      setMessage(error instanceof Error ? error.message : "Could not save changes.");
     } finally {
       setSaving(false);
     }
   }
 
-  if (isLoading || loading) return <div className="min-h-[60vh] grid place-items-center text-sm text-[#65534D]">Loading website settings…</div>;
-  if (!user || user.role !== "ADMIN") return <div className="min-h-[60vh] grid place-items-center px-6 text-center"><div><h1 className="font-serif-luxury text-3xl">Admin access required</h1><p className="mt-3 text-sm text-[#65534D]">Sign in with an administrator account to edit website content.</p><Link href="/login" className="inline-block mt-5 underline">Go to sign in</Link></div></div>;
+  if (isLoading || loading) return <div className="mx-auto max-w-4xl p-10 text-sm text-[#747B87]">Loading editor…</div>;
+  if (!user || user.role !== "ADMIN") return <div className="mx-auto max-w-xl rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center"><h1 className="text-2xl font-bold">Admin access required</h1><p className="mt-2 text-sm text-[#747B87]">Sign in with an administrator account to manage the store.</p><Link href="/login" className="mt-5 inline-flex rounded-lg bg-[#20242B] px-4 py-2 text-sm font-semibold text-white">Go to sign in</Link></div>;
+
+  const selectedPage = pages.find((page) => page.id === activeSection) || pages[0];
+  const SelectedIcon = selectedPage.icon;
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9] py-10 sm:py-16">
-      <div className="max-w-5xl mx-auto px-5 sm:px-8">
-        <Link href="/admin" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#65534D] hover:text-black"><ArrowLeft className="w-4 h-4" /> Back to dashboard</Link>
-        <div className="mt-7 flex items-start gap-4">
-          <div className="w-12 h-12 shrink-0 bg-[#17110F] text-[#E8BD9E] grid place-items-center"><Settings2 className="w-5 h-5" /></div>
-          <div><p className="text-[10px] uppercase tracking-[0.3em] text-[#8B6658]">Administrator workspace</p><h1 className="font-serif-luxury text-4xl sm:text-5xl mt-1">Website content</h1><p className="mt-3 text-sm text-[#65534D] leading-6">Manage brand settings and editable content across the homepage, About, Shop, Gift Sets, Contact, announcement bar, and footer. Products and orders remain in the main admin dashboard.</p></div>
+    <div className="mx-auto max-w-[1450px] space-y-7 font-sans-clean">
+      <div className="flex flex-col justify-between gap-4 border-b border-[#E5E7EB] pb-6 md:flex-row md:items-end">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8B5D45]">Storefront control centre</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#20242B] sm:text-4xl">Website editor</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#747B87]">Choose a page, update its content, preview every editable image and save your changes.</p>
         </div>
-
-        <div className="mt-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {sections.map((section) => (
-            <a key={section.id} href={"/admin/content?section=" + section.id} className={`border p-4 transition-colors ${activeSection === section.id ? "border-[#B77F60] bg-[#F7EEE8]" : "border-[#E8D9CE] bg-white hover:border-[#B77F60]"}`}>
-              <span className="text-xl text-[#8B6658]">{section.icon}</span>
-              <h2 className="mt-2 font-serif-luxury text-xl">{section.title}</h2>
-              <p className="mt-1 text-xs leading-5 text-[#7B6B62]">{section.description}</p>
-              <span className="mt-3 block text-[10px] uppercase tracking-widest text-[#8B6658]">Edit section →</span>
-            </a>
-          ))}
-        </div>
-
-        <form onSubmit={saveSettings} className="mt-8 space-y-6">
-          {groups.filter((group) => {
-            if (activeSection === "brand") return group.title === "Brand identity & appearance";
-            if (activeSection === "home") return group.title === "Homepage hero" || group.title === "Homepage sections";
-            if (activeSection === "shop") return group.title === "Shop page";
-            if (activeSection === "gifts") return group.title === "Gift Sets page";
-            if (activeSection === "about") return group.title === "About page";
-            if (activeSection === "contact") return group.title === "Contact page";
-            return false;
-          }).map((group) => (
-            <section key={group.title} className="bg-white border border-[#E8D9CE] p-5 sm:p-8">
-              <h2 className="font-serif-luxury text-2xl">{group.title}</h2>
-              <p className="mt-2 mb-6 text-sm leading-6 text-[#7B6B62]">{group.description}</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {group.fields.map((field) => (
-                  <label key={field.key} className={`block ${field.multiline ? "md:col-span-2" : ""}`}>
-                    <span className="block text-xs font-semibold uppercase tracking-widest">{field.label}</span>
-                    {field.help && <span className="block mt-1.5 text-xs leading-5 text-[#8B7A72]">{field.help}</span>}
-                    {field.multiline ? (
-                      <textarea rows={3} value={settings[field.key] ?? ""} onChange={(e) => setSettings({ ...settings, [field.key]: e.target.value })} className="mt-3 w-full border border-[#E8D8CF] bg-[#FFFCFA] px-4 py-3 text-sm outline-none focus:border-[#B77F60]" />
-                    ) : (
-                      <input type={field.type || "text"} value={settings[field.key] ?? ""} onChange={(e) => setSettings({ ...settings, [field.key]: e.target.value })} className="mt-3 w-full border border-[#E8D8CF] bg-[#FFFCFA] px-4 py-3 text-sm outline-none focus:border-[#B77F60]" />
-                    )}
-                    {["logoUrl", "heroImageUrl"].includes(field.key) && (
-                      <span className="mt-3 block rounded border border-dashed border-[#D8C4B7] bg-[#FFFCFA] p-3">
-                        <span className="block text-[11px] text-[#7B6B62]">Or upload JPG, PNG, WebP, GIF or AVIF (max 10 MB)</span>
-                        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingKey === field.key} onChange={(e) => { void uploadImage(field.key, e.target.files?.[0]); e.currentTarget.value = ""; }} className="mt-2 block w-full text-xs file:mr-3 file:border-0 file:bg-[#17110F] file:px-3 file:py-2 file:text-white" />
-                        {uploadingKey === field.key && <span className="mt-2 block text-xs text-[#8B6658]">Uploading image…</span>}
-                      </span>
-                    )}
-                  </label>
-                ))}
-              </div>
-            </section>
-          ))}
-          {message && <p role="status" className="text-sm text-[#65534D] flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-[#6C854B]" />{message}</p>}
-          <div className="flex flex-col sm:flex-row gap-3"><button disabled={saving} className="inline-flex items-center justify-center gap-2 bg-[#17110F] text-white px-6 py-3 text-xs uppercase tracking-widest disabled:opacity-60"><Save className="w-4 h-4" />{saving ? "Saving…" : "Save website changes"}</button><Link href="/" className="inline-flex items-center justify-center border border-[#B77F60] px-6 py-3 text-xs uppercase tracking-widest">View storefront</Link></div>
-        </form>
-        <p className="mt-5 text-xs leading-5 text-[#8B7A72]">Uploaded images are stored in Cloudinary. Configure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET in the deployment environment before uploading. Product images are managed from the product catalogue.</p>
+        <Link href="/" target="_blank" className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-[#E1E4E9] bg-white px-4 py-3 text-xs font-bold text-[#555D69] transition-all hover:-translate-y-0.5 hover:border-[#C7A48F] hover:shadow-sm md:self-auto"><ExternalLink size={14} /> Preview live website</Link>
       </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {pages.map((page) => {
+          const Icon = page.icon;
+          const active = activeSection === page.id;
+          return <button key={page.id} type="button" onClick={() => { setActiveSection(page.id); window.history.replaceState(null, "", "/admin/content?section=" + page.id); }} className={`group rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${active ? "border-[#B77F60] bg-[#FFF9F5] shadow-sm" : "border-[#E5E7EB] bg-white hover:border-[#D5C0B2]"}`}>
+            <span className={`grid h-10 w-10 place-items-center rounded-xl transition-colors ${active ? "bg-[#20242B] text-white" : "bg-[#F1F3F6] text-[#68707D] group-hover:bg-[#F7EAE1] group-hover:text-[#8B5D45]"}`}><Icon size={18} /></span>
+            <span className="mt-4 block text-sm font-bold text-[#20242B]">{page.label}</span>
+            <span className="mt-1 block text-xs leading-5 text-[#858B96]">{page.description}</span>
+          </button>;
+        })}
+      </div>
+
+      {activeSection === "home" && (
+        <section className="rounded-2xl border border-[#E5E7EB] bg-white p-5 sm:p-7">
+          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+            <div><h2 className="text-lg font-bold text-[#20242B]">Homepage image gallery</h2><p className="mt-1 text-xs leading-5 text-[#858B96]">These are the rotating hero images. Upload your own image to replace any placeholder.</p></div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8B5D45]">3 hero slides</span>
+          </div>
+          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[
+              { key: "heroImageUrl", label: "Hero slide 01" },
+              { key: "heroImageUrl2", label: "Hero slide 02" },
+              { key: "heroImageUrl3", label: "Hero slide 03" },
+            ].map((item, index) => <div key={item.key} className="overflow-hidden rounded-xl border border-[#E8EAEE] bg-[#F8F9FB]">
+              <div className="relative aspect-[16/10] overflow-hidden bg-[#E7E1DC]">
+                <img src={settings[item.key] || "/images/hero-placeholder-1.svg"} alt={item.label + " preview"} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
+                <span className="absolute left-3 top-3 rounded-lg bg-white/90 px-2.5 py-1 text-[10px] font-bold text-[#424852]">{item.label}</span>
+              </div>
+              <div className="space-y-3 p-4">
+                <p className="break-all text-[11px] text-[#858B96]">{settings[item.key]}</p>
+                <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#20242B] px-3 py-2.5 text-xs font-bold text-white transition-all hover:bg-[#424852]">
+                  <Upload size={14} /> {uploadingKey === item.key ? "Uploading…" : "Replace image"}
+                  <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingKey === item.key} className="hidden" onChange={(e) => { void uploadImage(item.key, e.target.files?.[0]); e.currentTarget.value = ""; }} />
+                </label>
+              </div>
+            </div>)}
+          </div>
+        </section>
+      )}
+
+      <form onSubmit={saveSettings} className="space-y-5">
+        {groups[activeSection].map((group) => <section key={group.title} className="rounded-2xl border border-[#E5E7EB] bg-white p-5 sm:p-7">
+          <div className="mb-6 flex items-start gap-3 border-b border-[#F0F1F4] pb-5">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#F1F3F6] text-[#6D7480]"><SelectedIcon size={17} /></span>
+            <div><h2 className="text-base font-bold text-[#20242B]">{group.title}</h2><p className="mt-1 text-xs leading-5 text-[#858B96]">{group.description}</p></div>
+          </div>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {group.fields.map((field) => <label key={field.key} className={`block ${field.multiline || field.image ? "md:col-span-2" : ""}`}>
+              <span className="block text-xs font-bold text-[#454C57]">{field.label}</span>
+              {field.help && <span className="mt-1 block text-xs text-[#858B96]">{field.help}</span>}
+              {field.image ? <div className="mt-3 grid grid-cols-1 gap-4 rounded-xl border border-[#E8EAEE] bg-[#FAFBFC] p-3 sm:grid-cols-[180px_1fr]">
+                <div className="aspect-[4/3] overflow-hidden rounded-lg bg-[#E7E1DC]"><img src={settings[field.key] || "/images/hero-placeholder-1.svg"} alt={field.label + " preview"} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" /></div>
+                <div className="flex flex-col justify-center gap-3">
+                  <input value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="w-full rounded-lg border border-[#E0E3E8] bg-white px-3 py-2.5 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" placeholder="Image URL or public path" />
+                  <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-[#DDE1E7] bg-white px-3 py-2 text-xs font-bold text-[#4F5662] transition hover:border-[#B77F60] hover:text-[#8B5D45]"><Upload size={14} /> {uploadingKey === field.key ? "Uploading…" : "Upload replacement"}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingKey === field.key} className="hidden" onChange={(e) => { void uploadImage(field.key, e.target.files?.[0]); e.currentTarget.value = ""; }} /></label>
+                  <p className="text-[10px] leading-4 text-[#858B96]">JPG, PNG, WebP, GIF or AVIF · max 10 MB</p>
+                </div>
+              </div> : field.multiline ? <textarea rows={4} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm leading-6 outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" /> : <input type={field.type || "text"} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" />}
+            </label>)}
+          </div>
+        </section>)}
+
+        {message && <div role="status" className={`flex items-start gap-2 rounded-xl border p-4 text-sm ${message.toLowerCase().includes("could not") || message.toLowerCase().includes("failed") ? "border-red-200 bg-red-50 text-red-700" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}><CheckCircle2 size={17} className="mt-0.5 shrink-0" /><span>{message}</span></div>}
+        <div className="sticky bottom-4 z-20 flex flex-col justify-between gap-3 rounded-2xl border border-[#E5E7EB] bg-white/95 p-3 shadow-lg backdrop-blur sm:flex-row sm:items-center sm:px-5">
+          <p className="text-xs text-[#858B96]">Editing: <strong className="text-[#454C57]">{selectedPage.label}</strong></p>
+          <button disabled={saving || !!uploadingKey} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#20242B] px-5 py-3 text-xs font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#424852] disabled:opacity-50"><Save size={15} /> {saving ? "Saving changes…" : "Save changes"}</button>
+        </div>
+      </form>
+
+      {activeSection === "home" && <ProductImageLibrary />}
+      <p className="text-xs leading-5 text-[#858B96]">Persistent image uploads require Cloudinary settings in the server environment. If those credentials are not configured yet, the editor will show a clear upload error rather than pretending the file was saved.</p>
     </div>
   );
 }
