@@ -20,18 +20,9 @@ const DEFAULTS: Record<string, string> = {
   heroImageUrl2: "/images/hero-placeholder-2.svg",
   heroImageUrl3: "/images/hero-placeholder-3.svg",
   heroCtaLabel: "Explore the collection",
-  // Collection landing page copy
-  herTitle: "Fragrances for Her",
-  herDescription: "Discover your next signature scent.",
-  herImageUrl: "/images/hero-placeholder-2.svg",
-  himTitle: "Fragrances for Him",
-  himDescription: "Find a scent that makes its own statement.",
-  himImageUrl: "/images/hero-placeholder-3.svg",
   // Homepage sections
   homeFeaturedEyebrow: "OUR COLLECTION",
   homeFeaturedTitle: "Featured fragrances.",
-  homeGiftTitle: "Curated Gift Sets.",
-  homeGiftDescription: "Thoughtfully chosen fragrances for meaningful moments and memorable gifts.",
   homePromoTitle: "Find your next signature",
   homePromoDescription: "Explore fragrances for every mood, moment, and version of you.",
   homePromoImageUrl: "/images/spring-peonies.svg",
