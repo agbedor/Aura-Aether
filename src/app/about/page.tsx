@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AboutIntro from "@/components/AboutIntro";
+import AboutHeading from "@/components/AboutHeading";
 import { ArrowRight, Heart, Sparkles, Wind } from "lucide-react";
 
 export const metadata = {
@@ -13,7 +14,7 @@ export default function AboutPage() {
       <section className="px-5 sm:px-8 py-20 sm:py-28 border-b border-[#F0DCE5]">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[10px] uppercase tracking-[0.32em] text-[#8B6658] mb-5">A little about us</p>
-          <h1 className="font-serif-luxury text-5xl sm:text-7xl leading-tight">Fragrance is personal.<br /><span className="italic text-[#B77F60]">Make it yours.</span></h1>
+          <h1 className="font-serif-luxury text-5xl sm:text-7xl leading-tight"><AboutHeading /></h1>
           <AboutIntro />
         </div>
       </section>
