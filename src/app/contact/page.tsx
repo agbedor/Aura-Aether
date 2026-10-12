@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Mail, Phone, MapPin, CheckCircle2, Send, Clock, Sparkles } from "lucide-react";
+import { Mail, Phone, MapPin, CheckCircle2, Send, Clock } from "lucide-react";
 
 export default function ContactPage() {
   const [siteContent, setSiteContent] = useState({
@@ -28,16 +28,36 @@ export default function ContactPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSending(true);
-    // Simulate consultation submission
-    setTimeout(() => {
-      setIsSending(false);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result.error || "We couldn't send your message. Please try again.");
+      }
+
       setSubmitted(true);
       setFormData({ name: "", email: "", subject: "Fragrance Consultation", message: "" });
-    }, 600);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "We couldn't send your message. Please try again."
+      );
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -132,8 +152,8 @@ export default function ContactPage() {
                   Thank you for reaching out
                 </h4>
                 <p className="text-xs text-[#78716C] max-w-sm mx-auto leading-relaxed">
-                  Your message has been safely received by our Accra atelier team. We look forward
-                  to assisting you.
+                  Your inquiry has been received. Our team will review it and follow up using
+                  the email address you provided.
                 </p>
                 <button
                   type="button"
@@ -204,6 +224,12 @@ export default function ContactPage() {
                     className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-3 text-sm text-[#1C1917] placeholder-[#A89F95] focus:outline-none focus:border-[#1C1917]"
                   />
                 </div>
+
+                {submitError && (
+                  <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {submitError}
+                  </p>
+                )}
 
                 <button
                   type="submit"
