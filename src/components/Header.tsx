@@ -17,6 +17,8 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
+    { name: "HOME", href: "/" },
+    { name: "ABOUT", href: "/about" },
     { name: "SHOP", href: "/shop" },
     { name: "GIFT SETS", href: "/gift-sets" },
     { name: "CONTACT", href: "/contact" },
