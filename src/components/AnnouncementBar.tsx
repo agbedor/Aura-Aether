@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { X, Sparkles } from "lucide-react";
 
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
+  const [announcement, setAnnouncement] = useState("Find your signature scent with Aura & Aether Parfums.");
+
+  useEffect(() => {
+    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+      if (data?.settings?.announcement) setAnnouncement(data.settings.announcement);
+    }).catch(() => undefined);
+  }, []);
 
   if (!isVisible) return null;
 
@@ -27,7 +34,7 @@ export default function AnnouncementBar() {
             href="/shop"
             className="hover:underline hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
           >
-            <span>Just Restocked : Shop Our Fragrance Collection</span>
+            <span>{announcement}</span>
             <span className="hidden sm:inline text-[#DFC07D] font-medium text-[11px] underline">
               • EXTRA 20% OFF FIRST ORDER
             </span>
