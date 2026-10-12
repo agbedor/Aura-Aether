@@ -14,11 +14,22 @@ Luxury fragrance storefront built with Next.js, TypeScript, Tailwind CSS, Prisma
 
 - The public homepage is `/`.
 - The About page is `/about`.
-- The administrator dashboard for products and orders is `/admin`.
-- Storefront text settings are edited at `/admin/content` and stored in the `SiteSetting` PostgreSQL model.
+- Collection pages are `/for-her` and `/for-him`.
+- The separate administrator workspace is `/admin`; the visual website editor is `/admin/content`.
+- The website editor manages page copy, brand settings, rotating homepage hero slides and product images. Product images can also be changed from the image library in the editor.
 - The site settings API is admin-write-protected at `/api/site-settings`.
 
 The `SiteSetting` model is new; run `npx prisma db push` in each configured environment before using the content editor. Keep credentials in environment variables and never commit `.env`.
+
+### Persistent CMS image uploads
+
+The admin editor uses Cloudinary for persistent image uploads. Create a Cloudinary account, then add these server-side environment variables to your local `.env` file and your deployment environment (for example, Vercel):
+
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+
+The variables are listed in `.env.example`. Uploads accept JPG, PNG, WebP, GIF and AVIF files up to 10 MB. SVG uploads are intentionally disabled. The app is configured to display images hosted on `res.cloudinary.com`.
 
 ## Production notes
 
