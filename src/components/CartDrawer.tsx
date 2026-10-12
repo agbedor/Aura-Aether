@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
+import { X, Trash2, Plus, Minus, ShoppingCart, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatGhs } from "@/lib/paystack";
 
@@ -19,7 +19,7 @@ export default function CartDrawer() {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Shopping Bag"
+      aria-label="Cart"
       className="fixed inset-0 z-50 overflow-hidden"
     >
       {/* Backdrop */}
@@ -33,9 +33,9 @@ export default function CartDrawer() {
           {/* Header */}
           <div className="p-6 border-b border-[#EBE4DC] flex items-center justify-between bg-white">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-[#1C1917]" />
+              <ShoppingCart className="w-5 h-5 text-[#1C1917]" />
               <h2 className="font-serif-luxury text-xl font-semibold text-[#1C1917]">
-                Shopping Bag
+                Cart
               </h2>
               <span className="text-xs bg-[#F2ECE4] text-[#5C554F] px-2 py-0.5 rounded-full font-medium">
                 {items.reduce((acc, i) => acc + i.quantity, 0)}
@@ -55,11 +55,11 @@ export default function CartDrawer() {
             {items.length === 0 ? (
               <div className="text-center py-20 space-y-4">
                 <div className="w-16 h-16 mx-auto rounded-full bg-[#F3ECE5] flex items-center justify-center text-[#8C827A]">
-                  <ShoppingBag className="w-8 h-8" />
+                  <ShoppingCart className="w-8 h-8" />
                 </div>
                 <div>
                   <h3 className="font-serif-luxury text-lg font-medium text-[#1C1917]">
-                    Your bag is empty
+                    Your cart is empty
                   </h3>
                   <p className="text-xs text-[#8C827A] mt-1 max-w-xs mx-auto">
                     Explore our handcrafted perfumes and artisanal coffrets to begin.
@@ -104,7 +104,7 @@ export default function CartDrawer() {
                         </Link>
                         <button
                           onClick={() => removeItem(item.productId)}
-                          aria-label={`Remove ${item.name} from bag`}
+                          aria-label={`Remove ${item.name} from cart`}
                           className="text-[#A89F95] hover:text-[#B91C1C] transition-colors p-1"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -187,7 +187,7 @@ export default function CartDrawer() {
                   }}
                   className="w-full py-2.5 px-6 rounded-full border border-[#D5CDC4] text-xs font-semibold uppercase tracking-widest text-[#5C554F] hover:bg-[#F7F2ED] transition-colors"
                 >
-                  View Full Bag
+                  View Cart
                 </button>
               </div>
 
