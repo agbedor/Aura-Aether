@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 const DEFAULTS: Record<string, string> = {
   // Brand identity and global styling
   brandName: "Aura & Aether Parfums",
-  logoUrl: "",
+  logoUrl: "/images/aura-aether-logo.svg",
   primaryColor: "#17110F",
   accentColor: "#B77F60",
   backgroundColor: "#FCFBF9",
