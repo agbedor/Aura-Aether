@@ -10,8 +10,8 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="bg-[#FFF0F6] text-[#17110F]">
-      <section className="px-5 sm:px-8 py-20 sm:py-28 border-b border-[#F0DCE5]">
+    <div className="bg-[#FCFBF9] text-[#17110F]">
+      <section className="px-5 sm:px-8 py-20 sm:py-28 border-b border-[#E8D9CE]">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[10px] uppercase tracking-[0.32em] text-[#8B6658] mb-5">A little about us</p>
           <h1 className="font-serif-luxury text-5xl sm:text-7xl leading-tight"><AboutHeading /></h1>
@@ -19,7 +19,7 @@ export default function AboutPage() {
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-24 grid md:grid-cols-2 gap-12 items-center">
-        <div className="bg-[#E7C2AD] min-h-[340px] sm:min-h-[440px] flex items-center justify-center p-10 text-center">
+        <div className="bg-[#E8D9CE] min-h-[340px] sm:min-h-[440px] flex items-center justify-center p-10 text-center">
           <div className="max-w-sm">
             <Sparkles className="w-8 h-8 mx-auto mb-6 text-[#7A4F3B]" />
             <p className="font-serif-luxury text-4xl sm:text-5xl leading-tight">Your scent.<br /><span className="italic">Your signature.</span></p>
@@ -34,7 +34,7 @@ export default function AboutPage() {
           <Link href="/shop" className="mt-8 inline-flex items-center gap-3 bg-[#17110F] text-white px-7 py-4 text-[11px] uppercase tracking-[0.18em] hover:bg-[#B77F60] transition-colors">Find your fragrance <ArrowRight className="w-4 h-4" /></Link>
         </div>
       </section>
-      <section className="bg-white/70 border-y border-[#F0DCE5] py-14 sm:py-18">
+      <section className="bg-white/70 border-y border-[#E8D9CE] py-14 sm:py-18">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 grid sm:grid-cols-3 gap-10 text-center">
           <div><Sparkles className="w-6 h-6 mx-auto mb-4 text-[#B77F60]" /><h3 className="font-serif-luxury text-xl">Made for self-expression</h3><p className="mt-2 text-sm leading-6 text-[#65534D]">Choose the notes that match your mood and the impression you want to leave.</p></div>
           <div><Heart className="w-6 h-6 mx-auto mb-4 text-[#B77F60]" /><h3 className="font-serif-luxury text-xl">Chosen with care</h3><p className="mt-2 text-sm leading-6 text-[#65534D]">A considered collection for gifting, celebrating, and everyday rituals.</p></div>
