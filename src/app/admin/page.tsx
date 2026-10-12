@@ -73,6 +73,8 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
+    const requestedTab = new URLSearchParams(window.location.search).get("tab");
+    if (requestedTab === "products" || requestedTab === "new-product") setActiveTab(requestedTab);
     fetchData();
   }, []);
 
