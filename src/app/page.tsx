@@ -68,8 +68,7 @@ export default async function HomePage() {
               {settings.homeGiftTitle || "Curated Gift Sets."}
             </h2>
             <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
-              Hand-assembled coffrets and travel atomizers crafted for discerning collectors and
-              memorable moments.
+              {settings.homeGiftDescription || "Thoughtfully chosen fragrances for meaningful moments and memorable gifts."}
             </p>
           </div>
 
