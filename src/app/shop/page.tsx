@@ -18,7 +18,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const currentSort = params.sort || "newest";
   const searchQuery = params.search || "";
 
-  const [categories, products] = await Promise.all([
+  const [categories, products, settingsRows] = await Promise.all([
     getCategories(),
     getProducts({
       category: currentCategory || undefined,
@@ -26,7 +26,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       search: searchQuery || undefined,
       giftSets: false,
     }),
+    prisma.siteSetting.findMany().catch(() => []),
   ]);
+  const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
 
   return (
     <div className="min-h-screen bg-[#FCFBF9] py-12 sm:py-16">
