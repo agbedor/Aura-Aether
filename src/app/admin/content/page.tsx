@@ -109,7 +109,7 @@ export default function StorefrontContentPage() {
 
   useEffect(() => {
     const section = new URLSearchParams(window.location.search).get("section");
-    if (section && sections.some((item) => item.id === section)) setActiveSection(section);
+    if (section && ["home", "brand", "shop", "gifts", "about", "contact"].includes(section)) setActiveSection(section);
   }, []);
 
   useEffect(() => {
