@@ -157,12 +157,12 @@ export default function StorefrontContentPage() {
 
         <div className="mt-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {sections.map((section) => (
-            <Link key={section.id} href={"/admin/content?section=" + section.id} className={`border p-4 transition-colors ${activeSection === section.id ? "border-[#B77F60] bg-[#F7EEE8]" : "border-[#E8D9CE] bg-white hover:border-[#B77F60]"}`}>
+            <a key={section.id} href={"/admin/content?section=" + section.id} className={`border p-4 transition-colors ${activeSection === section.id ? "border-[#B77F60] bg-[#F7EEE8]" : "border-[#E8D9CE] bg-white hover:border-[#B77F60]"}`}>
               <span className="text-xl text-[#8B6658]">{section.icon}</span>
               <h2 className="mt-2 font-serif-luxury text-xl">{section.title}</h2>
               <p className="mt-1 text-xs leading-5 text-[#7B6B62]">{section.description}</p>
               <span className="mt-3 block text-[10px] uppercase tracking-widest text-[#8B6658]">Edit section →</span>
-            </Link>
+            </a>
           ))}
         </div>
 
