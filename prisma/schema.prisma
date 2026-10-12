@@ -123,3 +123,10 @@ model Payment {
 
   @@index([reference])
 }
+
+
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
