@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Heart, UserRound, Mail, Sparkles, ExternalLink } from "lucide-react";
+import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
@@ -37,12 +37,6 @@ const initial: Settings = {
   shopEyebrow: "THE COLLECTION",
   shopTitle: "Find your fragrance.",
   shopDescription: "Explore scents for every mood, moment, and personal signature.",
-  herTitle: "Fragrances for Her",
-  herDescription: "Discover your next signature scent.",
-  herImageUrl: "/images/hero-placeholder-2.svg",
-  himTitle: "Fragrances for Him",
-  himDescription: "Find a scent that makes its own statement.",
-  himImageUrl: "/images/hero-placeholder-3.svg",
   giftSetsEyebrow: "GIFT WITH MEANING",
   giftSetsTitle: "Gift Sets",
   giftSetsDescription: "Discover thoughtful fragrance gifts made for celebrations, everyday moments, and people you love.",
@@ -65,8 +59,6 @@ const groups: Record<string, EditorGroup[]> = {
     { title: "Homepage sections", description: "The copy shown around featured fragrances and promotions.", fields: [
       { key: "homeFeaturedEyebrow", label: "Featured eyebrow" },
       { key: "homeFeaturedTitle", label: "Featured heading" },
-      { key: "homeGiftTitle", label: "Gift sets heading" },
-      { key: "homeGiftDescription", label: "Gift sets description", multiline: true },
       { key: "homePromoTitle", label: "Promotion heading" },
       { key: "homePromoDescription", label: "Promotion description", multiline: true },
       { key: "homePromoImageUrl", label: "Promotion image", image: true },
@@ -85,16 +77,6 @@ const groups: Record<string, EditorGroup[]> = {
     { key: "shopEyebrow", label: "Small heading" },
     { key: "shopTitle", label: "Page heading" },
     { key: "shopDescription", label: "Page description", multiline: true },
-  ]}],
-  her: [{ title: "For Her collection", description: "Content prepared for the For Her collection page.", fields: [
-    { key: "herTitle", label: "Page heading" },
-    { key: "herDescription", label: "Page description", multiline: true },
-    { key: "herImageUrl", label: "Collection image", image: true },
-  ]}],
-  him: [{ title: "For Him collection", description: "Content prepared for the For Him collection page.", fields: [
-    { key: "himTitle", label: "Page heading" },
-    { key: "himDescription", label: "Page description", multiline: true },
-    { key: "himImageUrl", label: "Collection image", image: true },
   ]}],
   gifts: [{ title: "Gift Sets page", description: "Edit the heading and introduction above your gift collection.", fields: [
     { key: "giftSetsEyebrow", label: "Small heading" },
@@ -119,8 +101,6 @@ const pages = [
   { id: "home", label: "Homepage", description: "Hero slides, featured products and promotion", icon: House },
   { id: "brand", label: "Brand & navigation", description: "Logo, colours, announcement and footer", icon: Palette },
   { id: "shop", label: "Shop", description: "Shop page introduction", icon: ShoppingBag },
-  { id: "her", label: "For Her", description: "Women’s collection content", icon: Heart },
-  { id: "him", label: "For Him", description: "Men’s collection content", icon: UserRound },
   { id: "gifts", label: "Gift Sets", description: "Gift collection introduction", icon: Gift },
   { id: "about", label: "About", description: "Brand story introduction", icon: Sparkles },
   { id: "contact", label: "Contact", description: "Contact details and copy", icon: Mail },
