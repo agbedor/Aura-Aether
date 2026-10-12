@@ -276,7 +276,7 @@ export default function StorefrontContentPage() {
         </div>
       </form>
 
-      {activeSection === "home" && <ProductImageLibrary />}
+      <ProductImageLibrary />
       <p className="text-xs leading-5 text-[#858B96]">Persistent image uploads require Cloudinary settings in the server environment. If those credentials are not configured yet, the editor will show a clear upload error rather than pretending the file was saved.</p>
     </div>
   );
