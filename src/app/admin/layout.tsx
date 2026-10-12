@@ -42,7 +42,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Icon size={17} strokeWidth={1.8} />
                   {item.label}
                   {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#B77F60]" />}
-                </Link>
+                </a>
               );
             })}
           </nav>
