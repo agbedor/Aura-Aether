@@ -17,7 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isInCart = items.some((item) => item.productId === product.id);
 
   return (
-    <div className="group bg-white rounded-2xl border border-[#ECE5DD] p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-[#D9CDBF] relative">
+    <div className="group animate-fade-up bg-white rounded-2xl border border-[#ECE5DD] p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#D9CDBF] relative">
       {/* Badges */}
       <div className="absolute top-4 right-4 z-10 flex flex-col gap-1 items-end">
         {product.isSale && (
@@ -96,12 +96,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           {isInCart ? (
             <>
               <Check className="w-3.5 h-3.5" />
-              <span>Added to Bag</span>
+              <span>Added to Cart</span>
             </>
           ) : (
             <>
               <Plus className="w-3.5 h-3.5" />
-              <span>Add to Bag</span>
+              <span>Add to Cart</span>
             </>
           )}
         </button>
