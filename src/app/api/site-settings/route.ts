@@ -34,6 +34,7 @@ const DEFAULTS: Record<string, string> = {
   homeGiftDescription: "Thoughtfully chosen fragrances for meaningful moments and memorable gifts.",
   homePromoTitle: "Find your next signature",
   homePromoDescription: "Explore fragrances for every mood, moment, and version of you.",
+  homePromoImageUrl: "/images/spring-peonies.svg",
   // About page
   aboutTitle: "Our story",
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
