@@ -9,7 +9,7 @@ type Settings = Record<string, string>;
 
 const initial: Settings = {
   brandName: "Aura & Aether Parfums",
-  logoUrl: "",
+  logoUrl: "/images/aura-aether-logo.svg",
   primaryColor: "#17110F",
   accentColor: "#B77F60",
   backgroundColor: "#FCFBF9",
