@@ -21,13 +21,6 @@ const defaults: HeroContent = {
   heroCtaLabel: "Explore the collection",
 };
 
-const categories = [
-  { label: "Shop All", href: "/shop" },
-  { label: "For Her", href: "/shop?category=women" },
-  { label: "For Him", href: "/shop?category=men" },
-  { label: "Gift Sets", href: "/gift-sets" },
-];
-
 export default function HeroSection() {
   const [content, setContent] = useState<HeroContent>(defaults);
 
@@ -89,18 +82,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <nav aria-label="Shop fragrance categories" className="grid grid-cols-2 sm:grid-cols-4 border-b border-[#E8D9CE]">
-        {categories.map((category, index) => (
-          <Link
-            key={category.label}
-            href={category.href}
-            className={`group flex items-center justify-between gap-3 bg-[#FCFBF9] px-5 py-4 sm:px-8 sm:py-5 transition-colors hover:bg-[#F5E8DF] ${index > 0 ? "sm:border-l border-[#E8D9CE]" : ""} ${index > 1 ? "border-t sm:border-t-0 border-[#E8D9CE]" : ""}`}
-          >
-            <span className="font-serif-luxury text-base sm:text-lg">{category.label}</span>
-            <ArrowRight className="h-4 w-4 text-[#B77F60] transition-transform group-hover:translate-x-1" />
-          </Link>
-        ))}
-      </nav>
     </section>
   );
 }
