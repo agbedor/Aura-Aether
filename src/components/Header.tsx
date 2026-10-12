@@ -44,7 +44,7 @@ export default function Header() {
       <header className="sticky top-0 z-40 bg-[#FCFBF9]/95 backdrop-blur-md border-b border-[#E8D9CE] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <nav className="hidden md:flex items-center space-x-7">
+            <nav className="hidden xl:flex items-center space-x-5">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
@@ -61,7 +61,7 @@ export default function Header() {
               )}
             </nav>
 
-            <div className="md:hidden flex items-center">
+            <div className="xl:hidden flex items-center">
               <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu" className="p-2 text-[#17110F] hover:text-[#B77F60]">
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
