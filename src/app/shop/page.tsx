@@ -40,8 +40,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             {settings.shopTitle || "Find your fragrance."}
           </h1>
           <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
-            Explore our signature extraits and eaux de parfum, handcrafted in small batches
-            with the world&apos;s rarest botanicals.
+            {settings.shopDescription || "Explore scents for every mood, moment, and personal signature."}
           </p>
         </div>
 
