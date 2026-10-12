@@ -5,18 +5,30 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 
+type HeroContent = { heroTitle: string; heroDescription: string; motto: string };
+
+const defaults: HeroContent = {
+  heroTitle: "Your scent. Your signature.",
+  heroDescription: "Discover fragrances that feel like you. Find your signature scent, mark a moment, and leave a little magic wherever you go.",
+  motto: "Your scent. Your signature.",
+};
+
 export default function HeroSection() {
-  const [content, setContent] = useState({ heroTitle: "Your scent. Your signature.", heroDescription: "{content.heroDescription}", motto: "Your scent. Your signature." });
+  const [content, setContent] = useState<HeroContent>(defaults);
 
   useEffect(() => {
-    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
-      if (data?.settings) setContent((current) => ({ ...current, ...data.settings }));
-    }).catch(() => undefined);
+    fetch("/api/site-settings")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.settings) setContent((current) => ({ ...current, ...data.settings }));
+      })
+      .catch(() => undefined);
   }, []);
 
-  const titleParts = content.heroTitle.split(/\\s+/);
-  const firstLine = titleParts.slice(0, Math.max(1, Math.ceil(titleParts.length / 2))).join(" ");
-  const secondLine = titleParts.slice(Math.max(1, Math.ceil(titleParts.length / 2))).join(" ");
+  const titleParts = content.heroTitle.trim().split(/\s+/);
+  const splitAt = Math.max(1, Math.ceil(titleParts.length / 2));
+  const firstLine = titleParts.slice(0, splitAt).join(" ");
+  const secondLine = titleParts.slice(splitAt).join(" ");
 
   return (
     <section className="relative overflow-hidden bg-[#FFF0F6] border-b border-[#F0DCE5]">
@@ -30,12 +42,10 @@ export default function HeroSection() {
               <Sparkles className="w-4 h-4 text-[#D9A17E]" /> Artistry in every drop
             </p>
             <h1 className="font-serif-luxury text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[0.98] tracking-[-0.045em] text-[#17110F] font-normal">
-              {firstLine}<br />
-              <span className="italic text-[#B77F60]">{secondLine}</span>
+              {firstLine}
+              {secondLine && <><br /><span className="italic text-[#B77F60]">{secondLine}</span></>}
             </h1>
-            <p className="mt-7 text-sm sm:text-base leading-7 text-[#65534D] max-w-lg mx-auto lg:mx-0">
-              Discover fragrances that feel like you. Find your signature scent, mark a moment, and leave a little magic wherever you go.
-            </p>
+            <p className="mt-7 text-sm sm:text-base leading-7 text-[#65534D] max-w-lg mx-auto lg:mx-0">{content.heroDescription}</p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
               <Link href="/shop" className="inline-flex items-center justify-center gap-3 bg-[#17110F] text-white px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] hover:bg-[#B77F60] transition-colors">
                 Explore fragrances <ArrowRight className="w-4 h-4" />
