@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Search, User as UserIcon, Menu, X, Shield } from "lucide-react";
+import { ShoppingCart, Search, User as UserIcon, Menu, X, Shield } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import SearchModal from "./SearchModal";
@@ -84,8 +84,8 @@ export default function Header() {
                 <UserIcon className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.75]" />
                 {user && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#10B981] ring-2 ring-white" />}
               </Link>
-              <button onClick={openCart} aria-label="Shopping bag" className="p-2 text-[#17110F] hover:text-[#B77F60] transition-colors relative rounded-full hover:bg-[#F5E8DF] flex items-center">
-                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.75]" />
+              <button onClick={openCart} aria-label="Cart" className="p-2 text-[#17110F] hover:text-[#B77F60] transition-colors relative rounded-full hover:bg-[#F5E8DF] flex items-center">
+                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.75]" />
                 {itemCount > 0 && <span className="absolute -top-1 -right-1 bg-[#17110F] text-white text-[10px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-[#FCFBF9]">{itemCount}</span>}
               </button>
             </div>
