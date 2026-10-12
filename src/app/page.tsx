@@ -5,12 +5,16 @@ import HeroSection from "@/components/HeroSection";
 import PressLogos from "@/components/PressLogos";
 import SpringDealsSpotlight from "@/components/SpringDealsSpotlight";
 import ProductCard from "@/components/ProductCard";
-import { getProducts } from "@/lib/db";
+import { getProducts, prisma } from "@/lib/db";
 
 
 export default async function HomePage() {
-  const featuredProducts = await getProducts({ featured: true, giftSets: false });
-  const giftSets = await getProducts({ giftSets: true });
+  const [featuredProducts, giftSets, settingsRows] = await Promise.all([
+    getProducts({ featured: true, giftSets: false }),
+    getProducts({ giftSets: true }),
+    prisma.siteSetting.findMany().catch(() => []),
+  ]);
+  const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
 
   return (
     <div className="min-h-screen bg-[#FCFBF9]">
@@ -25,11 +29,11 @@ export default async function HomePage() {
         <div className="flex flex-col sm:flex-row items-center justify-between mb-12 text-center sm:text-left gap-4">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A] block mb-1">
-              HAUTE PARFUMERIE
+              {settings.homeFeaturedEyebrow || "OUR COLLECTION"}
             </span>
             {/* Title matching Reference 2: "Featured fragrances." with italic serif touch */}
             <h2 className="font-serif-luxury text-3xl sm:text-4xl text-[#1C1917] font-normal">
-              Featured <span className="italic font-serif-luxury">fragrances.</span>
+              {settings.homeFeaturedTitle || "Featured fragrances."}
             </h2>
           </div>
 
@@ -61,7 +65,7 @@ export default async function HomePage() {
               PRESENTATION COFFRETS
             </span>
             <h2 className="font-serif-luxury text-3xl sm:text-4xl text-[#1C1917] font-normal">
-              The Curated <span className="italic font-serif-luxury">Gift Sets.</span>
+              {settings.homeGiftTitle || "Curated Gift Sets."}
             </h2>
             <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
               Hand-assembled coffrets and travel atomizers crafted for discerning collectors and
