@@ -8,9 +8,8 @@ import { getProducts, prisma } from "@/lib/db";
 
 
 export default async function HomePage() {
-  const [featuredProducts, giftSets, settingsRows] = await Promise.all([
+  const [featuredProducts, settingsRows] = await Promise.all([
     getProducts({ featured: true, giftSets: false }),
-    getProducts({ giftSets: true }),
     prisma.siteSetting.findMany().catch(() => []),
   ]);
   const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
@@ -53,35 +52,36 @@ export default async function HomePage() {
       {/* 4. Spring Deals Spotlight matching Reference 1 */}
       <SpringDealsSpotlight />
 
-      {/* 5. Curated Gift Sets & Coffrets Showcase */}
-      <section className="py-20 lg:py-24 bg-[#FAF7F3] border-b border-[#EFE9E2]">
+      {/* 5. Customer testimonials */}
+      <section className="py-20 lg:py-24 bg-[#FAF7F3] border-y border-[#EFE9E2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A] block mb-2">
-              PRESENTATION COFFRETS
+              NOTES FROM OUR COMMUNITY
             </span>
             <h2 className="font-serif-luxury text-3xl sm:text-4xl text-[#1C1917] font-normal">
-              {settings.homeGiftTitle || "Curated Gift Sets."}
+              A scent worth remembering.
             </h2>
             <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
-              {settings.homeGiftDescription || "Thoughtfully chosen fragrances for meaningful moments and memorable gifts."}
+              Every fragrance becomes part of a story. We look forward to sharing our customers’ experiences here.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {giftSets.slice(0, 3).map((gift) => (
-              <ProductCard key={gift.id} product={gift} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { quote: "The perfect fragrance is the one that feels like it was made for you.", label: "Customer story placeholder" },
+              { quote: "A beautiful scent can turn an ordinary moment into a memory.", label: "Customer story placeholder" },
+              { quote: "Finding your signature scent should feel personal, thoughtful, and effortless.", label: "Customer story placeholder" },
+            ].map((testimonial, index) => (
+              <article key={index} className="group rounded-2xl border border-[#E8DED5] bg-white p-7 sm:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#6B4B3E]/5">
+                <div aria-label="Decorative stars" className="text-[#B77F60] tracking-[0.2em] text-sm">★★★★★</div>
+                <p className="mt-5 font-serif-luxury text-xl leading-relaxed text-[#2A211D]">“{testimonial.quote}”</p>
+                <div className="mt-7 border-t border-[#EFE9E2] pt-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8C827A]">{testimonial.label}</p>
+                  <p className="mt-1 text-xs text-[#9A918A]">Replace with a verified customer review</p>
+                </div>
+              </article>
             ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <Link
-              href="/gift-sets"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#1C1917] text-xs font-bold uppercase tracking-widest text-[#1C1917] hover:bg-[#1C1917] hover:text-[#FAF8F5] transition-all"
-            >
-              <span>Explore All Coffrets &amp; Sets</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
         </div>
       </section>
