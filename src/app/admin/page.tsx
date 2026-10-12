@@ -10,7 +10,7 @@ import {
   Shield,
   Package,
   DollarSign,
-  ShoppingBag,
+  ShoppingCart,
   AlertTriangle,
   Plus,
   Edit2,
@@ -252,7 +252,7 @@ export default function AdminDashboardPage() {
             </span>
             <div className="flex items-baseline justify-between">
               <span className="text-2xl font-bold text-[#1C1917]">{paidOrdersCount}</span>
-              <ShoppingBag className="w-5 h-5 text-[#C59B4B]" />
+              <ShoppingCart className="w-5 h-5 text-[#C59B4B]" />
             </div>
           </div>
 
