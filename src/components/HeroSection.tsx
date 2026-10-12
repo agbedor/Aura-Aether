@@ -3,19 +3,26 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-type HeroContent = { heroTitle: string; heroDescription: string; motto: string };
+type HeroContent = {
+  heroTitle: string;
+  heroDescription: string;
+  motto: string;
+  heroImageUrl?: string;
+};
+
 const defaults: HeroContent = {
-  heroTitle: "Find your signature scent.",
-  heroDescription: "Explore fragrances that capture your mood, express your individuality, and leave a lasting impression.",
-  motto: "Your scent. Your signature.",
+  heroTitle: "Aura & Aether",
+  heroDescription: "Fragrance that says something about you. Find the scent that feels like yours.",
+  motto: "PARFUMS · Your scent. Your signature.",
+  heroImageUrl: "/images/hero-editorial.svg",
 };
 
 const categories = [
+  { label: "Shop All", href: "/shop" },
   { label: "For Her", href: "/shop?category=women" },
   { label: "For Him", href: "/shop?category=men" },
-  { label: "Unisex", href: "/shop?category=unisex" },
   { label: "Gift Sets", href: "/gift-sets" },
 ];
 
@@ -32,76 +39,66 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="bg-[#FFF0F6] text-[#17110F]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-7 lg:px-12 pt-5 sm:pt-8">
-        <div className="relative overflow-hidden min-h-[520px] sm:min-h-[580px] lg:min-h-[620px] grid lg:grid-cols-2 bg-[#F7DDE7]">
-          <div className="relative z-10 flex flex-col justify-center px-6 py-12 sm:px-10 sm:py-16 lg:px-14 xl:px-20">
-            <div className="inline-flex items-center gap-2 self-start border border-[#D9A17E]/60 bg-white/55 px-3 py-2 text-[9px] sm:text-[10px] uppercase tracking-[0.22em] text-[#765344]">
-              <Sparkles className="w-3.5 h-3.5" />
-              Aura &amp; Aether Parfums
-            </div>
-            <h1 className="font-serif-luxury mt-7 text-5xl sm:text-6xl lg:text-6xl xl:text-7xl leading-[0.98] tracking-[-0.04em] font-normal max-w-xl">
+    <section className="bg-[#FCFBF9] text-[#17110F]">
+      <div className="relative isolate min-h-[620px] sm:min-h-[700px] lg:min-h-[min(780px,calc(100vh-112px))] overflow-hidden bg-[#2A211D]">
+        <Image
+          src={content.heroImageUrl || "/images/hero-editorial.svg"}
+          alt="Fragrance imagery for Aura & Aether Parfums"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#17110F]/75 via-[#17110F]/35 to-[#17110F]/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#17110F]/55 via-transparent to-[#17110F]/10" />
+
+        <div className="relative z-10 flex min-h-[620px] sm:min-h-[700px] lg:min-h-[min(780px,calc(100vh-112px))] items-center justify-center px-5 py-20 sm:px-10 lg:px-16">
+          <div className="w-full max-w-6xl text-center text-white">
+            <p className="mb-5 text-[10px] sm:text-xs uppercase tracking-[0.45em] text-[#E8BD9E]">
+              A signature in every note
+            </p>
+            <h1 className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl lg:text-[clamp(5rem,10vw,10rem)] leading-[0.9] font-normal tracking-[-0.055em] drop-shadow-lg">
               {content.heroTitle}
             </h1>
-            <p className="mt-6 max-w-md text-sm sm:text-base leading-7 text-[#65534D]">
+            <p className="font-serif-luxury mt-4 text-lg sm:text-2xl md:text-3xl tracking-[0.2em] uppercase text-[#F0C8A9]">
+              Parfums
+            </p>
+            <div className="mx-auto mt-7 h-px w-16 bg-[#C58A63]" />
+            <p className="mx-auto mt-6 max-w-xl text-sm sm:text-base leading-7 text-white/90">
               {content.heroDescription}
             </p>
-            <p className="mt-4 font-serif-luxury italic text-lg sm:text-xl text-[#9C674D]">
+            <p className="font-serif-luxury mt-4 text-base sm:text-lg italic text-[#F0C8A9]">
               {content.motto}
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Link href="/shop" className="inline-flex items-center justify-center gap-3 bg-[#17110F] px-7 py-4 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#77513F]">
-                Shop all fragrances <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/about" className="inline-flex items-center justify-center gap-2 border border-[#B77F60] bg-white/35 px-7 py-4 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#3B2922] transition-colors hover:bg-white/75">
-                Discover our story <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-            <div className="mt-9 flex flex-wrap gap-x-5 gap-y-2 text-[9px] sm:text-[10px] uppercase tracking-[0.16em] text-[#765D51]">
-              <span>Find your everyday scent</span>
-              <span className="text-[#B77F60]">•</span>
-              <span>Make every moment yours</span>
-            </div>
-          </div>
-
-          <div className="relative min-h-[340px] sm:min-h-[430px] lg:min-h-full overflow-hidden bg-[#E8C2B0]">
-            <Image
-              src="/images/hero-editorial.svg"
-              alt="Aura & Aether Parfums signature fragrance and botanical inspiration"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#17110F]/35 via-transparent to-white/5" />
-            <div className="absolute left-5 right-5 bottom-5 sm:left-8 sm:right-8 sm:bottom-8 flex items-end justify-between gap-4 text-white">
-              <div>
-                <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] mb-2">The fragrance edit</p>
-                <p className="font-serif-luxury text-2xl sm:text-3xl lg:text-4xl leading-tight">A little luxury,<br />every day.</p>
-              </div>
-              <Link href="/shop" aria-label="Browse fragrances" className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-[#17110F] grid place-items-center hover:bg-[#B2B84D] transition-colors">
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-            <div className="absolute top-5 right-5 sm:top-8 sm:right-8 border border-white/70 bg-white/85 backdrop-blur-sm px-4 py-3 text-center text-[#17110F]">
-              <span className="block font-serif-luxury text-xl sm:text-2xl">A&amp;A</span>
-              <span className="block text-[8px] uppercase tracking-[0.2em]">Signature scents</span>
-            </div>
+            <Link
+              href="/shop"
+              className="group mt-8 inline-flex items-center gap-4 border border-[#E8BD9E] bg-[#17110F]/30 px-7 py-4 text-[10px] sm:text-xs uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-colors hover:bg-[#B77F60] hover:border-[#B77F60]"
+            >
+              Explore the collection
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
+        <div className="absolute bottom-5 left-5 z-10 text-[9px] uppercase tracking-[0.28em] text-white/75 sm:bottom-8 sm:left-10">
+          Discover your signature
+        </div>
+        <div className="absolute bottom-5 right-5 z-10 text-[9px] uppercase tracking-[0.28em] text-white/75 sm:bottom-8 sm:right-10">
+          Est. Aura & Aether
+        </div>
+      </div>
 
-        <nav aria-label="Shop fragrance categories" className="grid grid-cols-2 sm:grid-cols-4 border-x border-b border-[#E9CFD9]">
-          {categories.map((category, index) => (
-            <Link key={category.label} href={category.href} className={`group flex items-center justify-between gap-3 px-4 sm:px-6 py-4 sm:py-5 bg-white/55 hover:bg-white transition-colors ${index !== 0 ? "sm:border-l border-[#E9CFD9]" : ""} ${index > 1 ? "border-t sm:border-t-0 border-[#E9CFD9]" : ""}`}>
-              <span className="font-serif-luxury text-base sm:text-lg">{category.label}</span>
-              <ArrowRight className="w-4 h-4 text-[#B77F60] transition-transform group-hover:translate-x-1" />
-            </Link>
-          ))}
-        </nav>
-      </div>
-      <div className="mt-8 bg-[#B2B84D] px-4 py-3 text-center text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-[#292516]">
-        Discover your next favourite fragrance · Your scent. Your signature.
-      </div>
+      <nav aria-label="Shop fragrance categories" className="grid grid-cols-2 sm:grid-cols-4 border-b border-[#E8D9CE]">
+        {categories.map((category, index) => (
+          <Link
+            key={category.label}
+            href={category.href}
+            className={`group flex items-center justify-between gap-3 bg-[#FCFBF9] px-5 py-4 sm:px-8 sm:py-5 transition-colors hover:bg-[#F5E8DF] ${index > 0 ? "sm:border-l border-[#E8D9CE]" : ""} ${index > 1 ? "border-t sm:border-t-0 border-[#E8D9CE]" : ""}`}
+          >
+            <span className="font-serif-luxury text-base sm:text-lg">{category.label}</span>
+            <ArrowRight className="h-4 w-4 text-[#B77F60] transition-transform group-hover:translate-x-1" />
+          </Link>
+        ))}
+      </nav>
     </section>
   );
 }
