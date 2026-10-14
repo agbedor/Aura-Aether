@@ -332,7 +332,7 @@ export default function AdminDashboardPage() {
                       <th className="py-3 px-4">Client</th>
                       <th className="py-3 px-4">Delivery City</th>
                       <th className="py-3 px-4">Total Amount</th>
-                      <th className="py-3 px-4">Paystack Ref</th>
+                      <th className="py-3 px-4">Payment Reference</th>
                       <th className="py-3 px-4">Fulfillment Status</th>
                     </tr>
                   </thead>
