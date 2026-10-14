@@ -115,8 +115,6 @@ model Payment {
   order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
   reference   String    @unique
   paystackId  String?
-  provider    String    @default("PAYSTACK")
-  providerTransactionId String?
   amount      Float
   currency    String    @default("GHS")
   status      String    @default("PENDING") // PENDING, SUCCESS, FAILED, REVERSED

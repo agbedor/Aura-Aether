@@ -119,10 +119,10 @@ export default async function HomePage() {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h4 className="font-serif-luxury text-base font-semibold text-[#1C1917]">
-                Moolre Mobile Money
+                Paystack Protected
               </h4>
               <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                Secure Mobile Money payment prompts for MTN, Telecel and AT.
+                256-bit bank grade encryption for debit/credit cards and Mobile Money.
               </p>
             </div>
 

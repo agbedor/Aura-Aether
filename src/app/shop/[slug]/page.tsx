@@ -159,7 +159,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div className="grid grid-cols-2 gap-4 text-xs text-[#5C554F]">
               <div className="flex items-center gap-2 p-3 bg-white rounded-xl border border-[#ECE5DD]">
                 <ShieldCheck className="w-4 h-4 text-[#10B981] shrink-0" />
-                <span>Moolre Mobile Money Payment</span>
+                <span>Paystack Verified Payment</span>
               </div>
               <div className="flex items-center gap-2 p-3 bg-white rounded-xl border border-[#ECE5DD]">
                 <Truck className="w-4 h-4 text-[#C59B4B] shrink-0" />
