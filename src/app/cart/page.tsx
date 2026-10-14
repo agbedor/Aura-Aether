@@ -176,7 +176,7 @@ export default function CartPage() {
 
             <div className="pt-4 border-t border-[#EFE9E2] flex items-center justify-center gap-2 text-[11px] text-[#78716C]">
               <ShieldCheck className="w-4 h-4 text-[#10B981]" />
-              <span>Payments verified securely via Paystack</span>
+              <span>Mobile Money payments secured via Moolre</span>
             </div>
           </div>
         </div>
