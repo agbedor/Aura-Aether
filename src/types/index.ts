@@ -69,6 +69,8 @@ export interface Payment {
   orderId: string;
   reference: string;
   paystackId?: string | null;
+  provider?: string;
+  providerTransactionId?: string | null;
   amount: number;
   currency: string;
   status: "PENDING" | "SUCCESS" | "FAILED" | "REVERSED";
