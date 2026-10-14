@@ -317,7 +317,7 @@ export default function AdminDashboardPage() {
           <div className="bg-white rounded-3xl border border-[#ECE5DD] p-6 shadow-2xs overflow-hidden">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-serif-luxury text-xl font-semibold text-[#1C1917]">
-                Customer Orders &amp; Paystack Transactions
+                Customer Orders &amp; Moolre Transactions
               </h2>
             </div>
 
@@ -332,7 +332,7 @@ export default function AdminDashboardPage() {
                       <th className="py-3 px-4">Client</th>
                       <th className="py-3 px-4">Delivery City</th>
                       <th className="py-3 px-4">Total Amount</th>
-                      <th className="py-3 px-4">Paystack Ref</th>
+                      <th className="py-3 px-4">Payment Reference</th>
                       <th className="py-3 px-4">Fulfillment Status</th>
                     </tr>
                   </thead>

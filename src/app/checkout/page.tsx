@@ -23,6 +23,7 @@ export default function CheckoutPage() {
     notes: "",
   });
 
+  const [paymentChannel, setPaymentChannel] = useState<"13" | "6" | "7">("13");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -61,12 +62,13 @@ export default function CheckoutPage() {
 
     try {
       // Call server initialization endpoint
-      const response = await fetch("/api/paystack/initialize", {
+      const response = await fetch("/api/moolre/initialize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           userId: user?.id || null,
+          paymentChannel,
           items: items.map((i) => ({
             productId: i.productId,
             name: i.name,
@@ -85,12 +87,8 @@ export default function CheckoutPage() {
       sessionStorage.setItem("last_aura_order_ref", data.reference);
       sessionStorage.setItem("last_aura_order_id", data.orderId);
 
-      // Redirect customer to Paystack official authorization URL
-      if (data.authorizationUrl) {
-        window.location.href = data.authorizationUrl;
-      } else {
-        throw new Error("No payment authorization URL was returned.");
-      }
+      // Moolre sends a Mobile Money approval prompt to the customer's phone.
+      router.push(`/order/success?reference=${encodeURIComponent(data.reference)}`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Payment initialization failed";
       setErrorMessage(message);
@@ -194,6 +192,23 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1.5">
+                  Mobile Money Network *
+                </label>
+                <select
+                  name="paymentChannel"
+                  value={paymentChannel}
+                  onChange={(e) => setPaymentChannel(e.target.value as "13" | "6" | "7")}
+                  className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-3 text-sm text-[#1C1917] focus:outline-none focus:border-[#1C1917] transition-colors"
+                >
+                  <option value="13">MTN Mobile Money</option>
+                  <option value="6">Telecel Cash</option>
+                  <option value="7">AT Money</option>
+                </select>
+                <p className="text-[10px] text-[#8C827A] mt-1">Choose the network linked to the phone number above.</p>
+              </div>
+
               {/* Delivery Address */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1.5">
@@ -247,7 +262,7 @@ export default function CheckoutPage() {
                 />
               </div>
 
-              {/* Pay With Paystack Action */}
+              {/* Pay With Moolre Action */}
               <div className="pt-6 border-t border-[#EFE9E2] space-y-3">
                 <button
                   type="submit"
@@ -257,19 +272,19 @@ export default function CheckoutPage() {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Connecting to Paystack...</span>
+                      <span>Sending payment request...</span>
                     </>
                   ) : (
                     <>
                       <Lock className="w-4 h-4" />
-                      <span>Pay {formatGhs(total)} via Paystack</span>
+                      <span>Pay {formatGhs(total)} via Mobile Money</span>
                     </>
                   )}
                 </button>
 
                 <p className="text-[11px] text-center text-[#78716C] flex items-center justify-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#10B981]" />
-                  <span>Supports Ghana Mobile Money (MTN, Telecel, AT) and Debit/Credit Cards</span>
+                  <span>You will receive a Mobile Money prompt on your phone.</span>
                 </p>
               </div>
             </form>

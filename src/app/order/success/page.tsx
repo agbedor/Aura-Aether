@@ -20,10 +20,9 @@ function OrderSuccessContent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Paystack appends ?reference=... or ?trxref=... on callback
     const ref =
       searchParams.get("reference") ||
-      searchParams.get("trxref") ||
+      searchParams.get("externalref") ||
       (typeof window !== "undefined" ? sessionStorage.getItem("last_aura_order_ref") : null);
 
     if (!ref) {
@@ -34,26 +33,40 @@ function OrderSuccessContent() {
 
     setReference(ref);
 
-    // Call server verification endpoint
     const verify = async () => {
       try {
-        const res = await fetch("/api/paystack/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reference: ref }),
-        });
+        // Mobile Money approvals are asynchronous. Check status until Moolre confirms
+        // payment or the customer has had enough time to approve the prompt.
+        for (let attempt = 0; attempt < 24; attempt++) {
+          const res = await fetch("/api/moolre/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reference: ref }),
+            cache: "no-store",
+          });
+          const data = await res.json();
 
-        const data = await res.json();
+          if (res.ok && data.success && data.order) {
+            setOrder(data.order);
+            clearCart();
+            sessionStorage.removeItem("last_aura_order_ref");
+            return;
+          }
 
-        if (res.ok && data.success && data.order) {
-          setOrder(data.order);
-          clearCart(); // Order confirmed, clear cart
-          sessionStorage.removeItem("last_aura_order_ref");
-        } else {
-          setError(data.error || "Payment verification could not be confirmed by Paystack.");
+          if (data.pending || res.status === 202) {
+            if (attempt < 23) {
+              await new Promise((resolve) => setTimeout(resolve, 4000));
+              continue;
+            }
+            setError("Your payment is still pending. Approve the Mobile Money prompt on your phone, then refresh this page to check again.");
+            return;
+          }
+
+          setError(data.error || "Moolre could not confirm this payment.");
+          return;
         }
       } catch {
-        setError("Network communication error while verifying payment with Paystack.");
+        setError("We could not check your payment status. Please refresh this page to try again.");
       } finally {
         setIsVerifying(false);
       }
@@ -69,10 +82,10 @@ function OrderSuccessContent() {
           <RefreshCw className="w-8 h-8 text-[#C59B4B]" />
         </div>
         <h2 className="font-serif-luxury text-2xl font-medium text-[#1C1917] mb-2">
-          Verifying Paystack Transaction...
+          Waiting for Moolre payment confirmation...
         </h2>
         <p className="text-xs text-[#78716C] max-w-sm">
-          Please wait while our server authenticates your transaction details directly with Paystack.
+          Approve the Mobile Money prompt on your phone. This page will check for confirmation automatically.
         </p>
       </div>
     );
@@ -139,7 +152,7 @@ function OrderSuccessContent() {
             <span>•</span>
             <span className="flex items-center gap-1 text-[#10B981]">
               <ShieldCheck className="w-3.5 h-3.5" />
-              Paystack Paid
+              Moolre Paid
             </span>
           </div>
         </div>
@@ -180,7 +193,7 @@ function OrderSuccessContent() {
                 <span>{formatGhs(order.totalAmount)}</span>
               </div>
               <p className="text-[10px] text-[#10B981] pt-1">
-                ✓ Settled via Paystack Secure Checkout
+                ✓ Settled via Moolre Mobile Money
               </p>
             </div>
           </div>
