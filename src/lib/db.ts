@@ -299,6 +299,33 @@ export async function getOrderByReference(reference: string): Promise<Order | nu
   return memoryStore.orders.find((o) => o.paymentReference === reference) || null;
 }
 
+export async function getOrderByOrderNumber(orderNumber: string): Promise<Order | null> {
+  const useDb = await checkPostgres();
+  if (useDb) {
+    try {
+      const order = await prisma.order.findUnique({
+        where: { orderNumber },
+        include: { items: true, payment: true },
+      });
+      if (order) {
+        return {
+          ...order,
+          status: order.status as Order["status"],
+          paymentStatus: order.paymentStatus as Order["paymentStatus"],
+          items: order.items,
+          payment: order.payment ? {
+            ...order.payment,
+            status: order.payment.status as "PENDING" | "SUCCESS" | "FAILED" | "REVERSED",
+          } : null,
+        };
+      }
+    } catch {
+      // fallback
+    }
+  }
+  return memoryStore.orders.find((o) => o.orderNumber === orderNumber) || null;
+}
+
 export async function getOrderById(id: string): Promise<Order | null> {
   const useDb = await checkPostgres();
   if (useDb) {

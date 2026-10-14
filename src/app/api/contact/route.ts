@@ -83,7 +83,13 @@ export async function POST(request: Request) {
         });
 
         if (!emailResponse.ok) {
-          console.error("Contact email notification failed with status:", emailResponse.status);
+          const errorBody = await emailResponse.text().catch(() => "Could not read response body");
+          console.error("Contact email notification failed:", {
+            status: emailResponse.status,
+            body: errorBody,
+          });
+        } else {
+          console.log("Contact email sent successfully via Resend.");
         }
       } catch (error) {
         console.error("Contact email notification could not be sent:", error);
