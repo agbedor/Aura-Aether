@@ -95,7 +95,7 @@ export default function AccountPage() {
                 </div>
               </div>
               <p className="text-xs text-[#78716C] mt-4 font-light leading-relaxed">
-                Review all confirmed orders, payment receipts, Paystack references, and courier tracking details.
+                Review all confirmed orders, payment receipts, Moolre payment references, and courier tracking details.
               </p>
             </div>
 
