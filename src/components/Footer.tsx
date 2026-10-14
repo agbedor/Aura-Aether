@@ -38,7 +38,7 @@ export default function Footer() {
             </Link>
             <p className="text-xs text-[#C7B9B0] leading-relaxed max-w-sm font-light">{footerDescription}</p>
             <div className="pt-2 flex items-center gap-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#2A211D] border border-[#4A352B] text-[11px] text-[#F0D9C9]"><ShieldCheck className="w-4 h-4 text-[#D7A17E]" /><span>Secured by <strong>Paystack</strong></span></div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#2A211D] border border-[#4A352B] text-[11px] text-[#F0D9C9]"><ShieldCheck className="w-4 h-4 text-[#D7A17E]" /><span>Mobile Money via <strong>Moolre</strong></span></div>
               <span className="text-[11px] text-[#C7B9B0]">Ghana Delivery</span>
             </div>
           </div>
