@@ -192,7 +192,7 @@ export default function CartDrawer() {
               </div>
 
               <p className="text-[11px] text-center text-[#8C827A]">
-                🔒 Secure encrypted checkout with Paystack
+                🔒 Secure Mobile Money checkout with Moolre
               </p>
             </div>
           )}
