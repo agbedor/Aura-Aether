@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma, getProductById } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { initiateMoolrePayment, type MoolreChannel } from "@/lib/moolre";
 import type { OrderItem } from "@/types";
 
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Invalid item in cart." }, { status: 400 });
       }
 
-      const product = await getProductById(item.productId);
+      const product = await prisma.product.findUnique({ where: { id: item.productId } });
       if (!product) {
         return NextResponse.json({ error: "A product in your cart is no longer available." }, { status: 400 });
       }
