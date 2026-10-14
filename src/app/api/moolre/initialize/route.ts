@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createOrder, getProductById } from "@/lib/db";
+import { prisma, getProductById } from "@/lib/db";
 import { initiateMoolrePayment, MoolreChannel } from "@/lib/moolre";
 import { OrderItem } from "@/types";
 
@@ -100,22 +100,36 @@ export async function POST(req: Request) {
     const paymentReference = `AA-${Date.now()}-${cryptoRandom()}`.toUpperCase();
     const orderNumber = `ORD-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
 
-    const order = await createOrder({
-      orderNumber,
-      userId: userId || null,
-      customerName: String(customerName).trim(),
-      customerEmail: email,
-      customerPhone: String(customerPhone).trim(),
-      deliveryAddress: String(deliveryAddress).trim(),
-      city: String(city).trim(),
-      notes: notes ? String(notes).trim() : null,
-      subtotal,
-      deliveryFee,
-      totalAmount,
-      status: "PENDING",
-      paymentStatus: "PENDING",
-      paymentReference,
-      items: orderItems,
+    // Persist the pending order before asking Moolre to collect payment.
+    // Do not use the in-memory fallback for real payment transactions.
+    const order = await prisma.order.create({
+      data: {
+        orderNumber,
+        userId: userId || null,
+        customerName: String(customerName).trim(),
+        customerEmail: email,
+        customerPhone: String(customerPhone).trim(),
+        deliveryAddress: String(deliveryAddress).trim(),
+        city: String(city).trim(),
+        notes: notes ? String(notes).trim() : null,
+        subtotal,
+        deliveryFee,
+        totalAmount,
+        status: "PENDING",
+        paymentStatus: "PENDING",
+        paymentReference,
+        items: {
+          create: orderItems.map((item) => ({
+            productId: item.productId,
+            productName: item.productName,
+            productPrice: item.productPrice,
+            quantity: item.quantity,
+            size: item.size,
+            image: item.image,
+          })),
+        },
+      },
+      include: { items: true },
     });
 
     const payment = await initiateMoolrePayment({
