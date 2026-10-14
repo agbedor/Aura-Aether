@@ -1,4 +1,4 @@
-import { prisma, getOrderByReference } from "@/lib/db";
+import { prisma } from "@/lib/db";
 
 const LIVE_BASE_URL = "https://api.moolre.com";
 const SANDBOX_BASE_URL = "https://sandbox.moolre.com";
@@ -93,20 +93,17 @@ export async function initiateMoolrePayment(params: {
 }
 
 export async function getMoolrePaymentStatus(reference: string) {
-  const { payload, config } = await moolreRequest<MoolreTransaction>(
+  const config = getConfig();
+  const { payload } = await moolreRequest<MoolreTransaction>(
     "/open/transact/status",
     {
       type: 1,
       idtype: 1,
       id: reference,
-      accountnumber: configlessAccountNumber(),
+      accountnumber: config.accountNumber,
     }
   );
   return { transaction: payload.data, accountNumber: config.accountNumber };
-}
-
-function configlessAccountNumber() {
-  return getConfig().accountNumber;
 }
 
 export async function markMoolreOrderPaid(params: {
