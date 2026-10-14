@@ -170,7 +170,7 @@ export default function OrderHistoryPage() {
                     </span>
                     <span className="text-[11px] text-[#10B981] flex items-center gap-1">
                       <ShieldCheck className="w-3.5 h-3.5" />
-                      Paid with Moolre
+                      {order.payment?.provider === "MOOLRE" ? "Paid with Moolre" : order.payment?.provider === "PAYSTACK" ? "Paid with Paystack" : "Payment confirmed"}
                     </span>
                   </div>
                 </div>
