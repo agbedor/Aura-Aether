@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma, getProductById } from "@/lib/db";
-import { initiateMoolrePayment, MoolreChannel } from "@/lib/moolre";
-import { OrderItem } from "@/types";
+import { initiateMoolrePayment, type MoolreChannel } from "@/lib/moolre";
+import type { OrderItem } from "@/types";
 
 const allowedChannels = new Set<MoolreChannel>(["13", "6", "7"]);
 
