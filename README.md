@@ -33,4 +33,4 @@ The variables are listed in `.env.example`. Uploads accept JPG, PNG, WebP, GIF a
 
 ## Production notes
 
-Configure the production PostgreSQL database and environment variables before deployment. Use a unique `AUTH_SECRET`; remove demo credentials before making the store publicly available. Configure Paystack keys through environment variables before accepting live payments.
+Configure the production PostgreSQL database and environment variables before deployment. Use a unique `AUTH_SECRET`; remove demo credentials before making the store publicly available. Configure Moolre credentials and its callback URL, test sandbox payments, and verify payment status server-side before accepting live payments.
