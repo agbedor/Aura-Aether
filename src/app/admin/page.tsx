@@ -47,6 +47,7 @@ export default function AdminDashboardPage() {
 
   const [statusMessage, setStatusMessage] = useState("");
   const [uploadingProductImage, setUploadingProductImage] = useState(false);
+  const [uploadingProductId, setUploadingProductId] = useState<string | null>(null);
 
   const fetchData = async () => {
     setIsDataLoading(true);
@@ -112,6 +113,41 @@ export default function AdminDashboardPage() {
       setStatusMessage(error instanceof Error ? error.message : "Image upload failed.");
     } finally {
       setUploadingProductImage(false);
+    }
+  };
+
+  const handleReplaceProductImage = async (product: Product, file?: File) => {
+    if (!file) return;
+    setUploadingProductId(product.id);
+    setStatusMessage("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const uploadResponse = await fetch("/api/admin/media", {
+        method: "POST",
+        body: formData,
+      });
+      const uploadData = await uploadResponse.json();
+      if (!uploadResponse.ok || typeof uploadData.url !== "string") {
+        throw new Error(uploadData.error || "Image upload failed.");
+      }
+
+      const updateResponse = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: product.id, image: uploadData.url }),
+      });
+      const updateData = await updateResponse.json();
+      if (!updateResponse.ok) {
+        throw new Error(updateData.error || "The image uploaded, but the product could not be updated.");
+      }
+
+      setStatusMessage(`Image updated for ${product.name}.`);
+      await fetchData();
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not replace product image.");
+    } finally {
+      setUploadingProductId(null);
     }
   };
 
@@ -476,13 +512,32 @@ export default function AdminDashboardPage() {
                         </div>
                       </td>
                       <td className="py-3 px-4 text-right">
-                        <button
-                          onClick={() => handleDeleteProduct(p.id)}
-                          className="p-1.5 text-[#A89F95] hover:text-[#DC2626] transition-colors"
-                          title="Delete Product"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+                          <label
+                            className={`inline-flex items-center gap-1.5 rounded-full border border-[#DDD6CD] px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#5C554F] hover:bg-[#FAF7F4] cursor-pointer transition-colors ${uploadingProductId === p.id ? "opacity-50 pointer-events-none" : ""}`}
+                            title={`Change image for ${p.name}`}
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                            <span>{uploadingProductId === p.id ? "Uploading…" : "Change image"}</span>
+                            <input
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                              disabled={uploadingProductId !== null}
+                              className="hidden"
+                              onChange={(e) => {
+                                void handleReplaceProductImage(p, e.currentTarget.files?.[0]);
+                                e.currentTarget.value = "";
+                              }}
+                            />
+                          </label>
+                          <button
+                            onClick={() => handleDeleteProduct(p.id)}
+                            className="p-1.5 text-[#A89F95] hover:text-[#DC2626] transition-colors"
+                            title="Delete Product"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
