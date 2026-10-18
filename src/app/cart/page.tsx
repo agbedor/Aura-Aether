@@ -8,7 +8,7 @@ import { useCart } from "@/context/CartContext";
 import { formatGhs } from "@/lib/paystack";
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, subtotal, deliveryFee, total } = useCart();
+  const { items, updateQuantity, removeItem, subtotal, total } = useCart();
 
   if (items.length === 0) {
     return (
