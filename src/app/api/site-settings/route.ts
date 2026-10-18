@@ -29,6 +29,7 @@ const DEFAULTS: Record<string, string> = {
   // About page
   aboutTitle: "Our story",
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
+  aboutImageUrl: "/images/hero-placeholder-1.svg",
   // Shop page
   shopEyebrow: "THE COLLECTION",
   shopTitle: "Find your fragrance.",
