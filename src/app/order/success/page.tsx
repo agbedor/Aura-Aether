@@ -171,10 +171,9 @@ function OrderSuccessContent() {
                 <span>Items Subtotal:</span>
                 <span className="font-semibold text-[#1C1917]">{formatGhs(order.subtotal)}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Courier Delivery (Ghana):</span>
-                <span className="font-semibold text-[#1C1917]">{formatGhs(order.deliveryFee)}</span>
-              </div>
+              <p className="rounded-xl bg-[#FAF7F3] p-3 text-[11px] leading-5 text-[#6B635B]">
+                Delivery has not been charged here. We will call to confirm your location and arrange an Uber delivery; the courier cost will be discussed before dispatch.
+              </p>
               <div className="pt-2 border-t border-[#EFE9E2] flex justify-between text-sm font-bold text-[#1C1917]">
                 <span>Total Paid:</span>
                 <span>{formatGhs(order.totalAmount)}</span>
