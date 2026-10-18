@@ -5,6 +5,8 @@ import AboutIntro from "@/components/AboutIntro";
 import AboutHeading from "@/components/AboutHeading";
 import { ArrowRight, Heart, Sparkles, Wind } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Our Story | Aura & Aether Parfums",
   description: "Get to know Aura & Aether Parfums — fragrance, feeling, and the signature you leave behind.",
