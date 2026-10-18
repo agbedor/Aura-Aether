@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { prisma } from "@/lib/db";
 import AboutIntro from "@/components/AboutIntro";
 import AboutHeading from "@/components/AboutHeading";
 import { ArrowRight, Heart, Sparkles, Wind } from "lucide-react";
@@ -8,7 +10,14 @@ export const metadata = {
   description: "Get to know Aura & Aether Parfums — fragrance, feeling, and the signature you leave behind.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  let aboutImageUrl = "/images/hero-placeholder-1.svg";
+  try {
+    const savedImage = await prisma.siteSetting.findUnique({ where: { key: "aboutImageUrl" } });
+    if (savedImage?.value) aboutImageUrl = savedImage.value;
+  } catch {
+    // Use the local fallback if site settings are temporarily unavailable.
+  }
   return (
     <div className="bg-[#FCFBF9] text-[#17110F]">
       <section className="px-5 sm:px-8 py-20 sm:py-28 border-b border-[#E8D9CE]">
@@ -19,12 +28,14 @@ export default function AboutPage() {
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-24 grid md:grid-cols-2 gap-12 items-center">
-        <div className="bg-[#E8D9CE] min-h-[340px] sm:min-h-[440px] flex items-center justify-center p-10 text-center">
-          <div className="max-w-sm">
-            <Sparkles className="w-8 h-8 mx-auto mb-6 text-[#7A4F3B]" />
-            <p className="font-serif-luxury text-4xl sm:text-5xl leading-tight">Your scent.<br /><span className="italic">Your signature.</span></p>
-            <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-[#7A4F3B]">Aura &amp; Aether Parfums</p>
-          </div>
+        <div className="relative min-h-[340px] sm:min-h-[440px] overflow-hidden bg-[#E8D9CE]">
+          <Image
+            src={aboutImageUrl}
+            alt="Aura & Aether Parfums brand story"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
         </div>
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-[#8B6658] mb-4">Our philosophy</p>
