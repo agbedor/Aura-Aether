@@ -22,7 +22,7 @@ export default function LoginPage() {
 
     const res = await login(email, password);
     if (res.success) {
-      if (email.includes("admin")) {
+      if (res.user?.role === "ADMIN") {
         router.push("/admin");
       } else {
         router.push("/account");
@@ -31,11 +31,6 @@ export default function LoginPage() {
       setError(res.error || "Invalid email or password");
       setIsLoading(false);
     }
-  };
-
-  const handleQuickLogin = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
   };
 
   return (
@@ -105,29 +100,6 @@ export default function LoginPage() {
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
-
-        {/* Demo Fast Login Pills for Evaluation */}
-        <div className="mt-8 pt-6 border-t border-[#EFE9E2] text-center space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[#8C827A]">
-            Quick Test Accounts:
-          </p>
-          <div className="flex justify-center gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickLogin("amara@example.com", "password123")}
-              className="text-[11px] px-3 py-1.5 rounded-full bg-[#FAF5EE] border border-[#E7DFD5] text-[#5C554F] hover:bg-[#F2ECE4] hover:text-[#1C1917]"
-            >
-              Customer Demo
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin("admin@aura-aether.com", "admin123")}
-              className="text-[11px] px-3 py-1.5 rounded-full bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309] font-medium hover:bg-[#FDE047]"
-            >
-              Admin Demo
-            </button>
-          </div>
-        </div>
 
         {/* Links */}
         <div className="mt-6 text-center text-xs text-[#78716C] space-y-2">
