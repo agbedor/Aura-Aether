@@ -6,7 +6,7 @@ import { User } from "@/types";
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; user?: User }>;
   register: (data: {
     name: string;
     email: string;
@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (res.ok && data.user) {
         setUser(data.user);
-        return { success: true };
+        return { success: true, user: data.user };
       }
       return { success: false, error: data.error || "Invalid credentials" };
     } catch {
