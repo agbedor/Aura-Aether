@@ -22,8 +22,6 @@ export async function POST(req: Request) {
       !customerName ||
       !customerEmail ||
       !customerPhone ||
-      !deliveryAddress ||
-      !city ||
       !items ||
       !Array.isArray(items) ||
       items.length === 0
@@ -86,8 +84,8 @@ export async function POST(req: Request) {
     }
 
     // 3. Server-side delivery fee calculation (never trusted from frontend)
-    const deliveryFee = 50.0;
-    const finalTotal = calculatedSubtotal + deliveryFee;
+    const deliveryFee = 0;
+    const finalTotal = calculatedSubtotal;
 
     // 4. Generate unique transaction reference & human-readable order number
     const timestamp = Date.now();
@@ -102,8 +100,8 @@ export async function POST(req: Request) {
       customerName: customerName.trim(),
       customerEmail: customerEmail.trim().toLowerCase(),
       customerPhone: customerPhone.trim(),
-      deliveryAddress: deliveryAddress.trim(),
-      city: city.trim(),
+      deliveryAddress: (deliveryAddress || "To be confirmed by phone").trim(),
+      city: (city || "To be confirmed").trim(),
       notes: notes?.trim() || null,
       subtotal: calculatedSubtotal,
       deliveryFee,
@@ -141,7 +139,7 @@ export async function POST(req: Request) {
           {
             display_name: "Delivery City",
             variable_name: "delivery_city",
-            value: city.trim(),
+            value: (city || "To be confirmed").trim(),
           },
         ],
       },

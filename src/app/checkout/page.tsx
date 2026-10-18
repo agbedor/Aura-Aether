@@ -11,15 +11,15 @@ import { ShieldCheck, Lock, ArrowLeft, Loader2, AlertCircle } from "lucide-react
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, deliveryFee, total, clearCart } = useCart();
+  const { items, subtotal, total, clearCart } = useCart();
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     customerName: "",
     customerEmail: "",
     customerPhone: "",
-    deliveryAddress: "",
-    city: "Accra",
+    deliveryAddress: "To be confirmed by phone",
+    city: "To be confirmed",
     notes: "",
   });
 
@@ -34,8 +34,6 @@ export default function CheckoutPage() {
         customerName: prev.customerName || user.name || "",
         customerEmail: prev.customerEmail || user.email || "",
         customerPhone: prev.customerPhone || user.phone || "",
-        deliveryAddress: prev.deliveryAddress || user.address || "",
-        city: prev.city || user.city || "Accra",
       }));
     }
   }, [user]);
@@ -122,7 +120,7 @@ export default function CheckoutPage() {
                 EXPRESS DISPATCH
               </span>
               <h1 className="font-serif-luxury text-2xl sm:text-3xl font-medium text-[#1C1917]">
-                Delivery &amp; <span className="italic font-serif-luxury">Contact Details.</span>
+                Contact &amp; <span className="italic font-serif-luxury">Order Details.</span>
               </h1>
               {!user && (
                 <p className="text-xs text-[#78716C] mt-1">
@@ -194,53 +192,20 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Delivery Address */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1.5">
-                  Delivery Address *
-                </label>
-                <input
-                  type="text"
-                  name="deliveryAddress"
-                  required
-                  placeholder="House/Apartment number, Street name, Landmark"
-                  value={formData.deliveryAddress}
-                  onChange={handleChange}
-                  className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-3 text-sm text-[#1C1917] placeholder-[#A89F95] focus:outline-none focus:border-[#1C1917] transition-colors"
-                />
-              </div>
-
-              {/* City / Location */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1.5">
-                  City / Region in Ghana *
-                </label>
-                <select
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-3 text-sm text-[#1C1917] focus:outline-none focus:border-[#1C1917] transition-colors"
-                >
-                  <option value="Accra">Greater Accra (Accra, Tema, East Legon, Cantonments)</option>
-                  <option value="Kumasi">Kumasi (Ashanti Region)</option>
-                  <option value="Takoradi">Sekondi-Takoradi (Western Region)</option>
-                  <option value="Cape Coast">Cape Coast (Central Region)</option>
-                  <option value="Tamale">Tamale (Northern Region)</option>
-                  <option value="Sunyani">Sunyani (Bono Region)</option>
-                  <option value="Koforidua">Koforidua (Eastern Region)</option>
-                  <option value="Other Ghana Location">Other Location in Ghana</option>
-                </select>
+              <div className="rounded-2xl border border-[#E8D9CE] bg-[#FAF7F3] p-4 text-sm leading-6 text-[#65534D]">
+                <strong className="block text-[#1C1917]">Delivery will be confirmed after your order.</strong>
+                We will call you to confirm your exact location and arrange an Uber delivery. The delivery cost will be discussed with you before dispatch, so no delivery fee is added to this payment.
               </div>
 
               {/* Delivery Notes */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1.5">
-                  Delivery Instructions (Optional)
+                  Order Notes (Optional)
                 </label>
                 <textarea
                   name="notes"
                   rows={2}
-                  placeholder="Gate code, landmark notes, or special delivery preferences..."
+                  placeholder="Any notes about your order..."
                   value={formData.notes}
                   onChange={handleChange}
                   className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-3 text-sm text-[#1C1917] placeholder-[#A89F95] focus:outline-none focus:border-[#1C1917] transition-colors"
@@ -314,11 +279,7 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span className="font-semibold text-[#1C1917]">{formatGhs(subtotal)}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Doorstep Delivery (Ghana)</span>
-                <span className="font-semibold text-[#1C1917]">{formatGhs(deliveryFee)}</span>
-              </div>
-              <div className="pt-3 border-t border-[#EFE9E2] flex justify-between text-base font-bold text-[#1C1917]">
+                            <div className="pt-3 border-t border-[#EFE9E2] flex justify-between text-base font-bold text-[#1C1917]">
                 <span>Total Due</span>
                 <span>{formatGhs(total)}</span>
               </div>

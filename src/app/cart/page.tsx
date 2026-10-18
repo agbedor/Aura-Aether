@@ -8,7 +8,7 @@ import { useCart } from "@/context/CartContext";
 import { formatGhs } from "@/lib/paystack";
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, subtotal, deliveryFee, total } = useCart();
+  const { items, updateQuantity, removeItem, subtotal, total } = useCart();
 
   if (items.length === 0) {
     return (
@@ -147,9 +147,8 @@ export default function CartPage() {
                 <span>Items Subtotal</span>
                 <span className="font-semibold text-[#1C1917]">{formatGhs(subtotal)}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Standard Delivery (Ghana)</span>
-                <span className="font-semibold text-[#1C1917]">{formatGhs(deliveryFee)}</span>
+              <div className="rounded-xl bg-[#FAF7F3] p-3 text-[11px] leading-5 text-[#6B635B]">
+                We will call to confirm your delivery location and Uber delivery cost after your order. No delivery fee is added here.
               </div>
               <div className="pt-3 border-t border-[#EFE9E2] flex justify-between text-base font-bold text-[#1C1917]">
                 <span>Total Amount</span>

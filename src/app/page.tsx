@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles, HeartHandshake, ShieldCheck, Truck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import SpringDealsSpotlight from "@/components/SpringDealsSpotlight";
 import ProductCard from "@/components/ProductCard";
@@ -86,60 +86,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6. Brand Values & Guarantees */}
-      <section className="py-16 bg-white border-b border-[#EFE9E2]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center sm:text-left">
-            <div className="p-4 space-y-2">
-              <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center mb-3 mx-auto sm:mx-0">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <h4 className="font-serif-luxury text-base font-semibold text-[#1C1917]">
-                Rare Raw Essences
-              </h4>
-              <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                Cold-pressed Grasse blossoms, wild clover, and ethically sourced oud resins.
-              </p>
-            </div>
-
-            <div className="p-4 space-y-2">
-              <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center mb-3 mx-auto sm:mx-0">
-                <HeartHandshake className="w-5 h-5" />
-              </div>
-              <h4 className="font-serif-luxury text-base font-semibold text-[#1C1917]">
-                Cruelty Free &amp; Clean
-              </h4>
-              <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                Formulated without parabens or phthalates. Completely vegan and skin-kind.
-              </p>
-            </div>
-
-            <div className="p-4 space-y-2">
-              <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center mb-3 mx-auto sm:mx-0">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h4 className="font-serif-luxury text-base font-semibold text-[#1C1917]">
-                Paystack Protected
-              </h4>
-              <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                256-bit bank grade encryption for debit/credit cards and Mobile Money.
-              </p>
-            </div>
-
-            <div className="p-4 space-y-2">
-              <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center mb-3 mx-auto sm:mx-0">
-                <Truck className="w-5 h-5" />
-              </div>
-              <h4 className="font-serif-luxury text-base font-semibold text-[#1C1917]">
-                Ghana Nationwide Delivery
-              </h4>
-              <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                Swift doorstep dispatch across Accra, Kumasi, Takoradi, and beyond.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
