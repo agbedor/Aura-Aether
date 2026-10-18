@@ -34,6 +34,7 @@ const initial: Settings = {
   homePromoImageUrl: "/images/spring-peonies.svg",
   aboutTitle: "Our story",
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
+  aboutImageUrl: "/images/hero-placeholder-1.svg",
   shopEyebrow: "THE COLLECTION",
   shopTitle: "Find your fragrance.",
   shopDescription: "Explore scents for every mood, moment, and personal signature.",
@@ -86,6 +87,7 @@ const groups: Record<string, EditorGroup[]> = {
   about: [{ title: "About page", description: "Edit your public brand story introduction.", fields: [
     { key: "aboutTitle", label: "Page heading" },
     { key: "aboutIntro", label: "Introduction", multiline: true },
+    { key: "aboutImageUrl", label: "About page image", image: true, help: "Upload a replacement image for the “Your scent. Your signature.” section." },
   ]}],
   contact: [{ title: "Contact page", description: "Customer-facing contact details and introductory copy.", fields: [
     { key: "contactEyebrow", label: "Small heading" },
