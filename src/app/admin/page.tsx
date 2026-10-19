@@ -178,10 +178,14 @@ export default function AdminDashboardPage() {
         });
         setActiveTab("products");
         fetchData();
+        await fetchData();
         setTimeout(() => setStatusMessage(""), 3000);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setStatusMessage(data.error || "Could not create product. Check the database connection.");
       }
-    } catch {
-      // error
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not create product.");
     }
   };
 
@@ -190,10 +194,15 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
       if (res.ok) {
-        fetchData();
+        setStatusMessage("Product deleted successfully.");
+        await fetchData();
+        setTimeout(() => setStatusMessage(""), 3000);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setStatusMessage(data.error || "Could not delete product.");
       }
-    } catch {
-      // error
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not delete product.");
     }
   };
 
