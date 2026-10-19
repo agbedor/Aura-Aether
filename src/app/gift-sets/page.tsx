@@ -3,6 +3,8 @@ import ProductCard from "@/components/ProductCard";
 import { getProducts, prisma } from "@/lib/db";
 import { Gift, Sparkles, ShieldCheck } from "lucide-react";
 
+
+export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Artisanal Gift Sets & Coffrets | Aura & Aether Parfums",
   description:
