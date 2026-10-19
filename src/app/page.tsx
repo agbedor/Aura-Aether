@@ -7,6 +7,8 @@ import ProductCard from "@/components/ProductCard";
 import { getProducts, prisma } from "@/lib/db";
 
 
+
+export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const [featuredProducts, settingsRows] = await Promise.all([
     getProducts({ featured: true, giftSets: false }),
