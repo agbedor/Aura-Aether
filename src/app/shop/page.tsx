@@ -4,6 +4,8 @@ import ProductCard from "@/components/ProductCard";
 import { getProducts, getCategories, prisma } from "@/lib/db";
 import { SlidersHorizontal } from "lucide-react";
 
+
+export const dynamic = "force-dynamic";
 interface ShopPageProps {
   searchParams: Promise<{
     category?: string;
