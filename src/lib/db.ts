@@ -114,12 +114,12 @@ export async function getProducts(options?: {
         include: { category: true },
       });
 
-      if (dbProducts.length > 0) {
-        return dbProducts.map((p) => ({
-          ...p,
-          category: p.category ? { id: p.category.id, name: p.category.name, slug: p.category.slug } : undefined,
-        }));
-      }
+      // PostgreSQL is the source of truth, including when the catalog is empty.
+      // Falling back when the query returns zero rows resurrects deleted demo products.
+      return dbProducts.map((p) => ({
+        ...p,
+        category: p.category ? { id: p.category.id, name: p.category.name, slug: p.category.slug } : undefined,
+      }));
     } catch (e) {
       console.warn("Falling back to internal product catalog:", e);
     }
@@ -175,8 +175,9 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
           category: product.category ? { id: product.category.id, name: product.category.name, slug: product.category.slug } : undefined,
         };
       }
-    } catch {
-      // fallback
+    } catch (error) {
+      console.error("Product lookup failed in PostgreSQL:", error);
+      throw new Error("Could not load product from PostgreSQL.");
     }
   }
 
@@ -189,8 +190,9 @@ export async function getProductById(id: string): Promise<Product | null> {
     try {
       const p = await prisma.product.findUnique({ where: { id }, include: { category: true } });
       if (p) return p;
-    } catch {
-      // fallback
+    } catch (error) {
+      console.error("Product lookup failed in PostgreSQL:", error);
+      throw new Error("Could not load product from PostgreSQL.");
     }
   }
   return memoryStore.products.find((p) => p.id === id) || null;
@@ -560,13 +562,14 @@ export async function createProduct(productData: Omit<Product, "id">): Promise<P
         include: { category: true },
       });
       return created;
-    } catch {
-      // fallback
+    } catch (error) {
+      console.error("Product creation failed in PostgreSQL:", error);
+      throw new Error("Could not save product to PostgreSQL. Check the database schema and connection.");
     }
   }
 
-  memoryStore.products.unshift(newProduct);
-  return newProduct;
+  // In-memory writes are not visible to the deployed storefront and disappear on restart.
+  throw new Error("PostgreSQL is unavailable. Product was not created.");
 }
 
 export async function updateProduct(id: string, productData: Partial<Product>): Promise<Product | null> {
@@ -581,17 +584,13 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
         include: { category: true },
       });
       return updated;
-    } catch {
-      // fallback
+    } catch (error) {
+      console.error("Product update failed in PostgreSQL:", error);
+      throw new Error("Could not update product in PostgreSQL.");
     }
   }
 
-  const index = memoryStore.products.findIndex((p) => p.id === id);
-  if (index !== -1) {
-    memoryStore.products[index] = { ...memoryStore.products[index], ...productData };
-    return memoryStore.products[index];
-  }
-  return null;
+  throw new Error("PostgreSQL is unavailable. Product was not updated.");
 }
 
 export async function deleteProduct(id: string): Promise<boolean> {
@@ -600,15 +599,11 @@ export async function deleteProduct(id: string): Promise<boolean> {
     try {
       await prisma.product.delete({ where: { id } });
       return true;
-    } catch {
-      // fallback
+    } catch (error) {
+      console.error("Product deletion failed in PostgreSQL:", error);
+      throw new Error("Could not delete product from PostgreSQL. Check whether it is referenced by an order.");
     }
   }
 
-  const index = memoryStore.products.findIndex((p) => p.id === id);
-  if (index !== -1) {
-    memoryStore.products.splice(index, 1);
-    return true;
-  }
-  return false;
+  throw new Error("PostgreSQL is unavailable. Product was not deleted.");
 }
