@@ -67,7 +67,9 @@ async function checkPostgres(): Promise<boolean> {
     isPostgresAvailable = true;
     return true;
   } catch {
-    isPostgresAvailable = false;
+    // Do not cache a failed connection check forever. The database may become
+    // available after startup, so retry it on the next request.
+    isPostgresAvailable = null;
     return false;
   }
 }
@@ -263,13 +265,14 @@ export async function createOrder(orderData: Omit<Order, "id" | "createdAt" | "u
         } : null,
       };
     } catch (e) {
-      console.warn("Prisma order creation fallback:", e);
+      console.error("Prisma order creation failed; order was not saved:", e);
+      throw new Error("Order could not be saved to PostgreSQL. Check the database connection and Prisma schema.");
     }
   }
 
-  // Fallback to memory
-  memoryStore.orders.unshift(newOrder);
-  return newOrder;
+  // Orders must be persisted in PostgreSQL. Never report success for an
+  // in-memory-only order because it disappears when the server restarts.
+  throw new Error("PostgreSQL is unavailable; refusing to save the order only in memory.");
 }
 
 export async function getOrderByReference(reference: string): Promise<Order | null> {
