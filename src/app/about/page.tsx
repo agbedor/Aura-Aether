@@ -3,7 +3,7 @@ import Image from "next/image";
 import { prisma } from "@/lib/db";
 import AboutIntro from "@/components/AboutIntro";
 import AboutHeading from "@/components/AboutHeading";
-import { ArrowRight, Heart, Sparkles, Wind } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -45,13 +45,6 @@ export default async function AboutPage() {
           <p className="mt-6 text-sm leading-7 text-[#65534D]">From soft and comforting to bold and unforgettable, every fragrance has its own character. Our aim is to make discovering that character feel thoughtful, joyful, and distinctly yours.</p>
           <p className="mt-4 text-sm leading-7 text-[#65534D]">Whether you are choosing an everyday favourite or a scent for a meaningful occasion, we want you to find something that feels like you — and stays with you.</p>
           <Link href="/shop" className="mt-8 inline-flex items-center gap-3 bg-[#17110F] text-white px-7 py-4 text-[11px] uppercase tracking-[0.18em] hover:bg-[#B77F60] transition-colors">Find your fragrance <ArrowRight className="w-4 h-4" /></Link>
-        </div>
-      </section>
-      <section className="bg-white/70 border-y border-[#E8D9CE] py-14 sm:py-18">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 grid sm:grid-cols-3 gap-10 text-center">
-          <div><Sparkles className="w-6 h-6 mx-auto mb-4 text-[#B77F60]" /><h3 className="font-serif-luxury text-xl">Made for self-expression</h3><p className="mt-2 text-sm leading-6 text-[#65534D]">Choose the notes that match your mood and the impression you want to leave.</p></div>
-          <div><Heart className="w-6 h-6 mx-auto mb-4 text-[#B77F60]" /><h3 className="font-serif-luxury text-xl">Chosen with care</h3><p className="mt-2 text-sm leading-6 text-[#65534D]">A considered collection for gifting, celebrating, and everyday rituals.</p></div>
-          <div><Wind className="w-6 h-6 mx-auto mb-4 text-[#B77F60]" /><h3 className="font-serif-luxury text-xl">A lasting impression</h3><p className="mt-2 text-sm leading-6 text-[#65534D]">Because the best fragrances become part of the memories we make.</p></div>
         </div>
       </section>
       <section className="px-5 py-16 text-center">
