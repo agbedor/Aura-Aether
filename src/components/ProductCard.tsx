@@ -69,7 +69,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-base font-semibold text-[#1C1917]">
             {formatGhs(product.price)}
           </span>
-          {product.originalPrice && (
+          {product.originalPrice && product.originalPrice > product.price && (
             <span className="text-xs text-[#A89F95] line-through font-normal">
               {formatGhs(product.originalPrice)}
             </span>
