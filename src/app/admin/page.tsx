@@ -52,6 +52,21 @@ export default function AdminDashboardPage() {
   const [uploadingProductImage, setUploadingProductImage] = useState(false);
   const [uploadingProductId, setUploadingProductId] = useState<string | null>(null);
 
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editProduct, setEditProduct] = useState({
+    name: "",
+    scentNotes: "",
+    description: "",
+    price: "",
+    originalPrice: "",
+    stock: "",
+    size: "",
+    categoryId: "",
+    isFeatured: false,
+    isGiftSet: false,
+    isSale: false,
+  });
+
   const fetchData = async () => {
     setIsDataLoading(true);
     try {
@@ -225,6 +240,51 @@ export default function AdminDashboardPage() {
       }
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Could not create product.");
+    }
+  };
+
+  const startEditingProduct = (product: Product) => {
+    setEditingProduct(product);
+    setEditProduct({
+      name: product.name || "",
+      scentNotes: product.scentNotes || "",
+      description: product.description || "",
+      price: String(product.price ?? ""),
+      originalPrice: product.originalPrice == null ? "" : String(product.originalPrice),
+      stock: String(product.stock ?? 0),
+      size: product.size || "",
+      categoryId: product.categoryId || "",
+      isFeatured: !!product.isFeatured,
+      isGiftSet: !!product.isGiftSet,
+      isSale: !!product.isSale,
+    });
+    setStatusMessage("");
+  };
+
+  const handleSaveProductEdits = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+    setStatusMessage("");
+    try {
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: editingProduct.id,
+          ...editProduct,
+          price: Number(editProduct.price),
+          originalPrice: editProduct.originalPrice.trim() === "" ? null : Number(editProduct.originalPrice),
+          stock: Number(editProduct.stock),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not update product.");
+      setEditingProduct(null);
+      setStatusMessage(`“${editProduct.name}” updated successfully.`);
+      await fetchData();
+      setTimeout(() => setStatusMessage(""), 3000);
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not update product.");
     }
   };
 
@@ -592,6 +652,14 @@ export default function AdminDashboardPage() {
                             />
                           </label>
                           <button
+                            onClick={() => startEditingProduct(p)}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-[#DDD6CD] px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#5C554F] hover:bg-[#FAF7F4] transition-colors"
+                            title={`Edit ${p.name}`}
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                            <span>Edit</span>
+                          </button>
+                          <button
                             onClick={() => handleDeleteProduct(p.id)}
                             className="p-1.5 text-[#A89F95] hover:text-[#DC2626] transition-colors"
                             title="Delete Product"
@@ -604,6 +672,70 @@ export default function AdminDashboardPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {editingProduct && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 sm:p-8">
+            <div className="my-auto w-full max-w-2xl rounded-3xl border border-[#ECE5DD] bg-white p-6 shadow-2xl sm:p-8">
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C827A]">Product catalog</p>
+                  <h2 className="mt-1 font-serif-luxury text-2xl font-semibold text-[#1C1917]">Edit Fragrance</h2>
+                  <p className="mt-1 text-xs text-[#78716C]">Update the details or change the selling price and discount for this existing product.</p>
+                </div>
+                <button type="button" onClick={() => setEditingProduct(null)} className="rounded-full border border-[#DDD6CD] px-3 py-1.5 text-xs font-semibold text-[#5C554F] hover:bg-[#FAF7F4]">Close</button>
+              </div>
+              <form onSubmit={handleSaveProductEdits} className="space-y-4">
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Perfume Name *</label>
+                  <input required value={editProduct.name} onChange={(e) => setEditProduct({ ...editProduct, name: e.target.value })} className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]" />
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Current Selling Price (GH₵) *</label>
+                    <input required type="number" min="0.01" step="0.01" value={editProduct.price} onChange={(e) => setEditProduct({ ...editProduct, price: e.target.value })} className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Original Price Before Discount (GH₵)</label>
+                    <input type="number" min="0" step="0.01" placeholder="Leave blank if not discounted" value={editProduct.originalPrice} onChange={(e) => setEditProduct({ ...editProduct, originalPrice: e.target.value })} className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]" />
+                    <p className="mt-1 text-[11px] text-[#8C827A]">The original price must be higher than the selling price. Clear this field to remove the discount display.</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Perfume Size *</label>
+                    <input required value={editProduct.size} onChange={(e) => setEditProduct({ ...editProduct, size: e.target.value })} placeholder="e.g. 30ml, 50ml, 100ml" className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Stock Quantity *</label>
+                    <input required type="number" min="0" step="1" value={editProduct.stock} onChange={(e) => setEditProduct({ ...editProduct, stock: e.target.value })} className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]" />
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Category *</label>
+                  <select required value={editProduct.categoryId} onChange={(e) => setEditProduct({ ...editProduct, categoryId: e.target.value })} className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]">
+                    <option value="" disabled>Choose a category</option>
+                    {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Scent Profile Descriptor</label>
+                  <input value={editProduct.scentNotes} onChange={(e) => setEditProduct({ ...editProduct, scentNotes: e.target.value })} className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Description *</label>
+                  <textarea required rows={4} value={editProduct.description} onChange={(e) => setEditProduct({ ...editProduct, description: e.target.value })} className="w-full rounded-xl border border-[#DDD6CD] bg-[#FAF7F4] px-4 py-2.5 text-sm text-[#1C1917]" />
+                </div>
+                <div className="flex flex-wrap gap-4">
+                  <label className="flex cursor-pointer items-center gap-2 text-xs text-[#4A443F]"><input type="checkbox" checked={editProduct.isFeatured} onChange={(e) => setEditProduct({ ...editProduct, isFeatured: e.target.checked })} /> Mark as Featured</label>
+                  <label className="flex cursor-pointer items-center gap-2 text-xs text-[#4A443F]"><input type="checkbox" checked={editProduct.isSale} onChange={(e) => setEditProduct({ ...editProduct, isSale: e.target.checked })} /> Mark On Sale</label>
+                  <label className="flex cursor-pointer items-center gap-2 text-xs text-[#4A443F]"><input type="checkbox" checked={editProduct.isGiftSet} onChange={(e) => setEditProduct({ ...editProduct, isGiftSet: e.target.checked })} /> Is Gift Set / Coffret</label>
+                </div>
+                <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row">
+                  <button type="button" onClick={() => setEditingProduct(null)} className="w-full rounded-full border border-[#DDD6CD] px-6 py-3 text-xs font-bold uppercase tracking-widest text-[#5C554F] hover:bg-[#FAF7F4]">Cancel</button>
+                  <button type="submit" className="w-full rounded-full bg-[#1C1917] px-6 py-3 text-xs font-bold uppercase tracking-widest text-[#FAF8F5] hover:bg-[#38332E]">Save Changes</button>
+                </div>
+              </form>
             </div>
           </div>
         )}
