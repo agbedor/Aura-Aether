@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, Plus, Minus, ArrowRight, ArrowLeft, ShoppingCart, ShieldCheck } from "lucide-react";
+import { Trash2, Plus, Minus, ArrowRight, ArrowLeft, ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatGhs } from "@/lib/paystack";
 
@@ -173,10 +173,6 @@ export default function CartPage() {
               </Link>
             </div>
 
-            <div className="pt-4 border-t border-[#EFE9E2] flex items-center justify-center gap-2 text-[11px] text-[#78716C]">
-              <ShieldCheck className="w-4 h-4 text-[#10B981]" />
-              <span>Payments verified securely via Paystack</span>
-            </div>
           </div>
         </div>
       </div>
