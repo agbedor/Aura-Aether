@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Mail, Phone, MapPin, CheckCircle2, Send, Clock } from "lucide-react";
+import { Mail, Phone, CheckCircle2, Send } from "lucide-react";
 
 export default function ContactPage() {
   const [siteContent, setSiteContent] = useState({
@@ -77,60 +77,22 @@ export default function ContactPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left: Contact Info & Boutique */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl border border-[#ECE5DD] p-8 space-y-6 shadow-2xs">
-              <h3 className="font-serif-luxury text-xl font-semibold text-[#1C1917] pb-4 border-b border-[#EFE9E2]">
-                Atelier &amp; Flagship Showroom
-              </h3>
-
-              <div className="space-y-5 text-xs text-[#5C554F]">
+          {/* Contact details */}
+          <div className="lg:col-span-5">
+            <div className="rounded-3xl border border-[#ECE5DD] bg-white p-8 shadow-2xs">
+              <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A]">Get in touch</p>
+              <h3 className="mb-6 font-serif-luxury text-2xl font-medium text-[#1C1917]">We’re happy to help.</h3>
+              <div className="space-y-6 text-sm text-[#5C554F]">
                 <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center shrink-0">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#1C1917] text-sm">Flagship Boutique</h5>
-                    <p className="mt-0.5 leading-relaxed text-[#78716C]">
-                      {siteContent.contactAddress}
-                    </p>
-                  </div>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FAF5EE] text-[#C59B4B]"><Phone className="h-4 w-4" /></div>
+                  <div><h5 className="font-semibold text-[#1C1917]">Phone</h5><p className="mt-1 text-[#78716C]">{siteContent.contactPhone}</p></div>
                 </div>
-
                 <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center shrink-0">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#1C1917] text-sm">Concierge Telephone</h5>
-                    <p className="mt-0.5 text-[#78716C]">{siteContent.contactPhone}</p>
-                    <p className="text-[11px] text-[#A89F95]">Mon - Sat: 9:00 AM - 6:30 PM GMT</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center shrink-0">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#1C1917] text-sm">Electronic Mail</h5>
-                    <p className="mt-0.5 text-[#78716C]">{siteContent.contactEmail}</p>
-                    <p className="text-[11px] text-[#A89F95]">orders@aura-aether.com</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center shrink-0">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#1C1917] text-sm">Private Appointments</h5>
-                    <p className="mt-0.5 text-[#78716C]">
-                      Private one-on-one scent profiling sessions available by reservation.
-                    </p>
-                  </div>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FAF5EE] text-[#C59B4B]"><Mail className="h-4 w-4" /></div>
+                  <div><h5 className="font-semibold text-[#1C1917]">Email</h5><p className="mt-1 break-words text-[#78716C]">{siteContent.contactEmail}</p></div>
                 </div>
               </div>
+              <p className="mt-8 border-t border-[#EFE9E2] pt-5 text-xs leading-6 text-[#8C827A]">Questions about a fragrance, an order, or a gift? Send us a message and we’ll get back to you.</p>
             </div>
           </div>
 
