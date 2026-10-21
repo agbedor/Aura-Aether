@@ -70,11 +70,15 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
 
-              {product.isSale && (
+              {product.originalPrice != null && product.originalPrice > product.price ? (
+                <span className="absolute top-6 left-6 bg-[#9B2C2C] text-white text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-xs">
+                  {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                </span>
+              ) : product.isSale ? (
                 <span className="absolute top-6 left-6 bg-[#DFC07D] text-[#1C1917] text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-xs">
                   SPECIAL OFFER
                 </span>
-              )}
+              ) : null}
             </div>
 
             <div className="flex items-center justify-between text-xs text-[#78716C] px-2">
