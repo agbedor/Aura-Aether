@@ -20,12 +20,17 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="group animate-fade-up bg-white rounded-2xl border border-[#ECE5DD] p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#D9CDBF] relative">
       {/* Badges */}
       <div className="absolute top-4 right-4 z-10 flex flex-col gap-1 items-end">
-        {product.isSale && (
+        {product.originalPrice != null && product.originalPrice > product.price && (
+          <span className="bg-[#9B2C2C] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-2xs">
+            {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+          </span>
+        )}
+        {product.isSale && !(product.originalPrice != null && product.originalPrice > product.price) && (
           <span className="bg-[#DFC07D] text-[#1C1917] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-2xs">
             ON SALE
           </span>
         )}
-        {product.isFeatured && !product.isSale && (
+        {product.isFeatured && !product.isSale && !(product.originalPrice != null && product.originalPrice > product.price) && (
           <span className="bg-[#1C1917] text-[#FAF8F5] text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-2xs">
             SIGNATURE
           </span>
