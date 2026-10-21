@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { Product, Order } from "@/types";
+import { Product, Order, Category } from "@/types";
 import { formatGhs } from "@/lib/paystack";
 import {
   Shield,
@@ -24,9 +24,12 @@ import {
 export default function AdminDashboardPage() {
   const { user, isLoading } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<"orders" | "products" | "new-product">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "products" | "categories" | "new-product">("orders");
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryDescription, setNewCategoryDescription] = useState("");
   const [isDataLoading, setIsDataLoading] = useState(true);
 
   // New product form state
@@ -38,7 +41,7 @@ export default function AdminDashboardPage() {
     originalPrice: "",
     stock: "15",
     size: "50ml",
-    categoryId: "cat-floral",
+    categoryId: "cat-fresh",
     image: "/images/products/meadow.svg",
     isFeatured: false,
     isGiftSet: false,
@@ -52,9 +55,10 @@ export default function AdminDashboardPage() {
   const fetchData = async () => {
     setIsDataLoading(true);
     try {
-      const [ordersRes, productsRes] = await Promise.all([
+      const [ordersRes, productsRes, categoriesRes] = await Promise.all([
         fetch("/api/orders"),
         fetch("/api/products"),
+        fetch("/api/categories"),
       ]);
 
       if (ordersRes.ok) {
@@ -66,6 +70,18 @@ export default function AdminDashboardPage() {
         const data = await productsRes.json();
         setProducts(data.products || []);
       }
+
+      if (categoriesRes.ok) {
+        const data = await categoriesRes.json();
+        const loadedCategories: Category[] = data.categories || [];
+        setCategories(loadedCategories);
+        setNewProduct((current) => ({
+          ...current,
+          categoryId: loadedCategories.some((category) => category.id === current.categoryId)
+            ? current.categoryId
+            : loadedCategories[0]?.id || "",
+        }));
+      }
     } catch {
       // ignore
     } finally {
@@ -75,7 +91,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
-    if (requestedTab === "products" || requestedTab === "new-product") setActiveTab(requestedTab);
+    if (requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") setActiveTab(requestedTab);
     fetchData();
   }, []);
 
@@ -151,6 +167,29 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleCreateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatusMessage("");
+    try {
+      const res = await fetch("/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newCategoryName, description: newCategoryDescription }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not create category.");
+      const createdCategory: Category = data.category;
+      setCategories((current) => [...current, createdCategory].sort((a, b) => a.name.localeCompare(b.name)));
+      setNewProduct((current) => ({ ...current, categoryId: current.categoryId || createdCategory.id }));
+      setNewCategoryName("");
+      setNewCategoryDescription("");
+      setStatusMessage(`Category "${createdCategory.name}" added successfully.`);
+      setTimeout(() => setStatusMessage(""), 3000);
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not create category.");
+    }
+  };
+
   const handleCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -170,7 +209,7 @@ export default function AdminDashboardPage() {
           originalPrice: "",
           stock: "15",
           size: "50ml",
-          categoryId: "cat-floral",
+          categoryId: categories[0]?.id || "",
           image: "/images/products/meadow.svg",
           isFeatured: false,
           isGiftSet: false,
@@ -343,6 +382,16 @@ export default function AdminDashboardPage() {
             }`}
           >
             Product Catalog ({products.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("categories")}
+            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
+              activeTab === "categories"
+                ? "bg-[#1C1917] text-white"
+                : "text-[#5C554F] hover:bg-[#F2ECE4]"
+            }`}
+          >
+            Categories ({categories.length})
           </button>
           <button
             onClick={() => setActiveTab("new-product")}
@@ -556,7 +605,44 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* Tab 3: Create Product Form */}
+        {/* Categories management */}
+        {activeTab === "categories" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-3xl border border-[#ECE5DD] p-6 sm:p-8 shadow-2xs">
+              <h2 className="font-serif-luxury text-xl font-semibold text-[#1C1917] mb-2">Add a Category</h2>
+              <p className="text-xs text-[#78716C] mb-6">Create categories to organise fragrances in your shop.</p>
+              <form onSubmit={handleCreateCategory} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">Category name *</label>
+                  <input required value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} placeholder="e.g. Vanilla & Gourmand" className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">Description (optional)</label>
+                  <textarea rows={3} value={newCategoryDescription} onChange={(e) => setNewCategoryDescription(e.target.value)} placeholder="What defines this fragrance category?" className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]" />
+                </div>
+                <button type="submit" className="w-full py-3 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-colors">Save Category</button>
+              </form>
+            </div>
+            <div className="bg-white rounded-3xl border border-[#ECE5DD] p-6 sm:p-8 shadow-2xs">
+              <h2 className="font-serif-luxury text-xl font-semibold text-[#1C1917] mb-6">Available Categories</h2>
+              {categories.length === 0 ? (
+                <p className="text-sm text-[#78716C]">No categories found. Refresh to try again.</p>
+              ) : (
+                <div className="space-y-3">
+                  {categories.map((category) => (
+                    <div key={category.id} className="rounded-xl border border-[#ECE5DD] p-4">
+                      <p className="text-sm font-semibold text-[#1C1917]">{category.name}</p>
+                      {category.description && <p className="mt-1 text-xs text-[#78716C]">{category.description}</p>}
+                      <p className="mt-2 text-[10px] uppercase tracking-wider text-[#A89F95]">{category.slug}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 4: Create Product Form */}
         {activeTab === "new-product" && (
           <div className="bg-white rounded-3xl border border-[#ECE5DD] p-6 sm:p-10 shadow-2xs max-w-2xl">
             <h2 className="font-serif-luxury text-2xl font-semibold text-[#1C1917] mb-6">
@@ -614,6 +700,24 @@ export default function AdminDashboardPage() {
                     className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">
+                  Category *
+                </label>
+                <select
+                  required
+                  value={newProduct.categoryId}
+                  onChange={(e) => setNewProduct({ ...newProduct, categoryId: e.target.value })}
+                  className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]"
+                >
+                  <option value="" disabled>Choose a category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  ))}
+                </select>
+                {categories.length === 0 && <p className="mt-1 text-xs text-[#B91C1C]">No categories are available. Add one in the Categories tab first.</p>}
               </div>
 
               <div>
