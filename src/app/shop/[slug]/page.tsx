@@ -101,7 +101,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 <span className="text-2xl sm:text-3xl font-semibold text-[#1C1917]">
                   {formatGhs(product.price)}
                 </span>
-                {product.originalPrice && (
+                {product.originalPrice && product.originalPrice > product.price && (
                   <span className="text-base text-[#A89F95] line-through font-normal">
                     {formatGhs(product.originalPrice)}
                   </span>
