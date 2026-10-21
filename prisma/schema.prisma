@@ -43,7 +43,7 @@ model Product {
   description   String
   price         Float
   originalPrice Float?
-  size          String      @default("50ml")
+  size          String
   stock         Int         @default(10)
   inStock       Boolean     @default(true)
   isFeatured    Boolean     @default(false)
