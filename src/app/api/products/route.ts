@@ -134,6 +134,56 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json();
+
+    if (body.action === "bulk-discount" || body.action === "remove-bulk-discount") {
+      const productIds = Array.isArray(body.productIds)
+        ? [...new Set(body.productIds.filter((id: unknown) => typeof id === "string" && id.trim()))]
+        : [];
+      if (productIds.length === 0) {
+        return NextResponse.json({ error: "Select at least one product" }, { status: 400 });
+      }
+      if (body.action === "bulk-discount") {
+        const percent = Number(body.percent);
+        if (!Number.isFinite(percent) || percent <= 0 || percent >= 100) {
+          return NextResponse.json({ error: "Discount must be greater than 0% and less than 100%" }, { status: 400 });
+        }
+      }
+
+      const existingProducts = await prisma.product.findMany({
+        where: { id: { in: productIds } },
+        select: { id: true, price: true, originalPrice: true },
+      });
+      if (existingProducts.length !== productIds.length) {
+        return NextResponse.json({ error: "One or more selected products could not be found" }, { status: 404 });
+      }
+
+      await prisma.$transaction(existingProducts.map((product) => {
+        if (body.action === "remove-bulk-discount") {
+          return prisma.product.update({
+            where: { id: product.id },
+            data: {
+              price: product.originalPrice ?? product.price,
+              originalPrice: null,
+              isSale: false,
+            },
+          });
+        }
+
+        const basePrice = product.originalPrice ?? product.price;
+        const discountedPrice = Math.round(basePrice * (1 - Number(body.percent) / 100) * 100) / 100;
+        return prisma.product.update({
+          where: { id: product.id },
+          data: {
+            price: discountedPrice,
+            originalPrice: basePrice,
+            isSale: true,
+          },
+        });
+      }));
+
+      return NextResponse.json({ success: true, updatedCount: existingProducts.length });
+    }
+
     const { id, ...updates } = body;
     if (!id) {
       return NextResponse.json({ error: "Product ID required" }, { status: 400 });
