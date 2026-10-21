@@ -52,6 +52,11 @@ export default function AdminDashboardPage() {
   const [uploadingProductImage, setUploadingProductImage] = useState(false);
   const [uploadingProductId, setUploadingProductId] = useState<string | null>(null);
 
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+  const [discountPercent, setDiscountPercent] = useState("10");
+  const [discountScope, setDiscountScope] = useState<"selected" | "all">("selected");
+  const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
+
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editProduct, setEditProduct] = useState({
     name: "",
@@ -285,6 +290,66 @@ export default function AdminDashboardPage() {
       setTimeout(() => setStatusMessage(""), 3000);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Could not update product.");
+    }
+  };
+
+  const handleBulkDiscount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const percent = Number(discountPercent);
+    if (!Number.isFinite(percent) || percent <= 0 || percent >= 100) {
+      setStatusMessage("Enter a discount percentage greater than 0 and less than 100.");
+      return;
+    }
+    const productIds = discountScope === "all" ? products.map((product) => product.id) : selectedProductIds;
+    if (productIds.length === 0) {
+      setStatusMessage("Select at least one product, or choose all products.");
+      return;
+    }
+    if (!confirm(`Apply a ${percent}% discount to ${productIds.length} product(s)?`)) return;
+    setIsApplyingDiscount(true);
+    setStatusMessage("");
+    try {
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "bulk-discount", productIds, percent }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not apply the discount.");
+      setStatusMessage(`${percent}% discount applied to ${data.updatedCount} product(s).`);
+      setSelectedProductIds([]);
+      await fetchData();
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not apply the discount.");
+    } finally {
+      setIsApplyingDiscount(false);
+    }
+  };
+
+  const handleRemoveBulkDiscount = async () => {
+    const productIds = discountScope === "all" ? products.map((product) => product.id) : selectedProductIds;
+    if (productIds.length === 0) {
+      setStatusMessage("Select at least one product, or choose all products.");
+      return;
+    }
+    if (!confirm(`Remove discounts from ${productIds.length} product(s) and restore their original prices?`)) return;
+    setIsApplyingDiscount(true);
+    setStatusMessage("");
+    try {
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "remove-bulk-discount", productIds }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not remove discounts.");
+      setStatusMessage(`Discount removed from ${data.updatedCount} product(s).`);
+      setSelectedProductIds([]);
+      await fetchData();
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not remove discounts.");
+    } finally {
+      setIsApplyingDiscount(false);
     }
   };
 
@@ -552,10 +617,40 @@ export default function AdminDashboardPage() {
               Product &amp; Inventory Management
             </h2>
 
+            <form onSubmit={handleBulkDiscount} className="mb-6 rounded-2xl border border-[#E7D8BC] bg-[#FCFAF6] p-5">
+              <div className="mb-4">
+                <h3 className="font-serif-luxury text-lg font-semibold text-[#1C1917]">Bulk Discounts</h3>
+                <p className="mt-1 text-xs text-[#78716C]">Apply one percentage discount to selected fragrances or your entire catalog. Original prices are saved so discounts won't compound.</p>
+              </div>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Apply discount to</label>
+                  <select value={discountScope} onChange={(e) => setDiscountScope(e.target.value as "selected" | "all")} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-3 py-2.5 text-sm text-[#1C1917]">
+                    <option value="selected">Selected products ({selectedProductIds.length})</option>
+                    <option value="all">All products ({products.length})</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Discount percentage (%)</label>
+                  <input type="number" min="1" max="99" step="1" required value={discountPercent} onChange={(e) => setDiscountPercent(e.target.value)} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-3 py-2.5 text-sm text-[#1C1917]" />
+                </div>
+                <button type="submit" disabled={isApplyingDiscount || products.length === 0} className="rounded-full bg-[#1C1917] px-5 py-3 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#38332E] disabled:opacity-50">
+                  {isApplyingDiscount ? "Applying..." : "Apply Discount"}
+                </button>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-[11px] text-[#78716C]">Select products using the checkboxes in the catalog below.</p>
+                <button type="button" onClick={handleRemoveBulkDiscount} disabled={isApplyingDiscount || products.length === 0} className="rounded-full border border-[#C8B8A4] px-4 py-2 text-[11px] font-semibold text-[#5C554F] hover:bg-white disabled:opacity-50">Remove discounts / restore original prices</button>
+              </div>
+            </form>
+
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-[#FAF7F4] text-[#78716C] uppercase font-bold text-[10px] tracking-wider border-b border-[#EFE9E2]">
                   <tr>
+                    <th className="py-3 px-4">
+                      <input aria-label="Select all products" type="checkbox" checked={products.length > 0 && products.every((product) => selectedProductIds.includes(product.id))} onChange={(e) => setSelectedProductIds(e.target.checked ? products.map((product) => product.id) : [])} />
+                    </th>
                     <th className="py-3 px-4">Product</th>
                     <th className="py-3 px-4">Scent Notes</th>
                     <th className="py-3 px-4">Price</th>
@@ -567,6 +662,9 @@ export default function AdminDashboardPage() {
                 <tbody className="divide-y divide-[#F5EFEB]">
                   {products.map((p) => (
                     <tr key={p.id} className="hover:bg-[#FCFAF7] transition-colors">
+                      <td className="py-3 px-4">
+                        <input aria-label={`Select ${p.name}`} type="checkbox" checked={selectedProductIds.includes(p.id)} onChange={(e) => setSelectedProductIds((current) => e.target.checked ? [...current, p.id] : current.filter((id) => id !== p.id))} />
+                      </td>
                       <td className="py-3 px-4 flex items-center gap-3">
                         <div className="w-10 h-12 bg-[#FAF7F4] rounded relative overflow-hidden shrink-0 border border-[#EDE7DF]">
                           <Image
