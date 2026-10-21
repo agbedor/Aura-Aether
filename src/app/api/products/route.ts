@@ -37,8 +37,8 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    if (!body.name?.trim() || body.price === undefined || body.price === "" || !body.description?.trim()) {
-      return NextResponse.json({ error: "Name, price, and description are required" }, { status: 400 });
+    if (!body.name?.trim() || body.price === undefined || body.price === "" || !body.description?.trim() || !body.size?.trim()) {
+      return NextResponse.json({ error: "Name, price, size, and description are required" }, { status: 400 });
     }
 
     const price = Number(body.price);
@@ -99,7 +99,7 @@ export async function POST(req: Request) {
       inStock: stock > 0,
       image: body.image || "/images/products/meadow.svg",
       categoryId: category.id,
-      size: body.size || "50ml",
+      size: body.size.trim(),
       scentNotes: body.scentNotes || "ARTISANAL ACCORD",
       isFeatured: !!body.isFeatured,
       isGiftSet: !!body.isGiftSet,
