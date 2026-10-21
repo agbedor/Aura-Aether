@@ -46,6 +46,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Enter a valid price greater than zero" }, { status: 400 });
     }
 
+    const originalPrice = body.originalPrice === undefined || body.originalPrice === null || String(body.originalPrice).trim() === ""
+      ? null
+      : Number(body.originalPrice);
+    if (originalPrice !== null && (!Number.isFinite(originalPrice) || originalPrice <= price)) {
+      return NextResponse.json({ error: "Original price must be greater than the current selling price" }, { status: 400 });
+    }
+
     // The demo category IDs may not exist in a newly configured production database.
     // Resolve the category against PostgreSQL and create the matching default category if missing.
     const requestedCategoryId = body.categoryId || "cat-fresh";
@@ -94,7 +101,7 @@ export async function POST(req: Request) {
       name: body.name.trim(),
       slug,
       price,
-      originalPrice: body.originalPrice ? Number(body.originalPrice) : null,
+      originalPrice,
       stock,
       inStock: stock > 0,
       image: body.image || "/images/products/meadow.svg",
@@ -137,6 +144,9 @@ export async function PUT(req: Request) {
       updates.originalPrice = updates.originalPrice === "" || updates.originalPrice === null
         ? null
         : parseFloat(updates.originalPrice);
+      if (updates.originalPrice !== null && (!Number.isFinite(updates.originalPrice) || updates.originalPrice <= (updates.price ?? (await prisma.product.findUnique({ where: { id }, select: { price: true } }))?.price ?? 0))) {
+        return NextResponse.json({ error: "Original price must be greater than the current selling price" }, { status: 400 });
+      }
     }
     if (updates.stock !== undefined) {
       updates.stock = parseInt(updates.stock, 10);
