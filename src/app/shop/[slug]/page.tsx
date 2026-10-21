@@ -6,7 +6,7 @@ import { getProductBySlug, getProducts } from "@/lib/db";
 import { formatGhs } from "@/lib/paystack";
 import ProductDetailClient from "./ProductDetailClient";
 import ProductCard from "@/components/ProductCard";
-import { Sparkles, ShieldCheck, Truck, ArrowLeft } from "lucide-react";
+import { Sparkles, ArrowLeft } from "lucide-react";
 
 interface ProductPageProps {
   params: Promise<{
@@ -155,17 +155,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </div>
             )}
 
-            {/* Guarantees */}
-            <div className="grid grid-cols-2 gap-4 text-xs text-[#5C554F]">
-              <div className="flex items-center gap-2 p-3 bg-white rounded-xl border border-[#ECE5DD]">
-                <ShieldCheck className="w-4 h-4 text-[#10B981] shrink-0" />
-                <span>Paystack Verified Payment</span>
-              </div>
-              <div className="flex items-center gap-2 p-3 bg-white rounded-xl border border-[#ECE5DD]">
-                <Truck className="w-4 h-4 text-[#C59B4B] shrink-0" />
-                <span>Ghana Doorstep Delivery</span>
-              </div>
-            </div>
           </div>
         </div>
 
