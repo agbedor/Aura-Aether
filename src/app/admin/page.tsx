@@ -524,8 +524,11 @@ export default function AdminDashboardPage() {
                       <td className="py-3 px-4 text-[11px] uppercase tracking-wider text-[#78716C]">
                         {p.scentNotes}
                       </td>
-                      <td className="py-3 px-4 font-semibold text-[#1C1917]">
-                        {formatGhs(p.price)}
+                      <td className="py-3 px-4">
+                        <span className="font-semibold text-[#1C1917]">{formatGhs(p.price)}</span>
+                        {p.originalPrice && p.originalPrice > p.price && (
+                          <span className="block text-[10px] text-[#A89F95] line-through">{formatGhs(p.originalPrice)}</span>
+                        )}
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
@@ -674,7 +677,7 @@ export default function AdminDashboardPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">
-                    Price in Ghana Cedis (GH₵) *
+                    Current Selling Price (GH₵) *
                   </label>
                   <input
                     type="number"
@@ -685,6 +688,22 @@ export default function AdminDashboardPage() {
                     onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                     className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">
+                    Original Price Before Discount (GH₵)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="e.g. 550.00 (leave blank if no discount)"
+                    value={newProduct.originalPrice}
+                    onChange={(e) => setNewProduct({ ...newProduct, originalPrice: e.target.value })}
+                    className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]"
+                  />
+                  <p className="mt-1 text-[11px] text-[#8C827A]">If entered above the current selling price, the old price will appear crossed out on the storefront.</p>
                 </div>
 
                 <div>
