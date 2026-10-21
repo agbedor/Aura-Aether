@@ -40,7 +40,7 @@ export default function AdminDashboardPage() {
     price: "",
     originalPrice: "",
     stock: "15",
-    size: "50ml",
+    size: "",
     categoryId: "cat-fresh",
     image: "/images/products/meadow.svg",
     isFeatured: false,
@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
           price: "",
           originalPrice: "",
           stock: "15",
-          size: "50ml",
+          size: "",
           categoryId: categories[0]?.id || "",
           image: "/images/products/meadow.svg",
           isFeatured: false,
@@ -700,6 +700,20 @@ export default function AdminDashboardPage() {
                     className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">
+                  Perfume Size *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 30ml, 50ml, 100ml"
+                  value={newProduct.size}
+                  onChange={(e) => setNewProduct({ ...newProduct, size: e.target.value })}
+                  className="w-full bg-[#FAF7F4] border border-[#DDD6CD] rounded-xl px-4 py-2.5 text-sm text-[#1C1917]"
+                />
               </div>
 
               <div>
