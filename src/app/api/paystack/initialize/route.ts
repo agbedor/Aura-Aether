@@ -37,7 +37,6 @@ export async function POST(req: Request) {
       !customerPhone ||
       !deliveryAddress ||
       !city ||
-      !deliveryRange ||
       !items ||
       !Array.isArray(items) ||
       items.length === 0
@@ -112,12 +111,12 @@ export async function POST(req: Request) {
         return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
       })
       .filter((range) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
-    const selectedDeliveryRange = configuredRanges.find((range) => range.label === String(deliveryRange).trim());
-    if (!selectedDeliveryRange) {
+    const selectedDeliveryRange = configuredRanges.find((range) => range.label === String(deliveryRange || "").trim());
+    const freeDeliveryPromo = deliverySettings.deliveryFreePromo === "true";
+    if (!freeDeliveryPromo && !selectedDeliveryRange) {
       return NextResponse.json({ error: "Please select a valid delivery range. Refresh checkout and try again." }, { status: 400 });
     }
-    const freeDeliveryPromo = deliverySettings.deliveryFreePromo === "true";
-    const deliveryFee = freeDeliveryPromo ? 0 : selectedDeliveryRange.fee;
+    const deliveryFee = freeDeliveryPromo ? 0 : selectedDeliveryRange!.fee;
     const finalTotal = calculatedSubtotal + deliveryFee;
 
     // 4. Generate unique transaction reference & human-readable order number
