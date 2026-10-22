@@ -49,7 +49,7 @@ const DEFAULTS: Record<string, string> = {
 
 async function isAdmin() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("aura_auth_token")?.value;
+  const token = cookieStore.get("aura_admin_token")?.value;
   const payload = token ? await verifyToken(token) : null;
   return !!payload && payload.role === "ADMIN";
 }
