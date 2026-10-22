@@ -35,6 +35,8 @@ export async function POST(req: Request) {
         city: user.city,
       },
     });
+    // Keep customer and admin sessions independent. Signing in to one must not
+    // silently sign the other session out in a different tab.
     response.cookies.set(user.role === "ADMIN" ? "aura_admin_token" : "aura_auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -42,7 +44,6 @@ export async function POST(req: Request) {
       path: "/",
       maxAge: user.role === "ADMIN" ? 60 * 60 * 8 : 60 * 60 * 24 * 7,
     });
-    response.cookies.delete(user.role === "ADMIN" ? "aura_auth_token" : "aura_admin_token");
     return response;
   } catch (error) {
     console.error("Login error:", error);
