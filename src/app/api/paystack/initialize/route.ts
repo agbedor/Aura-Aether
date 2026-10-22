@@ -105,7 +105,7 @@ export async function POST(req: Request) {
       where: { key: { in: ["deliveryFreePromo", "deliveryRanges"] } },
     });
     const deliverySettings = Object.fromEntries(settingRows.map((row) => [row.key, row.value]));
-    const configuredRanges = String(deliverySettings.deliveryRanges || "0–5 km|20\n5–10 km|30\n10–15 km|40")
+    const configuredRanges = String(deliverySettings.deliveryRanges || "")
       .split("\n")
       .map((line) => {
         const [label, feeText] = line.split("|");
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
       customerPhone: customerPhone.trim(),
       deliveryAddress: deliveryAddress.trim(),
       city: city.trim(),
-      notes: notes?.trim() || null,
+      notes: [notes?.trim(), `Delivery range selected: ${freeDeliveryPromo ? "Free delivery promotion" : selectedDeliveryRange!.label}`].filter(Boolean).join("\n") || null,
       subtotal: calculatedSubtotal,
       deliveryFee,
       totalAmount: finalTotal,
