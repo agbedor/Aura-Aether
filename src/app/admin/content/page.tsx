@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles } from "lucide-react";
+import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, Truck } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
@@ -51,6 +51,9 @@ const initial: Settings = {
   contactEmail: "concierge@aura-aether.com",
   contactPhone: "+233 (0) 24 892 4110",
   contactAddress: "Accra, Ghana",
+  deliveryOrigin: "Adenta, Accra, Ghana",
+  deliveryFreePromo: "false",
+  deliveryRanges: "0–5 km|20\n5–10 km|30\n10–15 km|40",
 };
 
 const groups: Record<string, EditorGroup[]> = {
@@ -105,6 +108,11 @@ const groups: Record<string, EditorGroup[]> = {
     { key: "contactPhone", label: "Contact phone" },
     { key: "contactAddress", label: "Contact address", multiline: true },
   ]}],
+  delivery: [{ title: "Delivery pricing & promotions", description: "Set your delivery starting point, delivery fee ranges and an optional store-wide free-delivery promotion.", fields: [
+    { key: "deliveryOrigin", label: "Delivery starting point", help: "Current starting point: Adenta, Accra, Ghana." },
+    { key: "deliveryFreePromo", label: "Free delivery for all orders", options: [{ label: "Off — use normal delivery rates", value: "false" }, { label: "On — all orders have free delivery", value: "true" }] },
+    { key: "deliveryRanges", label: "Delivery ranges and fees", multiline: true, help: "One range per line, in this format: Range label|Fee in GH₵. Example: 0–5 km|20. Customers choose the range that applies to their location. Enter your own ranges and prices, then save." },
+  }],
 };
 
 const pages = [
@@ -114,6 +122,7 @@ const pages = [
   { id: "gifts", label: "Gift Sets", description: "Gift collection introduction", icon: Gift },
   { id: "about", label: "About", description: "Brand story introduction", icon: Sparkles },
   { id: "contact", label: "Contact", description: "Contact details and copy", icon: Mail },
+  { id: "delivery", label: "Delivery", description: "Delivery ranges, fees and free-delivery promotions", icon: Truck },
 ];
 
 export default function StorefrontContentPage() {
