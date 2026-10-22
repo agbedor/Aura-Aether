@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
 
 type Settings = Record<string, string>;
-type Field = { key: string; label: string; help?: string; multiline?: boolean; type?: string; image?: boolean };
+type Field = { key: string; label: string; help?: string; multiline?: boolean; type?: string; image?: boolean; options?: { label: string; value: string }[] };
 type EditorGroup = { title: string; description: string; fields: Field[] };
 
 const initial: Settings = {
@@ -24,7 +24,7 @@ const initial: Settings = {
   heroImageUrl: "/images/hero-placeholder-1.svg",
   heroImageUrl2: "/images/hero-placeholder-2.svg",
   heroImageUrl3: "/images/hero-placeholder-3.svg",
-  heroCtaLabel: "Explore the collection",
+  heroCtaLabel: "Explore the collection",\n  heroCtaUrl: "/shop",\n  heroCtaAlignment: "center",\n  homeFeaturedCtaLabel: "View All Fragrances",\n  homeFeaturedCtaUrl: "/shop",
   homeFeaturedEyebrow: "OUR COLLECTION",
   homeFeaturedTitle: "Featured fragrances.",
   homeGiftTitle: "Curated Gift Sets.",
@@ -55,11 +55,11 @@ const groups: Record<string, EditorGroup[]> = {
       { key: "heroTitle", label: "Main heading" },
       { key: "heroDescription", label: "Description", multiline: true },
       { key: "motto", label: "Tagline" },
-      { key: "heroCtaLabel", label: "Button label" },
+      { key: "heroCtaLabel", label: "Button label" },\n      { key: "heroCtaUrl", label: "Button destination", help: "Use a site path such as /shop or /gift-sets." },\n      { key: "heroCtaAlignment", label: "Button placement", options: [{ label: "Left", value: "left" }, { label: "Centre", value: "center" }, { label: "Right", value: "right" }] },
     ]},
     { title: "Homepage sections", description: "The copy shown around featured fragrances and promotions.", fields: [
       { key: "homeFeaturedEyebrow", label: "Featured eyebrow" },
-      { key: "homeFeaturedTitle", label: "Featured heading" },
+      { key: "homeFeaturedTitle", label: "Featured heading" },\n      { key: "homeFeaturedCtaLabel", label: "Featured section button label" },\n      { key: "homeFeaturedCtaUrl", label: "Featured section button destination", help: "Use a site path such as /shop." },
       { key: "homePromoTitle", label: "Promotion heading" },
       { key: "homePromoDescription", label: "Promotion description", multiline: true },
       { key: "homePromoImageUrl", label: "Promotion image", image: true },
@@ -246,7 +246,7 @@ export default function StorefrontContentPage() {
                   <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-[#DDE1E7] bg-white px-3 py-2 text-xs font-bold text-[#4F5662] transition hover:border-[#B77F60] hover:text-[#8B5D45]"><Upload size={14} /> {uploadingKey === field.key ? "Uploading…" : "Upload replacement"}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingKey === field.key} className="hidden" onChange={(e) => { void uploadImage(field.key, e.target.files?.[0]); e.currentTarget.value = ""; }} /></label>
                   <p className="text-[10px] leading-4 text-[#858B96]">JPG, PNG, WebP, GIF or AVIF · max 10 MB</p>
                 </div>
-              </div> : field.multiline ? <textarea rows={4} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm leading-6 outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" /> : <input type={field.type || "text"} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" />}
+              </div> : field.options ? <select value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10">{field.options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select> : field.multiline ? <textarea rows={4} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm leading-6 outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" /> : <input type={field.type || "text"} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" />}
             </label>)}
           </div>
         </section>)}
