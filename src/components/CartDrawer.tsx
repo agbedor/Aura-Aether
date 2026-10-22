@@ -70,7 +70,7 @@ export default function CartDrawer() {
                     closeCart();
                     router.push("/shop");
                   }}
-                  className="inline-block mt-4 text-xs font-semibold uppercase tracking-widest px-6 py-3 bg-[#1C1917] text-[#FAF8F5] rounded-full hover:bg-[#38332E] transition-colors"
+                  className="aa-button inline-block mt-4 text-xs font-semibold uppercase tracking-widest px-6 py-3 bg-[#1C1917] text-[#FAF8F5] rounded-full hover:bg-[#38332E] transition-colors"
                 >
                   Explore Fragrances
                 </button>
@@ -175,7 +175,7 @@ export default function CartDrawer() {
                     closeCart();
                     router.push("/checkout");
                   }}
-                  className="w-full py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#36322E] flex items-center justify-center gap-2 transition-colors shadow-md"
+                  className="aa-button w-full py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#36322E] flex items-center justify-center gap-2 transition-colors shadow-md"
                 >
                   <span>Proceed to Checkout</span>
                   <ArrowRight className="w-4 h-4" />
