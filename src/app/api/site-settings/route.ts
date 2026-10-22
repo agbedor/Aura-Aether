@@ -49,6 +49,10 @@ const DEFAULTS: Record<string, string> = {
   contactEmail: "concierge@aura-aether.com",
   contactPhone: "+233 (0) 24 892 4110",
   contactAddress: "Suite 4B, The Meridian Galleria, Airport Residential Area, Accra, Ghana",
+  // Delivery settings; fees are configured by the store owner in the admin editor.
+  deliveryOrigin: "Adenta, Accra, Ghana",
+  deliveryFreePromo: "false",
+  deliveryRanges: "0–5 km|20\\n5–10 km|30\\n10–15 km|40",
 };
 
 async function isAdmin() {
