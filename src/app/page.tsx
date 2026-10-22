@@ -38,7 +38,7 @@ export default async function HomePage() {
             href="/shop"
             className="text-xs font-semibold uppercase tracking-widest text-[#1C1917] hover:text-[#9B7036] flex items-center gap-1.5 transition-colors group"
           >
-            <span>View All Fragrances</span>
+            <span>{settings.homeFeaturedCtaLabel || "View All Fragrances"}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
