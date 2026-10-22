@@ -105,8 +105,8 @@ export async function POST(req: Request) {
       where: { key: { in: ["deliveryFreePromo", "deliveryRanges"] } },
     });
     const deliverySettings = Object.fromEntries(settingRows.map((row) => [row.key, row.value]));
-    const configuredRanges = String(deliverySettings.deliveryRanges || "0–5 km|20\\n5–10 km|30\\n10–15 km|40")
-      .split("\\n")
+    const configuredRanges = String(deliverySettings.deliveryRanges || "0–5 km|20\n5–10 km|30\n10–15 km|40")
+      .split("\n")
       .map((line) => {
         const [label, feeText] = line.split("|");
         return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
