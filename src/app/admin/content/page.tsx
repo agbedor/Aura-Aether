@@ -53,7 +53,7 @@ const initial: Settings = {
   contactAddress: "Accra, Ghana",
   deliveryOrigin: "Adenta, Accra, Ghana",
   deliveryFreePromo: "false",
-  deliveryRanges: "0–5 km|20\n5–10 km|30\n10–15 km|40",
+  deliveryRanges: "",
 };
 
 const groups: Record<string, EditorGroup[]> = {
