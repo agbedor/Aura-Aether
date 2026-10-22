@@ -4,7 +4,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { CheckCircle2, AlertTriangle, ArrowRight, ShoppingCart, ShieldCheck, RefreshCw } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ArrowRight, ShoppingCart, ShieldCheck, RefreshCw, PackageSearch } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { Order } from "@/types";
 import { formatGhs } from "@/lib/paystack";
@@ -231,6 +231,13 @@ function OrderSuccessContent() {
             <ArrowRight className="w-4 h-4" />
           </Link>
 
+          <Link
+            href="/track-order"
+            className="aa-button inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#D5CDC4] text-xs font-bold uppercase tracking-widest text-[#4A443F] hover:bg-white transition-all"
+          >
+            <PackageSearch className="w-4 h-4" />
+            <span>Track This Order</span>
+          </Link>
           <Link
             href="/account/orders"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#D5CDC4] text-xs font-bold uppercase tracking-widest text-[#4A443F] hover:bg-white transition-all"
