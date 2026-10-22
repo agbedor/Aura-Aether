@@ -24,10 +24,10 @@ function clearLegacyCookie(response: NextResponse) {
 }
 
 function migrateLegacyAdminToken(request: NextRequest, token: string, pathname: string) {
-  const isApi = pathname.startsWith("/api/");
-  const response = isApi
-    ? NextResponse.next()
-    : NextResponse.redirect(new URL("/admin", request.url));
+  const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+  const response = isAdminRoute
+    ? NextResponse.redirect(new URL("/admin", request.url))
+    : NextResponse.next();
   response.cookies.set("aura_admin_token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -46,14 +46,13 @@ export async function proxy(request: NextRequest) {
   const adminRole = adminToken ? await getTokenRole(adminToken) : null;
   const legacyRole = legacyToken ? await getTokenRole(legacyToken) : null;
   const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
-  const isAdminLoginApi = pathname === "/api/auth/login" || pathname === "/api/auth/admin-logout";
 
-  // Migrate older administrator sessions instead of repeatedly sending the
-  // administrator back to the login page because the cookie name changed.
+  // Keep the old administrator cookie working without redirecting storefront pages.
   if (legacyToken && legacyRole === "ADMIN" && adminRole !== "ADMIN") {
     return migrateLegacyAdminToken(request, legacyToken, pathname);
   }
 
+  // Only the admin session grants access to the admin portal.
   if (isAdminRoute) {
     if (adminRole !== "ADMIN") {
       const loginUrl = new URL("/login", request.url);
@@ -61,15 +60,11 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Clean up a leftover legacy cookie without invalidating the valid session.
+    // Remove a leftover legacy cookie while preserving the valid admin session.
     if (legacyToken) return clearLegacyCookie(NextResponse.next());
-    return NextResponse.next();
   }
 
-  if (adminRole === "ADMIN" && !isAdminLoginApi && !pathname.startsWith("/api/")) {
-    return NextResponse.redirect(new URL("/admin", request.url));
-  }
-
+  // Do not redirect storefront visitors just because an admin is also signed in.
   return NextResponse.next();
 }
 
