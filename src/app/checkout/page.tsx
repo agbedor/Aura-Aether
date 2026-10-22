@@ -251,7 +251,8 @@ export default function CheckoutPage() {
               </div>
 
               {/* Pay With Paystack Action */}
-              {!deliverySettings.freePromo && deliverySettings.ranges.length === 0 && <p className="text-xs text-amber-700">Delivery rates have not been set yet. Please contact the store or ask the administrator to add delivery ranges before accepting online payments.</p>}\n              <div className="pt-6 border-t border-[#EFE9E2] space-y-3">
+              {!deliverySettings.freePromo && deliverySettings.ranges.length === 0 && <p className="text-xs text-amber-700">Delivery rates have not been set yet. Please contact the store or ask the administrator to add delivery ranges before accepting online payments.</p>}
+              <div className="pt-6 border-t border-[#EFE9E2] space-y-3">
                 <button
                   type="submit"
                   disabled={isLoading || (!deliverySettings.freePromo && deliverySettings.ranges.length === 0)}
