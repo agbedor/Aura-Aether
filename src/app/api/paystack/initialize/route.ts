@@ -15,6 +15,9 @@ export async function POST(req: Request) {
     }
     const customerToken = cookieStore.get("aura_auth_token")?.value;
     const customerPayload = customerToken ? await verifyToken(customerToken) : null;
+    if (customerPayload?.role === "ADMIN") {
+      return NextResponse.json({ error: "Administrator accounts cannot place customer orders. Please sign in with a customer account." }, { status: 403 });
+    }
     const body = await req.json();
     const {
       customerName,
