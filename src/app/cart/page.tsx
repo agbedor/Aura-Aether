@@ -26,7 +26,7 @@ export default function CartPage() {
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#1C1917] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#38332E] transition-all shadow-md"
+            className="aa-button inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#1C1917] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#38332E] transition-all shadow-md"
           >
             <span>Explore Fragrance Catalog</span>
             <ArrowRight className="w-4 h-4" />
@@ -159,7 +159,7 @@ export default function CartPage() {
             <div className="space-y-3 pt-2">
               <Link
                 href="/checkout"
-                className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2 shadow-md"
+                className="aa-button w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2 shadow-md"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
