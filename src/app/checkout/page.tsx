@@ -11,20 +11,42 @@ import { ShieldCheck, Lock, ArrowLeft, Loader2, AlertCircle } from "lucide-react
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, total, clearCart } = useCart();
+  const { items, subtotal } = useCart();
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     customerName: "",
     customerEmail: "",
     customerPhone: "",
-    deliveryAddress: "To be confirmed by phone",
-    city: "To be confirmed",
+    deliveryAddress: "",
+    city: "",
+    deliveryRange: "",
     notes: "",
   });
 
+  const [deliverySettings, setDeliverySettings] = useState({ origin: "Adenta, Accra, Ghana", freePromo: false, ranges: [{ label: "0–5 km", fee: 20 }, { label: "5–10 km", fee: 30 }, { label: "10–15 km", fee: 40 }] });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => {
+        const s = data?.settings;
+        if (!s) return;
+        const ranges = String(s.deliveryRanges || "").split("\\n").map((line: string) => {
+          const [label, feeText] = line.split("|");
+          return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
+        }).filter((range: { label: string; fee: number }) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
+        setDeliverySettings({ origin: s.deliveryOrigin || "Adenta, Accra, Ghana", freePromo: s.deliveryFreePromo === "true", ranges });
+        setFormData((prev) => ({ ...prev, deliveryRange: prev.deliveryRange || ranges[0]?.label || "" }));
+      })
+      .catch(() => {});
+  }, []);
+
+  const selectedRange = deliverySettings.ranges.find((range) => range.label === formData.deliveryRange);
+  const deliveryFee = deliverySettings.freePromo ? 0 : selectedRange?.fee ?? 0;
+  const checkoutTotal = subtotal + deliveryFee;
 
   // Auto-fill if customer is logged in
   useEffect(() => {
@@ -192,9 +214,25 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#E8D9CE] bg-[#FAF7F3] p-4 text-sm leading-6 text-[#65534D]">
-                <strong className="block text-[#1C1917]">Delivery will be confirmed after your order.</strong>
-                We will call you to confirm your exact location and arrange an Uber delivery. The delivery cost will be discussed with you before dispatch, so no delivery fee is added to this payment.
+                  <div className="space-y-4 rounded-2xl border border-[#E8D9CE] bg-[#FAF7F3] p-4">
+                <p className="text-sm leading-6 text-[#65534D]"><strong className="text-[#1C1917]">Delivery starts from {deliverySettings.origin}.</strong> Enter your destination and select the delivery range that applies to your location.</p>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Delivery address *</label>
+                  <input type="text" name="deliveryAddress" required placeholder="House number, street, landmark…" value={formData.deliveryAddress} onChange={handleChange} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#1C1917]" />
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Area / city *</label>
+                    <input type="text" name="city" required placeholder="e.g. Madina" value={formData.city} onChange={handleChange} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#1C1917]" />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Delivery range *</label>
+                    <select name="deliveryRange" required value={formData.deliveryRange} onChange={handleChange} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#1C1917]">
+                      {deliverySettings.ranges.length === 0 ? <option value="">Delivery rates not set yet</option> : deliverySettings.ranges.map((range) => <option key={range.label} value={range.label}>{range.label} — {deliverySettings.freePromo ? "Free delivery" : formatGhs(range.fee)}</option>)}
+                    </select>
+                  </div>
+                </div>
+                {deliverySettings.freePromo && <p className="text-sm font-semibold text-emerald-700">Free delivery promotion is active — delivery is free on this order.</p>}
               </div>
 
               {/* Delivery Notes */}
@@ -227,7 +265,7 @@ export default function CheckoutPage() {
                   ) : (
                     <>
                       <Lock className="w-4 h-4" />
-                      <span>Pay {formatGhs(total)} via Paystack</span>
+                      <span>Pay {formatGhs(checkoutTotal)} via Paystack</span>
                     </>
                   )}
                 </button>
@@ -279,9 +317,13 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span className="font-semibold text-[#1C1917]">{formatGhs(subtotal)}</span>
               </div>
-                            <div className="pt-3 border-t border-[#EFE9E2] flex justify-between text-base font-bold text-[#1C1917]">
+                            <div className="flex justify-between">
+                <span>Delivery</span>
+                <span className="font-semibold text-[#1C1917]">{deliverySettings.freePromo ? "FREE" : selectedRange ? formatGhs(deliveryFee) : "Select a range"}</span>
+              </div>
+              <div className="pt-3 border-t border-[#EFE9E2] flex justify-between text-base font-bold text-[#1C1917]">
                 <span>Total Due</span>
-                <span>{formatGhs(total)}</span>
+                <span>{formatGhs(checkoutTotal)}</span>
               </div>
             </div>
           </div>
