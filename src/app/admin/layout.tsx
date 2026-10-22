@@ -8,10 +8,10 @@ import { LayoutDashboard, PanelsTopLeft, Package, Sparkles, LogOut } from "lucid
 type AdminUser = { id: string; name: string; email: string; role: "ADMIN" };
 
 const navigation = [
-  { label: "Overview & orders", href: "/admin", icon: LayoutDashboard },
+  { label: "Overview & orders", href: "/admin?tab=orders#admin-tabs", icon: LayoutDashboard },
   { label: "Website editor", href: "/admin/content?section=home", icon: PanelsTopLeft },
-  { label: "Product catalogue", href: "/admin?tab=products", icon: Package },
-  { label: "Add a fragrance", href: "/admin?tab=new-product", icon: Sparkles },
+  { label: "Product catalogue", href: "/admin?tab=products#admin-tabs", icon: Package },
+  { label: "Add a fragrance", href: "/admin?tab=new-product#admin-tabs", icon: Sparkles },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
