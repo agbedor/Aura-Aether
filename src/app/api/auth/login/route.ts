@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: user.role === "ADMIN" ? 60 * 60 * 8 : 60 * 60 * 24 * 7,
     });
     response.cookies.delete(user.role === "ADMIN" ? "aura_auth_token" : "aura_admin_token");
     return response;
