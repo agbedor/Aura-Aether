@@ -93,3 +93,8 @@
   }
 }
 \n\n/* Shared storefront button shape and minimum tap target. */\n.aa-button {\n  border-radius: 9999px;\n  min-height: 44px;\n  justify-content: center;\n}\n
+
+/* Consistent pill shape for interactive buttons across storefront and admin UI. */
+button {
+  border-radius: 9999px !important;
+}
