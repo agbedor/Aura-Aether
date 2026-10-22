@@ -29,7 +29,7 @@ export async function signToken(payload: AuthTokenPayload): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime(payload.role === "ADMIN" ? "8h" : "7d")
     .sign(getJwtSecret());
 }
 
