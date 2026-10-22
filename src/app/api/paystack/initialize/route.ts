@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
-import { getProductById, createOrder } from "@/lib/db";
+import { getProductById, createOrder, prisma } from "@/lib/db";
 import { initializePaystackTransaction } from "@/lib/paystack";
 import { OrderItem } from "@/types";
 
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
       customerPhone,
       deliveryAddress,
       city,
+      deliveryRange,
       notes,
       items,
     } = body;
@@ -34,6 +35,9 @@ export async function POST(req: Request) {
       !customerName ||
       !customerEmail ||
       !customerPhone ||
+      !deliveryAddress ||
+      !city ||
+      !deliveryRange ||
       !items ||
       !Array.isArray(items) ||
       items.length === 0
@@ -95,9 +99,26 @@ export async function POST(req: Request) {
       });
     }
 
-    // 3. Server-side delivery fee calculation (never trusted from frontend)
-    const deliveryFee = 0;
-    const finalTotal = calculatedSubtotal;
+    // 3. Resolve delivery price from admin-managed settings on the server.
+    // Never trust a fee supplied by the browser.
+    const settingRows = await prisma.siteSetting.findMany({
+      where: { key: { in: ["deliveryFreePromo", "deliveryRanges"] } },
+    });
+    const deliverySettings = Object.fromEntries(settingRows.map((row) => [row.key, row.value]));
+    const configuredRanges = String(deliverySettings.deliveryRanges || "0–5 km|20\\n5–10 km|30\\n10–15 km|40")
+      .split("\\n")
+      .map((line) => {
+        const [label, feeText] = line.split("|");
+        return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
+      })
+      .filter((range) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
+    const selectedDeliveryRange = configuredRanges.find((range) => range.label === String(deliveryRange).trim());
+    if (!selectedDeliveryRange) {
+      return NextResponse.json({ error: "Please select a valid delivery range. Refresh checkout and try again." }, { status: 400 });
+    }
+    const freeDeliveryPromo = deliverySettings.deliveryFreePromo === "true";
+    const deliveryFee = freeDeliveryPromo ? 0 : selectedDeliveryRange.fee;
+    const finalTotal = calculatedSubtotal + deliveryFee;
 
     // 4. Generate unique transaction reference & human-readable order number
     const timestamp = Date.now();
@@ -112,8 +133,8 @@ export async function POST(req: Request) {
       customerName: customerName.trim(),
       customerEmail: customerEmail.trim().toLowerCase(),
       customerPhone: customerPhone.trim(),
-      deliveryAddress: (deliveryAddress || "To be confirmed by phone").trim(),
-      city: (city || "To be confirmed").trim(),
+      deliveryAddress: deliveryAddress.trim(),
+      city: city.trim(),
       notes: notes?.trim() || null,
       subtotal: calculatedSubtotal,
       deliveryFee,
@@ -151,7 +172,7 @@ export async function POST(req: Request) {
           {
             display_name: "Delivery City",
             variable_name: "delivery_city",
-            value: (city || "To be confirmed").trim(),
+            value: city.trim(),
           },
         ],
       },
