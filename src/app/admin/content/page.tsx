@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, Truck } from "lucide-react";
-import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
 
 type Settings = Record<string, string>;
+type AdminUser = { id: string; name: string; email: string; role: "ADMIN" };
 type Field = { key: string; label: string; help?: string; multiline?: boolean; type?: string; image?: boolean; options?: { label: string; value: string }[] };
 type EditorGroup = { title: string; description: string; fields: Field[] };
 
@@ -126,13 +125,27 @@ const pages = [
 ];
 
 export default function StorefrontContentPage() {
-  const { user, isLoading } = useAuth();
+  const [user, setUser] = useState<AdminUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<Settings>(initial);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [activeSection, setActiveSection] = useState("home");
   const [uploadingKey, setUploadingKey] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/auth/admin-me")
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!active) return;
+        setUser(res.ok && data.user?.role === "ADMIN" ? data.user : null);
+      })
+      .catch(() => { if (active) setUser(null); })
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const section = new URLSearchParams(window.location.search).get("section");
@@ -190,7 +203,7 @@ export default function StorefrontContentPage() {
   }
 
   if (isLoading || loading) return <div className="mx-auto max-w-4xl p-10 text-sm text-[#747B87]">Loading editor…</div>;
-  if (!user || user.role !== "ADMIN") return <div className="mx-auto max-w-xl rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center"><h1 className="text-2xl font-bold">Admin access required</h1><p className="mt-2 text-sm text-[#747B87]">Sign in with an administrator account to manage the store.</p><Link href="/login" className="mt-5 inline-flex rounded-lg bg-[#20242B] px-4 py-2 text-sm font-semibold text-white">Go to sign in</Link></div>;
+  if (!user || user.role !== "ADMIN") return <div className="mx-auto max-w-xl rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center"><h1 className="text-2xl font-bold">Admin access required</h1><p className="mt-2 text-sm text-[#747B87]">Sign in with an administrator account to manage the store.</p><a href="/login" className="mt-5 inline-flex rounded-lg bg-[#20242B] px-4 py-2 text-sm font-semibold text-white">Go to sign in</a></div>;
 
   const selectedPage = pages.find((page) => page.id === activeSection) || pages[0];
   const SelectedIcon = selectedPage.icon;
