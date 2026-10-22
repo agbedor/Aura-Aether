@@ -19,10 +19,10 @@ const DEFAULTS: Record<string, string> = {
   heroImageUrl: "/images/hero-placeholder-1.svg",
   heroImageUrl2: "/images/hero-placeholder-2.svg",
   heroImageUrl3: "/images/hero-placeholder-3.svg",
-  heroCtaLabel: "Explore the collection",
+  heroCtaLabel: "Explore the collection",\n  heroCtaUrl: "/shop",\n  heroCtaAlignment: "center",
   // Homepage sections
   homeFeaturedEyebrow: "OUR COLLECTION",
-  homeFeaturedTitle: "Featured fragrances.",
+  homeFeaturedTitle: "Featured fragrances.",\n  homeFeaturedCtaLabel: "View All Fragrances",\n  homeFeaturedCtaUrl: "/shop",
   homePromoTitle: "Find your next signature",
   homePromoDescription: "Explore fragrances for every mood, moment, and version of you.",
   homePromoImageUrl: "/images/spring-peonies.svg",
