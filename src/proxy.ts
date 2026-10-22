@@ -3,12 +3,12 @@ import { jwtVerify } from "jose";
 
 async function getTokenRole(token: string): Promise<string | null> {
   const secret = process.env.AUTH_SECRET;
-  if (!secret || secret.length < 32) return false;
+  if (!secret || secret.length < 32) return null;
   try {
     const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
     return typeof payload.role === "string" && typeof payload.userId === "string" ? payload.role : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
