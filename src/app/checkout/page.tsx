@@ -20,11 +20,11 @@ export default function CheckoutPage() {
     customerPhone: "",
     deliveryAddress: "",
     city: "",
-    deliveryRange: "0–5 km",
+    deliveryRange: "",
     notes: "",
   });
 
-  const [deliverySettings, setDeliverySettings] = useState({ origin: "Adenta, Accra, Ghana", freePromo: false, ranges: [{ label: "0–5 km", fee: 20 }, { label: "5–10 km", fee: 30 }, { label: "10–15 km", fee: 40 }] });
+  const [deliverySettings, setDeliverySettings] = useState({ origin: "Adenta, Accra, Ghana", freePromo: false, ranges: [] as { label: string; fee: number }[] });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -228,7 +228,7 @@ export default function CheckoutPage() {
                   <div>
                     <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Delivery range *</label>
                     <select name="deliveryRange" required value={formData.deliveryRange} onChange={handleChange} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#1C1917]">
-                      {deliverySettings.ranges.length === 0 ? <option value="">Delivery rates not set yet</option> : deliverySettings.ranges.map((range) => <option key={range.label} value={range.label}>{range.label} — {deliverySettings.freePromo ? "Free delivery" : formatGhs(range.fee)}</option>)}
+                      {deliverySettings.ranges.length === 0 ? <option value="">{deliverySettings.freePromo ? "Free delivery promotion active" : "Delivery rates not set yet"}</option> : <><option value="">Choose a delivery range</option>{deliverySettings.ranges.map((range) => <option key={range.label} value={range.label}>{range.label} — {deliverySettings.freePromo ? "Free delivery" : formatGhs(range.fee)}</option>)}</>}
                     </select>
                   </div>
                 </div>
@@ -251,10 +251,10 @@ export default function CheckoutPage() {
               </div>
 
               {/* Pay With Paystack Action */}
-              <div className="pt-6 border-t border-[#EFE9E2] space-y-3">
+              {!deliverySettings.freePromo && deliverySettings.ranges.length === 0 && <p className="text-xs text-amber-700">Delivery rates have not been set yet. Please contact the store or ask the administrator to add delivery ranges before accepting online payments.</p>}\n              <div className="pt-6 border-t border-[#EFE9E2] space-y-3">
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || (!deliverySettings.freePromo && deliverySettings.ranges.length === 0)}
                   className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-60"
                 >
                   {isLoading ? (
