@@ -102,7 +102,4 @@
 }
 
 
-/* Consistent pill shape for interactive buttons across storefront and admin UI. */
-button {
-  border-radius: 9999px !important;
-}
+/* Keep the storefront's pill buttons scoped to .aa-button; admin controls use their own shapes. */
