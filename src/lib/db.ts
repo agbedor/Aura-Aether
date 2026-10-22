@@ -489,6 +489,7 @@ export async function updateOrderPaymentSuccess({
   // Memory update
   order.status = "PAID";
   order.paymentStatus = "SUCCESS";
+  if (paystackId) order.orderNumber = paystackId;
   order.payment = {
     id: `pay-${Date.now()}`,
     orderId: order.id,
