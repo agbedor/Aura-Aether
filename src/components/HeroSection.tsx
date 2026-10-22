@@ -29,24 +29,19 @@ const defaults: HeroContent = {
   heroCtaAlignment: "center",
 };
 
-export default function HeroSection() {
-  const [content, setContent] = useState<HeroContent>(defaults);
+export default function HeroSection({ initialSettings }: { initialSettings?: Partial<HeroContent> }) {
+  const [content] = useState<HeroContent>({ ...defaults, ...initialSettings });
   const [activeSlide, setActiveSlide] = useState(0);
   const slides = [content.heroImageUrl || defaults.heroImageUrl!, content.heroImageUrl2 || defaults.heroImageUrl2!, content.heroImageUrl3 || defaults.heroImageUrl3!];
+  const alignmentClass = content.heroCtaAlignment === "left" ? "justify-start" : content.heroCtaAlignment === "right" ? "justify-end" : "justify-center";
+  const heroCtaHref = content.heroCtaUrl?.startsWith("/") && !content.heroCtaUrl.startsWith("//") ? content.heroCtaUrl : "/shop";
 
   useEffect(() => {
     const timer = window.setInterval(() => setActiveSlide((current) => (current + 1) % 3), 6000);
     return () => window.clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    fetch("/api/site-settings")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.settings) setContent((current) => ({ ...current, ...data.settings }));
-      })
-      .catch(() => undefined);
-  }, []);
+
 
   return (
     <section className="bg-[#FCFBF9] text-[#17110F]">
@@ -83,13 +78,15 @@ export default function HeroSection() {
             <p className="font-serif-luxury mt-4 text-base sm:text-lg italic text-[#F0C8A9]">
               {content.motto}
             </p>
+            <div className={`mt-8 flex ${alignmentClass}`}>
             <Link
-              href="/shop"
-              className="group mt-8 inline-flex items-center gap-4 border border-[#E8BD9E] bg-[#17110F]/30 px-7 py-4 text-[10px] sm:text-xs uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-colors hover:bg-[#B77F60] hover:border-[#B77F60]"
+              href={heroCtaHref}
+              className="aa-button group inline-flex items-center gap-4 border border-[#E8BD9E] bg-[#17110F]/30 px-7 py-4 text-[10px] sm:text-xs uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-colors hover:bg-[#B77F60] hover:border-[#B77F60]"
             >
               {content.heroCtaLabel}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
+            </div>
           </div>
         </div>
         <div className="absolute bottom-5 left-5 z-10 text-[9px] uppercase tracking-[0.28em] text-white/75 sm:bottom-8 sm:left-10">
