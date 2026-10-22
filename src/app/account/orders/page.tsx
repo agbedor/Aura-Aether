@@ -78,7 +78,7 @@ export default function OrderHistoryPage() {
             </p>
             <Link
               href="/shop"
-              className="inline-block px-8 py-3.5 rounded-full bg-[#1C1917] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#38332E]"
+              className="aa-button inline-block px-8 py-3.5 rounded-full bg-[#1C1917] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#38332E]"
             >
               Discover Fragrances
             </Link>
