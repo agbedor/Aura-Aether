@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 export async function GET() {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value || cookieStore.get("aura_auth_token")?.value;
 
     if (!token) {
       return NextResponse.json({ user: null }, { status: 401 });
