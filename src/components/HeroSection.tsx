@@ -13,6 +13,8 @@ type HeroContent = {
   heroImageUrl2?: string;
   heroImageUrl3?: string;
   heroCtaLabel: string;
+  heroCtaUrl: string;
+  heroCtaAlignment: string;
 };
 
 const defaults: HeroContent = {
@@ -23,6 +25,8 @@ const defaults: HeroContent = {
   heroImageUrl2: "/images/hero-placeholder-2.svg",
   heroImageUrl3: "/images/hero-placeholder-3.svg",
   heroCtaLabel: "Explore the collection",
+  heroCtaUrl: "/shop",
+  heroCtaAlignment: "center",
 };
 
 export default function HeroSection() {
