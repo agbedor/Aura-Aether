@@ -19,7 +19,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-[#FCFBF9]">
       {/* 1. Hero Section matching Reference 2 */}
-      <HeroSection />
+      <HeroSection initialSettings={settings} />
 
       {/* 3. Featured Fragrances Grid matching Reference 2 */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,8 +35,8 @@ export default async function HomePage() {
           </div>
 
           <Link
-            href="/shop"
-            className="text-xs font-semibold uppercase tracking-widest text-[#1C1917] hover:text-[#9B7036] flex items-center gap-1.5 transition-colors group"
+            href={(settings.homeFeaturedCtaUrl || "/shop").startsWith("/") && !(settings.homeFeaturedCtaUrl || "/shop").startsWith("//") ? settings.homeFeaturedCtaUrl || "/shop" : "/shop"}
+            className="aa-button inline-flex items-center gap-2 border border-[#D8C4B5] px-5 py-3 text-xs font-semibold uppercase tracking-widest text-[#1C1917] hover:text-[#9B7036] transition-colors group"
           >
             <span>{settings.homeFeaturedCtaLabel || "View All Fragrances"}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
