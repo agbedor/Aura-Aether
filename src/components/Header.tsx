@@ -35,6 +35,7 @@ export default function Header() {
     { name: "SHOP", href: "/shop" },
     { name: "GIFT SETS", href: "/gift-sets" },
     { name: "CONTACT", href: "/contact" },
+    { name: "TRACK ORDER", href: "/track-order" },
   ];
 
   return (
