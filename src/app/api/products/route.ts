@@ -29,7 +29,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value;
     const payload = token ? await verifyToken(token) : null;
 
     if (!payload || payload.role !== "ADMIN") {
@@ -126,7 +126,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value;
     const payload = token ? await verifyToken(token) : null;
 
     if (!payload || payload.role !== "ADMIN") {
@@ -214,7 +214,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value;
     const payload = token ? await verifyToken(token) : null;
 
     if (!payload || payload.role !== "ADMIN") {
