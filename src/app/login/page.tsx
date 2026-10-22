@@ -94,7 +94,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60 mt-4"
+            className="aa-button w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60 mt-4"
           >
             <span>{isLoading ? "Signing in..." : "Sign In to Boutique"}</span>
             <ArrowRight className="w-4 h-4" />
