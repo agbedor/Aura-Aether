@@ -1,10 +1,20 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
 import { getProductById, createOrder } from "@/lib/db";
 import { initializePaystackTransaction } from "@/lib/paystack";
 import { OrderItem } from "@/types";
 
 export async function POST(req: Request) {
   try {
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get("aura_admin_token")?.value;
+    const adminPayload = adminToken ? await verifyToken(adminToken) : null;
+    if (adminPayload?.role === "ADMIN") {
+      return NextResponse.json({ error: "Administrator accounts cannot place customer orders." }, { status: 403 });
+    }
+    const customerToken = cookieStore.get("aura_auth_token")?.value;
+    const customerPayload = customerToken ? await verifyToken(customerToken) : null;
     const body = await req.json();
     const {
       customerName,
@@ -14,7 +24,6 @@ export async function POST(req: Request) {
       city,
       notes,
       items,
-      userId,
     } = body;
 
     // 1. Validation
@@ -96,7 +105,7 @@ export async function POST(req: Request) {
     // 5. Create PENDING Order in Database
     const order = await createOrder({
       orderNumber,
-      userId: userId || null,
+      userId: customerPayload?.role === "CUSTOMER" ? customerPayload.userId : null,
       customerName: customerName.trim(),
       customerEmail: customerEmail.trim().toLowerCase(),
       customerPhone: customerPhone.trim(),
