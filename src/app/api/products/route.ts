@@ -105,6 +105,7 @@ export async function POST(req: Request) {
       stock,
       inStock: stock > 0,
       image: body.image || "/images/products/meadow.svg",
+      images: Array.isArray(body.images) ? body.images.filter((url: unknown): url is string => typeof url === "string" && url.trim().length > 0) : [],
       categoryId: category.id,
       size: body.size.trim(),
       scentNotes: body.scentNotes || "ARTISANAL ACCORD",
@@ -197,6 +198,12 @@ export async function PUT(req: Request) {
       if (updates.originalPrice !== null && (!Number.isFinite(updates.originalPrice) || updates.originalPrice <= (updates.price ?? (await prisma.product.findUnique({ where: { id }, select: { price: true } }))?.price ?? 0))) {
         return NextResponse.json({ error: "Original price must be greater than the current selling price" }, { status: 400 });
       }
+    }
+    if (updates.images !== undefined) {
+      if (!Array.isArray(updates.images) || !updates.images.every((url: unknown) => typeof url === "string")) {
+        return NextResponse.json({ error: "Product images must be a list of image URLs" }, { status: 400 });
+      }
+      updates.images = [...new Set(updates.images.map((url: string) => url.trim()).filter(Boolean))];
     }
     if (updates.stock !== undefined) {
       updates.stock = parseInt(updates.stock, 10);
