@@ -436,6 +436,9 @@ export async function updateOrderPaymentSuccess({
         data: {
           status: "PAID",
           paymentStatus: "SUCCESS",
+          // Use Paystack's verified transaction ID as the customer-facing order number.
+          // Keep the internal Order.id unchanged so OrderItem relations remain valid.
+          ...(paystackId ? { orderNumber: paystackId } : {}),
           payment: {
             upsert: {
               create: {
