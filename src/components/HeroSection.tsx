@@ -35,6 +35,8 @@ export default function HeroSection({ initialSettings }: { initialSettings?: Par
   const slides = [content.heroImageUrl || defaults.heroImageUrl!, content.heroImageUrl2 || defaults.heroImageUrl2!, content.heroImageUrl3 || defaults.heroImageUrl3!];
   const alignmentClass = content.heroCtaAlignment === "left" ? "justify-start" : content.heroCtaAlignment === "right" ? "justify-end" : "justify-center";
   const heroCtaHref = content.heroCtaUrl?.startsWith("/") && !content.heroCtaUrl.startsWith("//") ? content.heroCtaUrl : "/shop";
+  const alignmentClass = content.heroCtaAlignment === "left" ? "justify-start" : content.heroCtaAlignment === "right" ? "justify-end" : "justify-center";
+  const heroCtaHref = content.heroCtaUrl?.startsWith("/") && !content.heroCtaUrl.startsWith("//") ? content.heroCtaUrl : "/shop";
 
   useEffect(() => {
     const timer = window.setInterval(() => setActiveSlide((current) => (current + 1) % 3), 6000);
