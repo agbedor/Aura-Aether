@@ -53,7 +53,6 @@ export async function POST(req: Request) {
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
-    response.cookies.delete("aura_admin_token");
     return response;
   } catch (error) {
     console.error("Registration error:", error);
