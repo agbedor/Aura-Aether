@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, PanelsTopLeft, Package, ShoppingCart, ExternalLink, Sparkles } from "lucide-react";
+import { LayoutDashboard, PanelsTopLeft, Package, ShoppingCart, ExternalLink, Sparkles, LogOut } from "lucide-react";
 
 const navigation = [
   { label: "Overview & orders", href: "/admin", icon: LayoutDashboard },
@@ -14,7 +14,7 @@ const navigation = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logout } = useAuth();
 
   if (isLoading) return <div className="grid min-h-screen place-items-center bg-[#F6F7F9] text-sm text-[#747B87]">Loading admin workspace…</div>;
   if (!user || user.role !== "ADMIN") return <div className="grid min-h-screen place-items-center bg-[#F6F7F9] p-6 text-center"><div className="max-w-md rounded-2xl border border-[#E5E7EB] bg-white p-8"><h1 className="text-2xl font-bold text-[#20242B]">Admin access required</h1><p className="mt-2 text-sm leading-6 text-[#747B87]">Sign in with an administrator account to open the store management portal.</p><Link href="/login" className="mt-5 inline-flex rounded-lg bg-[#20242B] px-4 py-2.5 text-sm font-semibold text-white">Go to sign in</Link></div></div>;
@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#9AA0AA]">Aura &amp; Aether / Admin</p>
             <p className="mt-1 text-sm font-bold">{pathname.startsWith("/admin/content") ? "Website editor" : "Store management"}</p>
           </div>
-          <Link href="/" target="_blank" className="inline-flex items-center gap-2 rounded-lg border border-[#E2E5EA] px-3 py-2 text-xs font-semibold text-[#5E6571] transition-colors hover:border-[#C7A48F] hover:text-[#8B5D45]"><ExternalLink size={14} /> View storefront</Link>
+          <div className="flex items-center gap-2"><Link href="/" target="_blank" className="inline-flex items-center gap-2 rounded-lg border border-[#E2E5EA] px-3 py-2 text-xs font-semibold text-[#5E6571] transition-colors hover:border-[#C7A48F] hover:text-[#8B5D45]"><ExternalLink size={14} /> View storefront</Link><button type="button" onClick={async () => { await fetch("/api/auth/admin-logout", { method: "POST" }); await logout(); window.location.href = "/login"; }} className="inline-flex items-center gap-2 rounded-lg bg-[#20242B] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#424852]"><LogOut size={14} /> Log out</button></div>
         </header>
         <nav className="flex gap-2 overflow-x-auto border-b border-[#E7E9EE] bg-white px-4 py-3 lg:hidden">
           {navigation.map((item) => <a key={item.label} href={item.href} className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold ${pathname.startsWith("/admin/content") === item.href.startsWith("/admin/content") ? "bg-[#20242B] text-white" : "bg-[#F3F4F6] text-[#626976]"}`}>{item.label}</a>)}
