@@ -60,8 +60,8 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Remove a leftover legacy cookie while preserving the valid admin session.
-    if (legacyToken) return clearLegacyCookie(NextResponse.next());
+    // Do not clear aura_auth_token here: it may be an active customer session
+    // being used in the storefront tab at the same time as this admin session.
   }
 
   // Do not redirect storefront visitors just because an admin is also signed in.
