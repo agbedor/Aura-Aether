@@ -131,7 +131,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             </p>
             <Link
               href="/shop"
-              className="inline-block px-6 py-3 rounded-full bg-[#1C1917] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#38332E]"
+              className="aa-button inline-block px-6 py-3 rounded-full bg-[#1C1917] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#38332E]"
             >
               Reset Filters
             </Link>
