@@ -111,7 +111,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
-    if (requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") setActiveTab(requestedTab);
+    if (requestedTab === "orders" || requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") setActiveTab(requestedTab);
     fetchData();
   }, []);
 
@@ -487,7 +487,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Tab navigation */}
-        <div className="flex items-center gap-2 border-b border-[#EFE9E2] mb-8 pb-3">
+        <div id="admin-tabs" className="flex items-center gap-2 border-b border-[#EFE9E2] mb-8 pb-3">
           <button
             onClick={() => setActiveTab("orders")}
             className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
