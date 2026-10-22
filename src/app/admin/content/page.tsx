@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, ExternalLink } from "lucide-react";
+import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
@@ -194,7 +194,7 @@ export default function StorefrontContentPage() {
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#20242B] sm:text-4xl">Website editor</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[#747B87]">Choose a page, update its content, preview every editable image and save your changes.</p>
         </div>
-        <Link href="/" target="_blank" className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-[#E1E4E9] bg-white px-4 py-3 text-xs font-bold text-[#555D69] transition-all hover:-translate-y-0.5 hover:border-[#C7A48F] hover:shadow-sm md:self-auto"><ExternalLink size={14} /> Preview live website</Link>
+        
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
