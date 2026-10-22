@@ -65,10 +65,10 @@ export async function GET() {
     for (const row of rows) {
       if (Object.prototype.hasOwnProperty.call(DEFAULTS, row.key)) settings[row.key] = row.value;
     }
-    return NextResponse.json({ settings });
+    return NextResponse.json({ settings }, { headers: { "Cache-Control": "private, max-age=10, must-revalidate" } });
   } catch (error) {
     console.error("Site settings GET error:", error);
-    return NextResponse.json({ settings: DEFAULTS });
+    return NextResponse.json({ settings: DEFAULTS }, { headers: { "Cache-Control": "private, max-age=5, must-revalidate" } });
   }
 }
 
