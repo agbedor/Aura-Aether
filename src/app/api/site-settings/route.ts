@@ -52,7 +52,7 @@ const DEFAULTS: Record<string, string> = {
   // Delivery settings; fees are configured by the store owner in the admin editor.
   deliveryOrigin: "Adenta, Accra, Ghana",
   deliveryFreePromo: "false",
-  deliveryRanges: "0–5 km|20\\n5–10 km|30\\n10–15 km|40",
+  deliveryRanges: "0–5 km|20\n5–10 km|30\n10–15 km|40",
 };
 
 async function isAdmin() {
