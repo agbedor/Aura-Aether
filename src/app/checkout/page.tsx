@@ -34,7 +34,7 @@ export default function CheckoutPage() {
       .then((data) => {
         const s = data?.settings;
         if (!s) return;
-        const ranges = String(s.deliveryRanges || "").split("\\n").map((line: string) => {
+        const ranges = String(s.deliveryRanges || "").split("\n").map((line: string) => {
           const [label, feeText] = line.split("|");
           return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
         }).filter((range: { label: string; fee: number }) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
