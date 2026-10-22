@@ -29,7 +29,7 @@ const defaults: HeroContent = {
   heroCtaAlignment: "center",
 };
 
-export default function HeroSection({ initialSettings }: { initialSettings?: Partial<HeroContent> }) {
+export default function HeroSection({ initialSettings }: { initialSettings?: Record<string, string> }) {
   const [content] = useState<HeroContent>({ ...defaults, ...initialSettings });
   const [activeSlide, setActiveSlide] = useState(0);
   const slides = [content.heroImageUrl || defaults.heroImageUrl!, content.heroImageUrl2 || defaults.heroImageUrl2!, content.heroImageUrl3 || defaults.heroImageUrl3!];
