@@ -16,14 +16,14 @@ export default function Header() {
   const { user } = useAuth();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [logoUrl, setLogoUrl] = useState("");
+  const [logoUrl, setLogoUrl] = useState("/images/aura-aether-logo.svg");
   const [brandName, setBrandName] = useState("Aura & Aether Parfums");
 
   useEffect(() => {
     fetch("/api/site-settings")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.settings?.logoUrl) setLogoUrl(data.settings.logoUrl);
+        if (typeof data?.settings?.logoUrl === "string" && data.settings.logoUrl.trim()) setLogoUrl(data.settings.logoUrl.trim());
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
       })
       .catch(() => undefined);
@@ -69,7 +69,7 @@ export default function Header() {
             <div className="flex-1 md:flex-initial text-center">
               <Link href="/" aria-label={brandName} className="inline-flex min-w-0 items-center justify-center py-2 group">
                 {logoUrl ? (
-                  <Image src={logoUrl} alt={brandName} width={250} height={72} priority className="h-12 sm:h-14 w-auto max-w-[190px] sm:max-w-[250px] object-contain" />
+                  <Image src={logoUrl} alt={`${brandName} logo`} width={250} height={156} priority className="h-14 sm:h-16 w-auto max-w-[210px] sm:max-w-[230px] object-contain" onError={() => setLogoUrl("/images/aura-aether-logo.svg")} />
                 ) : (
                   <span className="inline-block">
                     <span className="font-serif-luxury text-xl sm:text-2xl tracking-[0.12em] sm:tracking-[0.2em] font-semibold text-[#17110F] block uppercase group-hover:text-[#8E5E45] transition-colors">AURA &amp; AETHER</span>
