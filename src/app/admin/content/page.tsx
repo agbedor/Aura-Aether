@@ -112,7 +112,7 @@ const groups: Record<string, EditorGroup[]> = {
     { key: "deliveryOrigin", label: "Delivery starting point", help: "Current starting point: Adenta, Accra, Ghana." },
     { key: "deliveryFreePromo", label: "Free delivery for all orders", options: [{ label: "Off — use normal delivery rates", value: "false" }, { label: "On — all orders have free delivery", value: "true" }] },
     { key: "deliveryRanges", label: "Delivery ranges and fees", multiline: true, help: "One range per line, in this format: Range label|Fee in GH₵. Example: 0–5 km|20. Customers choose the range that applies to their location. Enter your own ranges and prices, then save." },
-  }],
+  ]}],
 };
 
 const pages = [
