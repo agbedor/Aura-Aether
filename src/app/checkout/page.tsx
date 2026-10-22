@@ -227,7 +227,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Delivery range *</label>
-                    <select name="deliveryRange" required value={formData.deliveryRange} onChange={handleChange} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#1C1917]">
+                    <select name="deliveryRange" required={!deliverySettings.freePromo} value={formData.deliveryRange} onChange={handleChange} className="w-full rounded-xl border border-[#DDD6CD] bg-white px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#1C1917]">
                       {deliverySettings.ranges.length === 0 ? <option value="">{deliverySettings.freePromo ? "Free delivery promotion active" : "Delivery rates not set yet"}</option> : <><option value="">Choose a delivery range</option>{deliverySettings.ranges.map((range) => <option key={range.label} value={range.label}>{range.label} — {deliverySettings.freePromo ? "Free delivery" : formatGhs(range.fee)}</option>)}</>}
                     </select>
                   </div>
