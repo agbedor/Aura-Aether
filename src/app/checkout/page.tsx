@@ -20,7 +20,7 @@ export default function CheckoutPage() {
     customerPhone: "",
     deliveryAddress: "",
     city: "",
-    deliveryRange: "",
+    deliveryRange: "0–5 km",
     notes: "",
   });
 
@@ -39,7 +39,7 @@ export default function CheckoutPage() {
           return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
         }).filter((range: { label: string; fee: number }) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
         setDeliverySettings({ origin: s.deliveryOrigin || "Adenta, Accra, Ghana", freePromo: s.deliveryFreePromo === "true", ranges });
-        setFormData((prev) => ({ ...prev, deliveryRange: prev.deliveryRange || ranges[0]?.label || "" }));
+        setFormData((prev) => ({ ...prev, deliveryRange: ranges.some((range: { label: string; fee: number }) => range.label === prev.deliveryRange) ? prev.deliveryRange : ranges[0]?.label || "" }));
       })
       .catch(() => {});
   }, []);
