@@ -178,7 +178,7 @@ export default function AdminDashboardPage() {
         uploadedUrls.push(data.url);
       }
       const existingImages = product.images || [];
-      const allImages = [...new Set([...existingImages, product.image, ...uploadedUrls].filter(Boolean))];
+      const allImages = [...new Set([...existingImages, product.image, ...uploadedUrls].filter((url) => Boolean(url) && !url.startsWith("/images/products/")))];
       const response = await fetch("/api/products", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
