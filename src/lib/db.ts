@@ -121,7 +121,7 @@ export async function getProducts(options?: {
         category: p.category ? { id: p.category.id, name: p.category.name, slug: p.category.slug } : undefined,
       }));
     } catch (e) {
-      console.warn("Falling back to internal product catalog:", e);
+      console.error("Could not load products from PostgreSQL; refusing to show demo products:", e);
     }
   }
 
