@@ -47,9 +47,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         href={`/shop/${product.slug}`}
         className="block relative w-full aspect-square bg-[#FCFAF7] rounded-xl overflow-hidden mb-4 group-hover:bg-[#F8F4EE] transition-colors"
       >
-        {(product.images?.find((url) => typeof url === "string" && url.trim()) || product.image?.trim()) ? (
+        {(product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "")) ? (
           <Image
-            src={product.images?.find((url) => typeof url === "string" && url.trim()) || product.image}
+            src={product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || product.image}
             alt={product.name}
             fill
             className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
