@@ -104,7 +104,7 @@ export async function POST(req: Request) {
       originalPrice,
       stock,
       inStock: stock > 0,
-      image: body.image || "/images/products/meadow.svg",
+      image: (Array.isArray(body.images) ? body.images.find((url: unknown) => typeof url === "string" && url.trim().length > 0) : undefined) || body.image || "",
       images: Array.isArray(body.images) ? body.images.filter((url: unknown): url is string => typeof url === "string" && url.trim().length > 0) : [],
       categoryId: category.id,
       size: body.size.trim(),
