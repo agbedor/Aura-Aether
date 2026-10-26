@@ -49,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       >
         {(product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "")) ? (
           <Image
-            src={product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || product.image}
+            src={product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "")}
             alt={product.name}
             fill
             className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
