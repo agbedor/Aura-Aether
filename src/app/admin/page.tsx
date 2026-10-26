@@ -42,7 +42,7 @@ export default function AdminDashboardPage() {
     stock: "15",
     size: "",
     categoryId: "cat-fresh",
-    image: "/images/products/meadow.svg",
+    image: "",
     images: [] as string[],
     isFeatured: false,
     isGiftSet: false,
@@ -273,7 +273,7 @@ export default function AdminDashboardPage() {
           stock: "15",
           size: "",
           categoryId: categories[0]?.id || "",
-          image: "/images/products/meadow.svg",
+          image: "",
           images: [],
           isFeatured: false,
           isGiftSet: false,
@@ -938,7 +938,7 @@ export default function AdminDashboardPage() {
                 <input type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingProductImage} onChange={(e) => { void handleProductImageUpload(e.currentTarget.files || undefined); e.currentTarget.value = ""; }} className="block w-full text-xs file:mr-3 file:border-0 file:bg-[#1C1917] file:px-3 file:py-2 file:text-white" />
                 {uploadingProductImage && <p className="mt-2 text-xs text-[#8B6658]">Uploading photos…</p>}
                 <p className="mt-2 break-all text-[11px] text-[#78716C]">Main photo: {newProduct.image}</p>
-                {newProduct.images.length > 0 && <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">{newProduct.images.map((url, index) => <div key={`${url}-${index}`} className="relative aspect-square overflow-hidden rounded-lg border border-[#EDE7DF] bg-white"><Image src={url} alt={`Product photo ${index + 1}`} fill className="object-contain p-1" /><button type="button" onClick={() => setNewProduct((current) => { const images = current.images.filter((_, i) => i !== index); return { ...current, images, image: images[0] || "/images/products/meadow.svg" }; })} className="absolute right-1 top-1 rounded bg-white/90 px-1.5 py-1 text-[10px] font-bold text-[#9B2C2C]">Remove</button></div>)}</div>}
+                {newProduct.images.length > 0 && <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">{newProduct.images.map((url, index) => <div key={`${url}-${index}`} className="relative aspect-square overflow-hidden rounded-lg border border-[#EDE7DF] bg-white"><Image src={url} alt={`Product photo ${index + 1}`} fill className="object-contain p-1" /><button type="button" onClick={() => setNewProduct((current) => { const images = current.images.filter((_, i) => i !== index); return { ...current, images, image: images[0] || "" }; })} className="absolute right-1 top-1 rounded bg-white/90 px-1.5 py-1 text-[10px] font-bold text-[#9B2C2C]">Remove</button></div>)}</div>}
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">
