@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { initialProducts, initialCategories } from "./data";
+import { initialCategories } from "./data";
 import { Product, Category, Order, User } from "@/types";
 
 declare global {
@@ -26,7 +26,7 @@ interface MemoryStore {
 }
 
 const memoryStore: MemoryStore = {
-  products: [...initialProducts],
+  products: [],
   categories: [...initialCategories],
   orders: [],
   users: [
@@ -125,40 +125,9 @@ export async function getProducts(options?: {
     }
   }
 
-  // Memory fallback with filtering & sorting
-  let list = [...memoryStore.products];
-
-  if (options?.featured) {
-    list = list.filter((p) => p.isFeatured);
-  }
-  if (options?.giftSets !== undefined) {
-    list = list.filter((p) => p.isGiftSet === options.giftSets);
-  }
-  if (options?.category) {
-    const cat = memoryStore.categories.find((c) => c.slug === options.category);
-    if (cat) {
-      list = list.filter((p) => p.categoryId === cat.id);
-    }
-  }
-  if (options?.search) {
-    const query = options.search.toLowerCase();
-    list = list.filter(
-      (p) =>
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query) ||
-        p.scentNotes.toLowerCase().includes(query)
-    );
-  }
-
-  if (options?.sort === "price-asc") {
-    list.sort((a, b) => a.price - b.price);
-  } else if (options?.sort === "price-desc") {
-    list.sort((a, b) => b.price - a.price);
-  } else if (options?.sort === "name") {
-    list.sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  return list;
+  // Never replace the real catalogue with demo products when PostgreSQL is unavailable.
+  console.error("PostgreSQL unavailable; returning an empty product list instead of demo products.");
+  return [];
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
@@ -181,7 +150,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     }
   }
 
-  return memoryStore.products.find((p) => p.slug === slug) || null;
+  return null;
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
@@ -195,7 +164,7 @@ export async function getProductById(id: string): Promise<Product | null> {
       throw new Error("Could not load product from PostgreSQL.");
     }
   }
-  return memoryStore.products.find((p) => p.id === id) || null;
+  return null;
 }
 
 export async function getCategories(): Promise<Category[]> {
