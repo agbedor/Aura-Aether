@@ -6,23 +6,27 @@ import { Product } from "@/types";
 
 export default function ProductImageGallery({ product }: { product: Product }) {
   const images = useMemo(
-    () => [...new Set([product.image, ...(product.images || [])].filter((url): url is string => typeof url === "string" && url.length > 0))],
+    () => [...new Set([...(product.images || []), product.image].filter((url): url is string => typeof url === "string" && url.trim().length > 0))],
     [product.image, product.images]
   );
-  const [selectedImage, setSelectedImage] = useState(images[0] || product.image);
+  const [selectedImage, setSelectedImage] = useState(images[0] || "");
 
   return (
     <div className="space-y-3">
       <div className="relative aspect-4/5 w-full bg-white rounded-3xl border border-[#ECE5DD] overflow-hidden p-8 shadow-sm flex items-center justify-center">
-        <Image
-          key={selectedImage}
-          src={selectedImage}
-          alt={product.name}
-          fill
-          priority
-          className="object-contain p-8 hover:scale-105 transition-transform duration-700"
-          sizes="(max-width: 1024px) 100vw, 50vw"
-        />
+        {selectedImage ? (
+          <Image
+            key={selectedImage}
+            src={selectedImage}
+            alt={product.name}
+            fill
+            priority
+            className="object-contain p-8 hover:scale-105 transition-transform duration-700"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+        ) : (
+          <span className="text-sm text-[#8C827A]">No product photos added yet</span>
+        )}
         {product.originalPrice != null && product.originalPrice > product.price ? (
           <span className="absolute top-6 left-6 bg-[#9B2C2C] text-white text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-xs">
             {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
