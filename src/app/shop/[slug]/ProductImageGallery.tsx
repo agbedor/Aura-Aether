@@ -6,7 +6,7 @@ import { Product } from "@/types";
 
 export default function ProductImageGallery({ product }: { product: Product }) {
   const images = useMemo(
-    () => [...new Set([...(product.images || []), product.image].filter((url): url is string => typeof url === "string" && url.trim().length > 0))],
+    () => [...new Set([...(product.images || []), product.image].filter((url): url is string => typeof url === "string" && url.trim().length > 0 && !url.startsWith("/images/products/")))],
     [product.image, product.images]
   );
   const [selectedImage, setSelectedImage] = useState(images[0] || "");
