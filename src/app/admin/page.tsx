@@ -31,6 +31,7 @@ export default function AdminDashboardPage() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryDescription, setNewCategoryDescription] = useState("");
   const [isDataLoading, setIsDataLoading] = useState(true);
+  const [dataLoadError, setDataLoadError] = useState("");
 
   // New product form state
   const [newProduct, setNewProduct] = useState({
@@ -75,6 +76,8 @@ export default function AdminDashboardPage() {
 
   const fetchData = async () => {
     setIsDataLoading(true);
+    setDataLoadError("");
+    const loadErrors: string[] = [];
     try {
       const [ordersRes, productsRes, categoriesRes] = await Promise.all([
         fetch("/api/orders"),
@@ -85,11 +88,17 @@ export default function AdminDashboardPage() {
       if (ordersRes.ok) {
         const data = await ordersRes.json();
         setOrders(data.orders || []);
+      } else {
+        const data = await ordersRes.json().catch(() => ({}));
+        loadErrors.push(data.error || "Saved orders could not be loaded.");
       }
 
       if (productsRes.ok) {
         const data = await productsRes.json();
         setProducts(data.products || []);
+      } else {
+        const data = await productsRes.json().catch(() => ({}));
+        loadErrors.push(data.error || "Saved products could not be loaded.");
       }
 
       if (categoriesRes.ok) {
@@ -102,9 +111,16 @@ export default function AdminDashboardPage() {
             ? current.categoryId
             : loadedCategories[0]?.id || "",
         }));
+      } else {
+        loadErrors.push("Product categories could not be loaded.");
       }
-    } catch {
-      // ignore
+
+      if (loadErrors.length) {
+        setDataLoadError(loadErrors.join(" "));
+      }
+    } catch (error) {
+      console.error("Admin dashboard data request failed:", error);
+      setDataLoadError("The admin dashboard could not contact the server. Check the development terminal for the database error, then try Refresh.");
     } finally {
       setIsDataLoading(false);
     }
@@ -477,6 +493,14 @@ export default function AdminDashboardPage() {
             </Link>
           </div>
         </div>
+
+        {dataLoadError && (
+          <div role="alert" className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm">
+            <strong className="block mb-1">Some admin data could not be loaded.</strong>
+            <span>{dataLoadError}</span>
+            <button type="button" onClick={fetchData} className="ml-2 underline font-semibold">Try again</button>
+          </div>
+        )}
 
         {statusMessage && (
           <div className="mb-6 p-4 rounded-xl bg-[#ECFDF5] border border-[#6EE7B7] text-[#065F46] text-xs font-medium flex items-center gap-2 animate-fade-in">
