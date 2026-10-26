@@ -47,13 +47,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         href={`/shop/${product.slug}`}
         className="block relative w-full aspect-square bg-[#FCFAF7] rounded-xl overflow-hidden mb-4 group-hover:bg-[#F8F4EE] transition-colors"
       >
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        />
+        {(product.images?.find((url) => typeof url === "string" && url.trim()) || product.image?.trim()) ? (
+          <Image
+            src={product.images?.find((url) => typeof url === "string" && url.trim()) || product.image}
+            alt={product.name}
+            fill
+            className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        ) : (
+          <span className="px-4 text-center text-xs text-[#8C827A]">Product photo not added yet</span>
+        )}
       </Link>
 
       {/* Product Information */}
