@@ -711,12 +711,14 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="py-3 px-4 flex items-center gap-3">
                         <div className="w-10 h-12 bg-[#FAF7F4] rounded relative overflow-hidden shrink-0 border border-[#EDE7DF]">
-                          <Image
-                            src={p.image}
-                            alt={p.name}
-                            fill
-                            className="object-contain p-0.5"
-                          />
+                          {(p.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || (p.image?.trim() && !p.image.startsWith("/images/products/") ? p.image : "")) ? (
+                            <Image
+                              src={p.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || (p.image?.trim() && !p.image.startsWith("/images/products/") ? p.image : "")}
+                              alt={p.name}
+                              fill
+                              className="object-contain p-0.5"
+                            />
+                          ) : null}
                         </div>
                         <div>
                           <span className="font-bold text-[#1C1917]">{p.name}</span>
