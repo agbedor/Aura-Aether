@@ -54,39 +54,39 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Search Fragrances"
-      className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/40 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/45 px-4 pt-20 backdrop-blur-sm transition-opacity"
     >
-      <div className="bg-[#FAF8F5] border border-[#EBE4DC] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
+      <div className="w-full max-w-2xl animate-fade-in overflow-hidden border border-black/10 bg-white shadow-2xl">
         {/* Search Input Bar */}
-        <div className="flex items-center px-6 py-4 border-b border-[#EBE4DC] bg-white">
-          <Search className="w-5 h-5 text-[#8C827A] mr-3" />
+        <div className="flex items-center border-b border-black/10 bg-white px-6 py-4">
+          <Search className="mr-3 h-5 w-5 text-[#222a37]" />
           <input
             type="text"
             placeholder="Search by perfume name, accord, or notes (e.g. Amber, Rose, Oud)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
-            className="w-full bg-transparent border-none text-[#1C1917] placeholder-[#A89F95] text-base focus:outline-none"
+            className="w-full border-none bg-transparent text-base text-black placeholder:text-black/35 focus:outline-none"
           />
           <button
             onClick={onClose}
             aria-label="Close search"
-            className="p-1 text-[#8C827A] hover:text-[#1C1917] transition-colors"
+            className="p-1 text-black/45 transition-colors hover:text-[#222a37]"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Search Results */}
-        <div className="max-h-[60vh] overflow-y-auto p-4 divide-y divide-[#EFE9E2]">
+        <div className="max-h-[60vh] divide-y divide-black/10 overflow-y-auto bg-white p-4">
           {isLoading && (
-            <p className="text-center py-8 text-sm text-[#8C827A]">Searching perfumes...</p>
+            <p className="py-8 text-center text-sm text-black/55">Searching perfumes...</p>
           )}
 
           {!isLoading && query.trim().length > 1 && results.length === 0 && (
             <div className="text-center py-10">
-              <p className="text-sm font-medium text-[#1C1917]">No fragrances found for &quot;{query}&quot;</p>
-              <p className="text-xs text-[#8C827A] mt-1">Try searching for &quot;Oud&quot;, &quot;Floral&quot;, or &quot;Meadow&quot;</p>
+              <p className="text-sm font-medium text-black">No fragrances found for &quot;{query}&quot;</p>
+              <p className="mt-1 text-xs text-black/55">Try searching for &quot;Oud&quot;, &quot;Floral&quot;, or &quot;Meadow&quot;</p>
             </div>
           )}
 
@@ -98,10 +98,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   router.push(`/shop/${product.slug}`);
                   onClose();
                 }}
-                className="flex items-center justify-between p-3 rounded-xl hover:bg-white cursor-pointer transition-colors group"
+                className="group flex cursor-pointer items-center justify-between p-3 transition-colors hover:bg-[#222a37]/[0.06]"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-16 relative bg-[#F5EFEB] rounded-lg overflow-hidden shrink-0 border border-[#EAE3D9]">
+                  <div className="relative h-16 w-14 shrink-0 overflow-hidden bg-[#222a37]">
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -110,26 +110,26 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     />
                   </div>
                   <div>
-                    <h4 className="font-serif-luxury text-base font-semibold text-[#1C1917] group-hover:text-[#9B7036] transition-colors">
+                    <h4 className="font-serif-luxury text-base font-semibold text-[#222a37] transition-colors group-hover:text-[#773B44]">
                       {product.name}
                     </h4>
-                    <p className="text-[11px] tracking-wider text-[#8C827A] uppercase">
+                    <p className="text-[11px] uppercase tracking-wider text-black/50">
                       {product.scentNotes} • {product.size}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-semibold text-[#1C1917]">
+                  <span className="text-sm font-semibold text-black">
                     {formatGhs(product.price)}
                   </span>
-                  <ArrowRight className="w-4 h-4 text-[#8C827A] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-4 w-4 text-[#222a37] transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             ))}
 
           {!query && (
             <div className="py-6 px-4 text-center">
-              <p className="text-xs uppercase tracking-widest text-[#8C827A] mb-3">
+              <p className="mb-3 text-xs uppercase tracking-widest text-[#222a37]">
                 Popular Searches
               </p>
               <div className="flex flex-wrap justify-center gap-2">
@@ -137,7 +137,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <button
                     key={term}
                     onClick={() => setQuery(term)}
-                    className="text-xs px-3 py-1.5 rounded-full bg-white border border-[#E5DDD4] text-[#4A443F] hover:border-[#1C1917] transition-colors"
+                    className="border border-black/15 bg-white px-3 py-1.5 text-xs text-black/70 transition-colors hover:border-[#222a37] hover:text-[#222a37]"
                   >
                     {term}
                   </button>

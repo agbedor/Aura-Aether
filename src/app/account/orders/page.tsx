@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { Order } from "@/types";
 import { formatGhs } from "@/lib/paystack";
-import { Package, ArrowLeft, ShieldCheck, Clock, CheckCircle } from "lucide-react";
+import { Package, ArrowLeft, ShieldCheck } from "lucide-react";
 
 export default function OrderHistoryPage() {
   const { user, isLoading } = useAuth();
@@ -36,13 +36,13 @@ export default function OrderHistoryPage() {
   }, [user, isLoading]);
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9] py-12 sm:py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white pb-14 pt-28 sm:px-6 sm:pb-20 sm:pt-32 lg:px-[4vw] lg:pt-36">
+      <div className="mx-auto max-w-5xl px-4 sm:px-0">
         {/* Navigation Breadcrumb */}
         <div className="mb-6">
           <Link
             href="/account"
-            className="inline-flex items-center gap-1.5 text-xs text-[#78716C] hover:text-[#1C1917] transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-black/60 transition-colors hover:text-[#222a37]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Account Overview</span>
@@ -50,35 +50,35 @@ export default function OrderHistoryPage() {
         </div>
 
         {/* Page Header */}
-        <div className="pb-8 mb-8 border-b border-[#EFE9E2]">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A] block mb-1">
+        <div className="mb-8 border-b border-black/10 pb-8">
+          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#222a37]">
             PURCHASE ARCHIVES
           </span>
-          <h1 className="font-serif-luxury text-3xl sm:text-4xl font-normal text-[#1C1917]">
+          <h1 className="font-serif-luxury text-3xl font-normal text-black sm:text-4xl">
             Your Previous <span className="italic font-serif-luxury">Orders.</span>
           </h1>
         </div>
 
         {/* Orders list */}
         {isFetching ? (
-          <div className="py-20 text-center text-xs text-[#78716C]">
+          <div className="py-20 text-center text-xs text-black/55">
             Retrieving your order records...
           </div>
         ) : orders.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-[#ECE5DD] p-8 shadow-xs">
-            <div className="w-16 h-16 mx-auto rounded-full bg-[#FAF5EE] flex items-center justify-center text-[#8C827A] mb-4">
-              <Package className="w-8 h-8 text-[#C59B4B]" />
+          <div className="border border-black/10 bg-white px-8 py-16 text-center sm:py-20">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#222a37]/10 text-[#222a37]">
+              <Package className="h-8 w-8" />
             </div>
-            <h3 className="font-serif-luxury text-2xl font-normal text-[#1C1917] mb-2">
+            <h3 className="font-serif-luxury mb-2 text-2xl font-normal text-[#222a37]">
               No orders placed yet
             </h3>
-            <p className="text-xs text-[#78716C] max-w-sm mx-auto mb-6">
+            <p className="mx-auto mb-6 max-w-sm text-xs leading-5 text-black/60">
               When you purchase our perfumes or gift sets, your confirmed orders and receipts
               will appear here.
             </p>
             <Link
               href="/shop"
-              className="inline-block px-8 py-3.5 rounded-full bg-[#1C1917] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#38332E]"
+              className="inline-block bg-[#222a37] px-8 py-3.5 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
             >
               Discover Fragrances
             </Link>
@@ -86,17 +86,14 @@ export default function OrderHistoryPage() {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <div
-                key={order.id}
-                className="bg-white rounded-3xl border border-[#ECE5DD] p-6 sm:p-8 shadow-2xs space-y-6"
-              >
+              <div key={order.id} className="space-y-5 border border-black/10 bg-white p-5 sm:p-7">
                 {/* Order Top Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#EFE9E2] text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-4 text-xs">
                   <div>
-                    <span className="font-bold text-[#1C1917] text-sm sm:text-base">
+                    <span className="text-sm font-semibold text-[#222a37] sm:text-base">
                       {order.orderNumber}
                     </span>
-                    <p className="text-[#8C827A] text-[11px] mt-0.5">
+                    <p className="mt-1 text-[11px] text-black/55">
                       Placed on {new Date(order.createdAt).toLocaleDateString("en-GH", {
                         year: "numeric",
                         month: "long",
@@ -108,32 +105,31 @@ export default function OrderHistoryPage() {
                   {/* Status Badges */}
                   <div className="flex items-center gap-2">
                     <span
-                      className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                        order.status === "PAID"
-                          ? "bg-[#ECFDF5] text-[#065F46]"
+                      className={`px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${order.status === "PAID"
+                          ? "bg-[#222a37]/10 text-[#773B44]"
                           : order.status === "DELIVERED"
-                          ? "bg-[#EFF6FF] text-[#1E40AF]"
-                          : order.status === "SHIPPED"
-                          ? "bg-[#F5F3FF] text-[#5B21B6]"
-                          : "bg-[#FEF3C7] text-[#92400E]"
-                      }`}
+                            ? "bg-[#222a37]/10 text-[#773B44]"
+                            : order.status === "SHIPPED"
+                              ? "bg-[#222a37]/10 text-[#773B44]"
+                              : "bg-black/[0.06] text-black/70"
+                        }`}
                     >
                       {order.status}
                     </span>
 
-                    <span className="text-[10px] bg-[#FAF7F4] border border-[#EDE7DF] px-2.5 py-1 rounded-full text-[#4A443F]">
+                    <span className="border border-black/10 bg-white px-2.5 py-1 text-[10px] text-black/60">
                       Ref: {order.paymentReference}
                     </span>
                   </div>
                 </div>
 
                 {/* Items in order */}
-                <div className="divide-y divide-[#F5EFEB]">
+                <div className="divide-y divide-black/10">
                   {order.items.map((item) => (
-                    <div key={item.id} className="py-3 flex items-center justify-between gap-4 text-xs">
+                    <div key={item.id} className="flex items-center justify-between gap-4 py-3 text-xs">
                       <div className="flex items-center gap-3">
                         {item.image && (
-                          <div className="w-12 h-14 bg-[#FAF7F4] rounded-lg relative overflow-hidden shrink-0 border border-[#EDE7DF]">
+                          <div className="relative h-14 w-12 shrink-0 overflow-hidden bg-[#222a37]">
                             <Image
                               src={item.image}
                               alt={item.productName}
@@ -143,16 +139,16 @@ export default function OrderHistoryPage() {
                           </div>
                         )}
                         <div>
-                          <p className="font-serif-luxury text-sm font-semibold text-[#1C1917]">
+                          <p className="font-serif-luxury text-sm font-semibold text-[#222a37]">
                             {item.productName}
                           </p>
-                          <p className="text-[11px] text-[#8C827A]">
+                          <p className="text-[11px] text-black/55">
                             Qty: {item.quantity} • {item.size || "50ml"}
                           </p>
                         </div>
                       </div>
 
-                      <span className="font-semibold text-[#1C1917]">
+                      <span className="font-semibold text-black">
                         {formatGhs(item.productPrice * item.quantity)}
                       </span>
                     </div>
@@ -160,16 +156,16 @@ export default function OrderHistoryPage() {
                 </div>
 
                 {/* Total and Delivery Footnote */}
-                <div className="pt-4 border-t border-[#EFE9E2] flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs gap-3">
-                  <div className="text-[#78716C]">
-                    <span>Delivered to: <strong>{order.deliveryAddress}, {order.city}</strong></span>
+                <div className="flex flex-col items-start justify-between gap-3 border-t border-black/10 pt-4 text-xs sm:flex-row sm:items-center">
+                  <div className="text-black/55">
+                    <span>Delivered to: <strong className="font-medium text-black">{order.deliveryAddress}, {order.city}</strong></span>
                   </div>
                   <div className="flex items-center gap-3 self-end sm:self-auto">
-                    <span className="text-sm font-bold text-[#1C1917]">
+                    <span className="text-sm font-semibold text-black">
                       Total: {formatGhs(order.totalAmount)}
                     </span>
-                    <span className="text-[11px] text-[#10B981] flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5" />
+                    <span className="flex items-center gap-1 text-[11px] text-[#222a37]">
+                      <ShieldCheck className="h-3.5 w-3.5" />
                       Paid with Paystack
                     </span>
                   </div>

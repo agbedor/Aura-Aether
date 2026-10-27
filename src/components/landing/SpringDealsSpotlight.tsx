@@ -1,0 +1,65 @@
+import Image from "next/image";
+import Link from "next/link";
+
+const fragrances = [
+  { name: "Esencia de la Forêt", image: "/images/botanical-edit/esencia-foret.jpeg" },
+  { name: "Néctar de la Terre", image: "/images/botanical-edit/nectar-terre.jpeg" },
+  { name: "Bleue Rivage", image: "/images/botanical-edit/bleue-rivage.jpeg" },
+  { name: "Esencia de la Forêt", image: "/images/botanical-edit/esencia-foret.jpeg" },
+  { name: "Néctar de la Terre", image: "/images/botanical-edit/nectar-terre.jpeg" },
+  { name: "Bleue Rivage", image: "/images/botanical-edit/bleue-rivage.jpeg" },
+];
+
+export default function SpringDealsSpotlight() {
+  return (
+    <section id="botanical-edit" className="bg-white px-6 py-20 text-black sm:px-10 sm:py-24 lg:px-[3.5vw] lg:py-28">
+      <div className="mb-12 flex items-end justify-between gap-8 sm:mb-14">
+        <div>
+          <h2 className="font-sans-clean text-3xl font-medium leading-tight tracking-tight sm:text-4xl lg:text-[2.5rem]">
+            Find your signature fragrance.
+          </h2>
+          <p className="mt-5 max-w-xl font-sans-clean text-sm leading-relaxed sm:text-base">
+            Botanical compositions for the moments you want to make unforgettable.
+          </p>
+        </div>
+        <Link href="/shop" className="shrink-0 font-sans-clean text-base font-medium underline underline-offset-4 sm:text-lg">
+          Shop All
+        </Link>
+      </div>
+
+      <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {fragrances.map((fragrance, index) => (
+          <article key={`${fragrance.name}-${index}`} className="w-[82vw] max-w-[444px] shrink-0 snap-start">
+            <div className="relative aspect-square w-full overflow-hidden bg-[#f7f5f4]">
+              <Image
+                src={fragrance.image}
+                alt={fragrance.name}
+                fill
+                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+
+            <div className="mt-8 flex flex-col gap-4">
+              <div className="flex flex-col items-start gap-2">
+                <h3 className="font-sans-clean text-lg font-medium leading-tight">{fragrance.name}</h3>
+                <div className="flex" aria-hidden="true">
+                  {[1, 2, 3, 4].map((star) => (
+                    <Image key={star} src="/images/bestsellers/star-rate.svg" alt="" width={18} height={18} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-end justify-between gap-4">
+                <p className="font-sans-clean text-lg font-medium leading-[1.4] tracking-[0.1px] sm:text-xl">Eau de Parfum</p>
+                <Link href="/shop" className="flex h-[50px] shrink-0 items-center justify-center rounded border border-black px-6 font-sans-clean text-sm transition-colors hover:bg-[#222a37] hover:text-white sm:px-8 sm:text-base">
+                  Quick shop
+                </Link>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}

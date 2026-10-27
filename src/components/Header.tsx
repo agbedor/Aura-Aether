@@ -4,103 +4,106 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, Search, User as UserIcon, Menu, X, Shield } from "lucide-react";
+import { Menu, Shield, User as UserIcon, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import SearchModal from "./SearchModal";
 import CartDrawer from "./CartDrawer";
 
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" },
+  { name: "Gift Sets", href: "/gift-sets" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
+
+const iconClass = "h-6 w-6 shrink-0";
+
 export default function Header() {
   const pathname = usePathname();
+  const isHome = pathname === "/";
+  const headerTheme = pathname === "/about" || pathname === "/contact" || pathname.startsWith("/shop") || pathname === "/gift-sets" || pathname === "/login" || pathname === "/register" ? "color" : "light";
+  const isColorHeader = headerTheme === "color";
+  const overlaysHero = isHome || pathname === "/about" || pathname === "/contact" || pathname === "/shop" || pathname === "/gift-sets" || pathname === "/login" || pathname === "/register" || pathname === "/cart" || pathname === "/checkout";
   const { itemCount, openCart } = useCart();
   const { user } = useAuth();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [logoUrl, setLogoUrl] = useState("");
   const [brandName, setBrandName] = useState("Aura & Aether Parfums");
 
   useEffect(() => {
     fetch("/api/site-settings")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.settings?.logoUrl) setLogoUrl(data.settings.logoUrl);
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
       })
       .catch(() => undefined);
   }, []);
 
-  const navLinks = [
-    { name: "HOME", href: "/" },
-    { name: "ABOUT", href: "/about" },
-    { name: "SHOP", href: "/shop" },
-    { name: "GIFT SETS", href: "/gift-sets" },
-    { name: "CONTACT", href: "/contact" },
-  ];
+  const pillClass = `flex items-center rounded-[20px] px-5 py-3.5 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[#222a37] text-white" : "bg-white text-[#1e1e1e]"}`;
+  const mobilePillClass = `flex items-center gap-2 rounded-[14px] px-3 py-2 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[#222a37] text-white" : "bg-white text-[#1e1e1e]"}`;
+  const linkClass = "transition-opacity hover:opacity-60";
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[#FCFBF9]/95 backdrop-blur-md border-b border-[#E8D9CE] transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <nav className="hidden xl:flex items-center space-x-5">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link key={link.name} href={link.href} className={`text-xs font-semibold tracking-widest transition-colors py-1 relative ${isActive ? "text-[#17110F] font-bold" : "text-[#6D625B] hover:text-[#B77F60]"}`}>
-                    {link.name}
-                    {isActive && <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#B77F60]" />}
-                  </Link>
-                );
-              })}
-              {user?.role === "ADMIN" && (
-                <Link href="/admin" className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-[#8E5E45] bg-[#F5E8DF] px-2.5 py-1 rounded-full hover:bg-[#E8D2C2] transition-colors">
-                  <Shield className="w-3 h-3" /><span>Admin</span>
-                </Link>
-              )}
-            </nav>
+      <header className={`${overlaysHero ? "absolute" : "sticky"} left-0 right-0 top-0 z-40 w-full ${overlaysHero ? "bg-transparent" : "border-b border-[#EEE9E4] bg-[#FFFEFC]/95 backdrop-blur-md"}`}>
+        <div className="relative flex w-full items-center justify-between px-4 py-5 sm:px-6 lg:px-[4vw] lg:py-7">
+          <nav aria-label="Main navigation" className={`${pillClass} hidden gap-6 lg:flex`}>
+            <Link href="/shop" className={`${linkClass} flex items-center gap-1.5`}>
+              Shop
+            </Link>
+            <Link href="/gift-sets" className={linkClass}>Gifts</Link>
+            <span aria-hidden="true" className={`h-6 w-px ${isColorHeader ? "bg-white/25" : "bg-[#E6E6E6]"}`} />
+            <button type="button" aria-label="Search products" onClick={() => setIsSearchOpen(true)} className={linkClass}>
+              <Image src="/images/naya-icons/search.svg" alt="" width={23} height={23} className={`${iconClass} ${isColorHeader ? "brightness-0 invert" : ""}`} />
+            </button>
+          </nav>
 
-            <div className="xl:hidden flex items-center">
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu" className="p-2 text-[#17110F] hover:text-[#B77F60]">
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
+          <Link href="/" aria-label={brandName} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity hover:opacity-80">
+            <span className={`font-alhambra whitespace-nowrap text-[2rem] leading-none tracking-[-0.08em] sm:text-[2.5rem] ${isColorHeader ? "text-[#222a37]" : "text-white"}`}>
+              <span className="lg:hidden">A &amp; A</span>
+              <span className="hidden lg:inline">AURA &amp; AETHER</span>
+            </span>
+          </Link>
 
-            <div className="flex-1 md:flex-initial text-center">
-              <Link href="/" aria-label={brandName} className="inline-flex min-w-0 items-center justify-center py-2 group">
-                {logoUrl ? (
-                  <Image src={logoUrl} alt={brandName} width={250} height={72} priority className="h-12 sm:h-14 w-auto max-w-[190px] sm:max-w-[250px] object-contain" />
-                ) : (
-                  <span className="inline-block">
-                    <span className="font-serif-luxury text-xl sm:text-2xl tracking-[0.12em] sm:tracking-[0.2em] font-semibold text-[#17110F] block uppercase group-hover:text-[#8E5E45] transition-colors">AURA &amp; AETHER</span>
-                    <span className="font-sans-clean text-[8px] sm:text-[9px] tracking-[0.4em] font-medium text-[#B77F60] uppercase block">PARFUMS</span>
-                  </span>
-                )}
-              </Link>
-            </div>
+          <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
+            <Link href="/about" className={linkClass}>Our Story</Link>
+            <Link href="/contact" className={linkClass}>Contact</Link>
+            <span aria-hidden="true" className={`h-6 w-px ${isColorHeader ? "bg-white/25" : "bg-[#E6E6E6]"}`} />
+            <Link href={user ? "/account" : "/login"} aria-label="Account" title={user ? `Signed in as ${user.name}` : "Sign in or register"} className={linkClass}>
+              <UserIcon className="h-5 w-5" strokeWidth={1.6} />
+            </Link>
+            {user?.role === "ADMIN" && <Link href="/admin" aria-label="Admin dashboard" className={linkClass}><Shield className="h-5 w-5" /></Link>}
+            <button type="button" onClick={openCart} aria-label={`Cart${itemCount ? `, ${itemCount} items` : ""}`} className={`${linkClass} relative flex items-center`}>
+              <Image src="/images/naya-icons/shopping-basket.svg" alt="" width={23} height={23} className={`${iconClass} ${isColorHeader ? "brightness-0 invert" : ""}`} />
+              {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[#222a37]" : "bg-[#222a37] text-white"}`}>{itemCount}</span>}
+            </button>
+          </nav>
 
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <button onClick={() => setIsSearchOpen(true)} aria-label="Search" className="p-2 text-[#3D3833] hover:text-[#B77F60] transition-colors rounded-full hover:bg-[#F5E8DF]"><Search className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.75]" /></button>
-              <Link href={user ? "/account" : "/login"} aria-label="Account" className="p-2 text-[#3D3833] hover:text-[#B77F60] transition-colors rounded-full hover:bg-[#F5E8DF] relative" title={user ? `Signed in as ${user.name}` : "Sign in / Register"}>
-                <UserIcon className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.75]" />
-                {user && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#10B981] ring-2 ring-white" />}
-              </Link>
-              <button onClick={openCart} aria-label="Cart" className="p-2 text-[#17110F] hover:text-[#B77F60] transition-colors relative rounded-full hover:bg-[#F5E8DF] flex items-center">
-                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.75]" />
-                {itemCount > 0 && <span className="absolute -top-1 -right-1 bg-[#17110F] text-white text-[10px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-[#FCFBF9]">{itemCount}</span>}
-              </button>
-            </div>
+          <div className={`${mobilePillClass} relative lg:hidden`}>
+            <button type="button" onClick={() => setIsMobileMenuOpen((open) => !open)} aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"} className="flex items-center gap-2">
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+            {isMobileMenuOpen && (
+              <div className={`absolute left-0 top-full mt-3 flex min-w-44 flex-col gap-4 rounded-xl p-4 text-sm shadow-lg ${isColorHeader ? "bg-[#222a37] text-white" : "bg-white text-[#1e1e1e]"}`}>
+                {navLinks.map((link) => <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)}>{link.name}</Link>)}
+                <Link href={user ? "/account" : "/login"} onClick={() => setIsMobileMenuOpen(false)}>{user ? `Account (${user.name})` : "Sign in / Register"}</Link>
+                {user?.role === "ADMIN" && <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>Admin</Link>}
+              </div>
+            )}
           </div>
+
+          <button
+            type="button"
+            aria-label={`Cart${itemCount ? `, ${itemCount} items` : ""}`}
+            onClick={openCart}
+            className={`${mobilePillClass} relative justify-center lg:hidden`}
+          >
+            <Image src="/images/naya-icons/shopping-basket.svg" alt="" width={20} height={20} className={isColorHeader ? "brightness-0 invert" : ""} />
+            {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[#222a37]" : "bg-[#222a37] text-white"}`}>{itemCount}</span>}
+          </button>
         </div>
-
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-[#FCFBF9] border-t border-[#E8D9CE] px-6 py-6 space-y-4 animate-fade-in shadow-lg">
-            <div className="space-y-3">
-              {navLinks.map((link) => <Link key={link.name} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className="block text-sm font-semibold tracking-widest text-[#17110F] py-2 border-b border-[#E8D9CE]">{link.name}</Link>)}
-              {user?.role === "ADMIN" && <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="block text-sm font-semibold tracking-widest text-[#8E5E45] py-2 border-b border-[#E8D9CE]">ADMIN DASHBOARD</Link>}
-              <Link href={user ? "/account" : "/login"} onClick={() => setIsMobileMenuOpen(false)} className="block text-sm font-medium tracking-wide text-[#6D625B] py-2">{user ? `Account (${user.name})` : "Login / Create Account"}</Link>
-            </div>
-          </div>
-        )}
       </header>
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       <CartDrawer />

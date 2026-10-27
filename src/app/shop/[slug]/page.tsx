@@ -43,7 +43,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9] py-10 sm:py-16">
+    <div className="min-h-screen bg-white py-10 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="mb-8">

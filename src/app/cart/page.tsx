@@ -12,21 +12,21 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-[70vh] bg-[#FCFBF9] flex items-center justify-center px-4 py-16">
-        <div className="text-center max-w-md bg-white p-8 sm:p-12 rounded-3xl border border-[#ECE5DD] shadow-sm">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#FAF5EE] flex items-center justify-center text-[#8C827A] mb-4">
-            <ShoppingCart className="w-8 h-8 text-[#C59B4B]" />
+      <div className="flex min-h-[70vh] items-center justify-center bg-white px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-[4vw] lg:pt-36">
+        <div className="max-w-md border border-black/10 bg-white p-8 text-center sm:p-12">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#222a37]/10 text-[#222a37]">
+            <ShoppingCart className="h-8 w-8" />
           </div>
-          <h1 className="font-serif-luxury text-2xl sm:text-3xl font-medium text-[#1C1917] mb-2">
+          <h1 className="font-serif-luxury mb-2 text-2xl font-medium text-[#222a37] sm:text-3xl">
             Your cart is empty
           </h1>
-          <p className="text-sm text-[#78716C] mb-8 font-light leading-relaxed">
+          <p className="mb-8 text-sm font-light leading-relaxed text-black/65">
             Discover our artisanal perfumes and limited-edition gift coffrets to begin your
             sensory voyage.
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#1C1917] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#38332E] transition-all shadow-md"
+            className="inline-flex items-center gap-2 bg-[#222a37] px-8 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
           >
             <span>Explore Fragrance Catalog</span>
             <ArrowRight className="w-4 h-4" />
@@ -37,21 +37,21 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9] py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-white pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pt-36">
+      <div className="px-4 sm:px-6 lg:px-[4vw]">
         {/* Header */}
-        <div className="flex items-center justify-between pb-8 mb-8 border-b border-[#EFE9E2]">
+        <div className="mb-8 flex items-center justify-between border-b border-black/10 pb-8">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A] block mb-1">
+            <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#222a37]">
               CURRENT SELECTIONS
             </span>
-            <h1 className="font-serif-luxury text-3xl sm:text-4xl font-normal text-[#1C1917]">
-              Shopping <span className="italic font-serif-luxury">Bag.</span>
+            <h1 className="font-serif-luxury text-3xl font-normal text-[#222a37] sm:text-4xl">
+              Shopping <span className="italic font-serif-luxury">bag.</span>
             </h1>
           </div>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1.5 text-xs text-[#78716C] hover:text-[#1C1917] font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-black/60 transition-colors hover:text-[#222a37]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Continue Shopping</span>
@@ -65,11 +65,11 @@ export default function CartPage() {
             {items.map((item) => (
               <div
                 key={item.productId}
-                className="bg-white rounded-2xl border border-[#ECE5DD] p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-2xs hover:border-[#D5CDC4] transition-colors"
+                className="flex flex-col items-start justify-between gap-6 border-b border-black/10 bg-white py-5 sm:flex-row sm:items-center sm:py-6"
               >
                 {/* Product Thumbnail & Details */}
                 <div className="flex items-center gap-5">
-                  <div className="w-20 h-24 sm:w-24 sm:h-28 bg-[#FAF7F4] rounded-xl relative overflow-hidden shrink-0 border border-[#EDE7DF]">
+                  <div className="relative h-24 w-20 shrink-0 overflow-hidden bg-[#222a37] sm:h-28 sm:w-24">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -81,37 +81,37 @@ export default function CartPage() {
                   <div className="space-y-1">
                     <Link
                       href={`/shop/${item.slug}`}
-                      className="font-serif-luxury text-lg sm:text-xl font-semibold text-[#1C1917] hover:text-[#9B7036] transition-colors"
+                      className="font-serif-luxury text-lg font-semibold text-[#222a37] transition-colors hover:text-[#773B44] sm:text-xl"
                     >
                       {item.name}
                     </Link>
-                    <p className="text-[10px] sm:text-xs font-semibold tracking-wider text-[#8C827A] uppercase">
-                      {item.scentNotes || item.size}
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-black/55 sm:text-xs">
+                      {item.size}{item.scentNotes ? ` · ${item.scentNotes}` : ""}
                     </p>
-                    <p className="text-sm font-semibold text-[#1C1917]">
+                    <p className="text-sm font-semibold text-black">
                       {formatGhs(item.price)}
                     </p>
                   </div>
                 </div>
 
                 {/* Quantity & Controls */}
-                <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-0 border-[#F5EFEB]">
-                  <div className="flex items-center border border-[#D5CDC4] rounded-full px-3 py-1 bg-[#FCFAF7]">
+                <div className="flex w-full items-center justify-between gap-6 border-t border-black/10 pt-3 sm:w-auto sm:justify-end sm:border-0 sm:pt-0">
+                  <div className="flex items-center border border-black/20">
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                       disabled={item.quantity <= 1}
-                      className="p-1 text-[#5C554F] hover:text-black disabled:opacity-30"
+                      className="p-1 text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
                       aria-label="Decrease quantity"
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="w-8 text-center text-xs font-semibold text-[#1C1917]">
+                    <span className="w-8 text-center text-xs font-semibold text-black">
                       {item.quantity}
                     </span>
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                       disabled={item.quantity >= item.stock}
-                      className="p-1 text-[#5C554F] hover:text-black disabled:opacity-30"
+                      className="p-1 text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
                       aria-label="Increase quantity"
                     >
                       <Plus className="w-3.5 h-3.5" />
@@ -119,7 +119,7 @@ export default function CartPage() {
                   </div>
 
                   <div className="text-right min-w-24">
-                    <span className="text-sm font-bold text-[#1C1917]">
+                    <span className="text-sm font-semibold text-black">
                       {formatGhs(item.price * item.quantity)}
                     </span>
                   </div>
@@ -127,7 +127,7 @@ export default function CartPage() {
                   <button
                     onClick={() => removeItem(item.productId)}
                     aria-label={`Remove ${item.name}`}
-                    className="p-2 text-[#A89F95] hover:text-[#B91C1C] transition-colors"
+                    className="p-2 text-black/45 transition-colors hover:text-[#222a37]"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -137,20 +137,20 @@ export default function CartPage() {
           </div>
 
           {/* Order Summary Card */}
-          <div className="lg:col-span-4 bg-white rounded-3xl border border-[#ECE5DD] p-6 sm:p-8 space-y-6 shadow-sm sticky top-28">
-            <h2 className="font-serif-luxury text-xl font-semibold text-[#1C1917] pb-4 border-b border-[#EFE9E2]">
+          <div className="sticky top-28 space-y-6 border border-black/10 bg-white p-6 sm:p-8 lg:col-span-4">
+            <h2 className="font-serif-luxury border-b border-black/10 pb-4 text-xl font-semibold text-[#222a37]">
               Order Summary
             </h2>
 
-            <div className="space-y-3 text-xs text-[#5C554F]">
+            <div className="space-y-3 text-xs text-black/65">
               <div className="flex justify-between">
                 <span>Items Subtotal</span>
-                <span className="font-semibold text-[#1C1917]">{formatGhs(subtotal)}</span>
+                <span className="font-semibold text-black">{formatGhs(subtotal)}</span>
               </div>
-              <div className="rounded-xl bg-[#FAF7F3] p-3 text-[11px] leading-5 text-[#6B635B]">
+              <div className="border-l-2 border-[#222a37] bg-[#222a37]/[0.06] p-3 text-[11px] leading-5 text-black/70">
                 We will call to confirm your delivery location and Uber delivery cost after your order. No delivery fee is added here.
               </div>
-              <div className="pt-3 border-t border-[#EFE9E2] flex justify-between text-base font-bold text-[#1C1917]">
+              <div className="flex justify-between border-t border-black/10 pt-3 text-base font-bold text-black">
                 <span>Total Amount</span>
                 <span>{formatGhs(total)}</span>
               </div>
@@ -159,7 +159,7 @@ export default function CartPage() {
             <div className="space-y-3 pt-2">
               <Link
                 href="/checkout"
-                className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2 shadow-md"
+                className="flex w-full items-center justify-center gap-2 bg-[#222a37] px-6 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
@@ -167,7 +167,7 @@ export default function CartPage() {
 
               <Link
                 href="/shop"
-                className="block text-center text-xs text-[#78716C] hover:text-[#1C1917] py-2 transition-colors"
+                className="block py-2 text-center text-xs text-black/60 transition-colors hover:text-[#222a37]"
               >
                 Add more items
               </Link>

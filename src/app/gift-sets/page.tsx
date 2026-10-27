@@ -1,8 +1,7 @@
-import React from "react";
+import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, prisma } from "@/lib/db";
-import { Gift, Sparkles, ShieldCheck } from "lucide-react";
-
+import { Gift, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -19,69 +18,68 @@ export default async function GiftSetsPage() {
   const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9] py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Banner Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF4ED] border border-[#E8DEC0] text-[#9B7036] text-[10px] font-bold uppercase tracking-widest mb-3">
-            <Gift className="w-3.5 h-3.5" />
-            <span>{settings.giftSetsEyebrow || "GIFT WITH MEANING"}</span>
+    <div className="bg-white pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pt-36">
+      <div className="px-4 sm:px-6 lg:px-[4vw]">
+        <header className="mb-10 flex flex-col gap-5 border-b border-black/10 pb-8 sm:mb-12 sm:pb-10 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#222a37]">
+              <Gift className="h-3.5 w-3.5" />
+              {settings.giftSetsEyebrow || "Gifts, thoughtfully composed"}
+            </p>
+            <h1 className="font-serif-luxury text-4xl font-normal leading-tight text-[#222a37] sm:text-5xl lg:text-6xl">
+              {settings.giftSetsTitle || "A gift that lingers."}
+            </h1>
           </div>
-          <h1 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1C1917]">
-            {settings.giftSetsTitle || "Gift Sets"}
-          </h1>
-          <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
-            {settings.giftSetsDescription || "Discover thoughtful fragrance gifts made for celebrations, everyday moments, and people you love."}
-          </p>
-        </div>
-
-        {/* Gift Sets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
-          {giftSets.map((set) => (
-            <ProductCard key={set.id} product={set} />
-          ))}
-        </div>
-
-        {/* Gift Service Highlights */}
-        <div className="mt-20 p-8 sm:p-10 bg-white rounded-3xl border border-[#ECE5DD] shadow-xs">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center sm:text-left">
-            <div className="space-y-2">
-              <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center mb-3 mx-auto sm:mx-0">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <h4 className="font-serif-luxury text-lg font-medium text-[#1C1917]">
-                Complimentary Gift Wrapping
-              </h4>
-              <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                Every coffret includes luxury silk ribbon, protective inner foam, and a hand-written note.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center mb-3 mx-auto sm:mx-0">
-                <Gift className="w-5 h-5" />
-              </div>
-              <h4 className="font-serif-luxury text-lg font-medium text-[#1C1917]">
-                Discovery Travel Formats
-              </h4>
-              <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                TSA-compliant pocket atomizers engineered for fine mist dispersion on the move.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C59B4B] flex items-center justify-center mb-3 mx-auto sm:mx-0">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h4 className="font-serif-luxury text-lg font-medium text-[#1C1917]">
-                Nationwide Courier Care
-              </h4>
-              <p className="text-xs text-[#78716C] leading-relaxed font-light">
-                Shock-tested protective packaging ensures your flacons arrive in pristine condition.
-              </p>
-            </div>
+          <div className="max-w-md lg:pb-1">
+            <p className="text-sm leading-6 text-black sm:text-base sm:leading-7">
+              {settings.giftSetsDescription || "Discover considered fragrance gifts for celebrations, everyday moments, and the people you love."}
+            </p>
+            <Link href="/shop" className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-[#222a37] transition-colors hover:text-[#773B44]">
+              Explore all fragrances <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
+        </header>
+
+        <div className="mb-5 flex items-center justify-between text-xs text-black/60">
+          <p><span className="font-medium text-black">{giftSets.length}</span> curated gifts</p>
+          <span className="hidden uppercase tracking-[0.14em] sm:inline">Made to be remembered</span>
         </div>
+
+        {giftSets.length > 0 ? (
+          <div className="grid grid-cols-2 gap-x-3 gap-y-9 sm:grid-cols-2 sm:gap-x-5 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12">
+            {giftSets.map((set) => <ProductCard key={set.id} product={set} />)}
+          </div>
+        ) : (
+          <div className="border-y border-black/10 py-16 text-center sm:py-20">
+            <h2 className="font-serif-luxury text-2xl text-[#222a37]">A considered gift is on its way.</h2>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-black/65">
+              Our curated coffrets are being prepared. In the meantime, explore the fragrances that make each gift personal.
+            </p>
+            <Link href="/shop" className="mt-6 inline-flex items-center gap-2 bg-[#222a37] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#773B44]">
+              Shop fragrances <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
+
+        <section aria-label="Gift service details" className="mt-16 bg-[#222a37] px-5 py-8 text-white sm:mt-20 sm:px-8 sm:py-10 lg:px-10">
+          <div className="grid grid-cols-1 divide-y divide-white/20 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <article className="py-5 first:pt-0 sm:px-5 sm:py-2 sm:first:pl-0 sm:first:pt-2">
+              <Sparkles className="mb-4 h-5 w-5 text-white/80" strokeWidth={1.5} />
+              <h2 className="font-serif-luxury text-lg">Wrapped with care</h2>
+              <p className="mt-2 max-w-xs text-xs leading-5 text-white/80">Every coffret arrives with a silk ribbon and a handwritten note.</p>
+            </article>
+            <article className="py-5 sm:px-5 sm:py-2">
+              <Gift className="mb-4 h-5 w-5 text-white/80" strokeWidth={1.5} />
+              <h2 className="font-serif-luxury text-lg">Made for discovery</h2>
+              <p className="mt-2 max-w-xs text-xs leading-5 text-white/80">Thoughtful fragrance pairings make it easy to find a new favorite.</p>
+            </article>
+            <article className="py-5 last:pb-0 sm:py-2 sm:pl-5 sm:last:pr-0 sm:last:pb-2">
+              <ShieldCheck className="mb-4 h-5 w-5 text-white/80" strokeWidth={1.5} />
+              <h2 className="font-serif-luxury text-lg">Delivered with care</h2>
+              <p className="mt-2 max-w-xs text-xs leading-5 text-white/80">Protective packaging helps your gift arrive ready to give.</p>
+            </article>
+          </div>
+        </section>
       </div>
     </div>
   );

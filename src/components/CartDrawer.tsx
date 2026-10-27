@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -13,191 +13,189 @@ export default function CartDrawer() {
     useCart();
   const router = useRouter();
 
+  useEffect(() => {
+    if (!isCartOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeCart();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isCartOpen, closeCart]);
+
   if (!isCartOpen) return null;
+
+  const itemCount = items.reduce((count, item) => count + item.quantity, 0);
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Cart"
-      className="fixed inset-0 z-50 overflow-hidden"
+      aria-labelledby="cart-title"
+      className="fixed inset-0 z-[120] overflow-hidden"
     >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+      <button
+        type="button"
+        aria-label="Close cart"
+        className="absolute inset-0 h-full w-full cursor-default bg-black/45 backdrop-blur-[2px]"
         onClick={closeCart}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-[#FAF8F5] border-l border-[#EBE4DC] shadow-2xl flex flex-col justify-between">
-          {/* Header */}
-          <div className="p-6 border-b border-[#EBE4DC] flex items-center justify-between bg-white">
-            <div className="flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5 text-[#1C1917]" />
-              <h2 className="font-serif-luxury text-xl font-semibold text-[#1C1917]">
-                Cart
-              </h2>
-              <span className="text-xs bg-[#F2ECE4] text-[#5C554F] px-2 py-0.5 rounded-full font-medium">
-                {items.reduce((acc, i) => acc + i.quantity, 0)}
-              </span>
+      <aside className="absolute inset-y-0 right-0 flex w-screen max-w-[480px] flex-col border-l border-black/10 bg-white shadow-2xl">
+        <div className="h-1.5 shrink-0 bg-[#222a37]" />
+        <header className="flex items-center justify-between border-b border-black/10 px-6 py-5 sm:px-8">
+          <div>
+            <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-[#222a37]">Aura &amp; Aether</p>
+            <div className="mt-1 flex items-baseline gap-2.5">
+              <h2 id="cart-title" className="font-serif-luxury text-2xl text-black">Your bag</h2>
+              <span className="text-[11px] text-black/55">{itemCount} {itemCount === 1 ? "item" : "items"}</span>
             </div>
-            <button
-              onClick={closeCart}
-              aria-label="Close cart drawer"
-              className="p-1.5 rounded-full hover:bg-[#F5EFEB] text-[#8C827A] hover:text-[#1C1917] transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
           </div>
+          <button
+            type="button"
+            onClick={closeCart}
+            aria-label="Close cart drawer"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:border-[#222a37] hover:bg-[#222a37] hover:text-white"
+          >
+            <X className="h-4 w-4" strokeWidth={1.6} />
+          </button>
+        </header>
 
-          {/* Cart Items List */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {items.length === 0 ? (
-              <div className="text-center py-20 space-y-4">
-                <div className="w-16 h-16 mx-auto rounded-full bg-[#F3ECE5] flex items-center justify-center text-[#8C827A]">
-                  <ShoppingCart className="w-8 h-8" />
-                </div>
-                <div>
-                  <h3 className="font-serif-luxury text-lg font-medium text-[#1C1917]">
-                    Your cart is empty
-                  </h3>
-                  <p className="text-xs text-[#8C827A] mt-1 max-w-xs mx-auto">
-                    Explore our handcrafted perfumes and artisanal coffrets to begin.
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    closeCart();
-                    router.push("/shop");
-                  }}
-                  className="inline-block mt-4 text-xs font-semibold uppercase tracking-widest px-6 py-3 bg-[#1C1917] text-[#FAF8F5] rounded-full hover:bg-[#38332E] transition-colors"
-                >
-                  Explore Fragrances
-                </button>
+        <div className="flex-1 overflow-y-auto px-6 sm:px-8">
+          {items.length === 0 ? (
+            <div className="flex h-full min-h-[380px] flex-col items-center justify-center py-16 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#222a37]/10 text-[#222a37]">
+                <ShoppingCart className="h-7 w-7" strokeWidth={1.3} />
               </div>
-            ) : (
-              items.map((item) => (
-                <div
-                  key={item.productId}
-                  className="bg-white border border-[#ECE5DD] rounded-xl p-4 flex gap-4 shadow-2xs hover:border-[#DFC07D] transition-colors"
-                >
-                  {/* Thumbnail */}
-                  <div className="w-20 h-24 bg-[#F8F5F1] rounded-lg shrink-0 relative overflow-hidden border border-[#EDE7DF]">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className="object-contain p-1"
-                    />
-                  </div>
+              <h3 className="mt-6 font-serif-luxury text-xl text-black">Your bag is waiting</h3>
+              <p className="mt-2 max-w-[260px] text-xs leading-5 text-black/60">
+                Discover a fragrance that feels unmistakably yours.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  closeCart();
+                  router.push("/shop");
+                }}
+                className="mt-6 inline-flex items-center gap-2 bg-[#222a37] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#773B44]"
+              >
+                Explore fragrances <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="divide-y divide-black/10">
+              {items.map((item) => (
+                <article key={item.productId} className="flex gap-4 py-5 sm:gap-5">
+                  <Link
+                    href={`/shop/${item.slug}`}
+                    onClick={closeCart}
+                    aria-label={`View ${item.name}`}
+                    className="relative h-[112px] w-[92px] shrink-0 overflow-hidden bg-[#222a37] sm:h-[128px] sm:w-[104px]"
+                  >
+                    <Image src={item.image} alt={item.name} fill className="object-contain p-2" sizes="104px" />
+                  </Link>
 
-                  {/* Info */}
-                  <div className="flex-1 flex flex-col justify-between">
+                  <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
                     <div>
-                      <div className="flex justify-between items-start">
+                      <div className="flex items-start justify-between gap-2">
                         <Link
                           href={`/shop/${item.slug}`}
                           onClick={closeCart}
-                          className="font-serif-luxury text-base font-semibold text-[#1C1917] hover:text-[#9B7036] transition-colors leading-tight"
+                          className="font-serif-luxury text-lg leading-tight text-[#222a37] transition-colors hover:text-[#773B44]"
                         >
                           {item.name}
                         </Link>
                         <button
+                          type="button"
                           onClick={() => removeItem(item.productId)}
                           aria-label={`Remove ${item.name} from cart`}
-                          className="text-[#A89F95] hover:text-[#B91C1C] transition-colors p-1"
+                          className="-mr-1 -mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-black/45 transition-colors hover:bg-[#222a37]/10 hover:text-[#222a37]"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="h-4 w-4" strokeWidth={1.5} />
                         </button>
                       </div>
-                      <p className="text-[10px] tracking-wider uppercase text-[#8C827A] mt-0.5">
-                        {item.scentNotes || item.size}
+                      <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-black/55">
+                        {item.size}{item.scentNotes ? ` · ${item.scentNotes}` : ""}
                       </p>
-                      <p className="text-sm font-semibold text-[#1C1917] mt-1">
-                        {formatGhs(item.price)}
-                      </p>
+                      <p className="mt-2 text-sm font-medium text-black">{formatGhs(item.price)}</p>
                     </div>
 
-                    {/* Quantity controls */}
-                    <div className="flex items-center justify-between pt-2 border-t border-[#F5EFEB]">
-                      <div className="flex items-center border border-[#DDD6CE] rounded-full px-2 py-0.5 bg-[#FAF8F5]">
+                    <div className="mt-4 flex items-end justify-between gap-3">
+                      <div className="flex h-8 items-center border border-black/20">
                         <button
+                          type="button"
                           onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                           disabled={item.quantity <= 1}
                           aria-label={`Decrease quantity of ${item.name}`}
-                          className="p-1 text-[#5C554F] hover:text-black disabled:opacity-30"
-                        >
-                          <Minus className="w-3 h-3" />
-                        </button>
-                        <span className="w-7 text-center text-xs font-semibold text-[#1C1917]">
-                          {item.quantity}
-                        </span>
+                          className="flex h-full w-8 items-center justify-center text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
+                        ><Minus className="h-3 w-3" /></button>
+                        <span className="w-7 text-center text-[11px] text-black">{item.quantity}</span>
                         <button
+                          type="button"
                           onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                           disabled={item.quantity >= item.stock}
                           aria-label={`Increase quantity of ${item.name}`}
-                          className="p-1 text-[#5C554F] hover:text-black disabled:opacity-30"
-                        >
-                          <Plus className="w-3 h-3" />
-                        </button>
+                          className="flex h-full w-8 items-center justify-center text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
+                        ><Plus className="h-3 w-3" /></button>
                       </div>
-                      <span className="text-xs font-medium text-[#78716C]">
-                        Subtotal: {formatGhs(item.price * item.quantity)}
-                      </span>
+                      <span className="text-[10px] text-black/60">{formatGhs(item.price * item.quantity)}</span>
                     </div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Footer & Checkout */}
-          {items.length > 0 && (
-            <div className="p-6 bg-white border-t border-[#EBE4DC] space-y-4">
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between text-[#78716C]">
-                  <span>Subtotal</span>
-                  <span className="font-medium text-[#1C1917]">{formatGhs(subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-[#78716C]">
-                  <span>Standard Nationwide Delivery</span>
-                  <span className="font-medium text-[#1C1917]">{formatGhs(deliveryFee)}</span>
-                </div>
-                <div className="border-t border-[#EFE9E2] pt-2 flex justify-between text-base font-semibold text-[#1C1917]">
-                  <span>Estimated Total</span>
-                  <span>{formatGhs(total)}</span>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <button
-                  onClick={() => {
-                    closeCart();
-                    router.push("/checkout");
-                  }}
-                  className="w-full py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#36322E] flex items-center justify-center gap-2 transition-colors shadow-md"
-                >
-                  <span>Proceed to Checkout</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => {
-                    closeCart();
-                    router.push("/cart");
-                  }}
-                  className="w-full py-2.5 px-6 rounded-full border border-[#D5CDC4] text-xs font-semibold uppercase tracking-widest text-[#5C554F] hover:bg-[#F7F2ED] transition-colors"
-                >
-                  View Cart
-                </button>
-              </div>
-
-              <p className="text-[11px] text-center text-[#8C827A]">
-                🔒 Secure encrypted checkout with Paystack
-              </p>
+                </article>
+              ))}
             </div>
           )}
         </div>
-      </div>
+
+        {items.length > 0 && (
+          <footer className="shrink-0 border-t border-black/10 bg-white px-6 pb-6 pt-5 sm:px-8 sm:pb-8">
+            <div className="space-y-3 text-xs">
+              <div className="flex justify-between text-black/60">
+                <span>Subtotal</span>
+                <span className="text-black">{formatGhs(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-black/60">
+                <span>Nationwide delivery</span>
+                <span className="text-black">{deliveryFee === 0 ? "Calculated at checkout" : formatGhs(deliveryFee)}</span>
+              </div>
+              <div className="flex justify-between border-t border-black/10 pt-3 text-sm font-semibold text-black">
+                <span>Estimated total</span>
+                <span>{formatGhs(total)}</span>
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  closeCart();
+                  router.push("/checkout");
+                }}
+                className="flex w-full items-center justify-center gap-2 bg-[#222a37] px-6 py-3.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#773B44]"
+              >
+                Continue to checkout <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  closeCart();
+                  router.push("/cart");
+                }}
+                className="w-full border border-black/20 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-black transition-colors hover:border-[#222a37] hover:text-[#222a37]"
+              >
+                View full bag
+              </button>
+            </div>
+            <p className="mt-4 text-center text-[9px] uppercase tracking-[0.12em] text-black/45">Secure checkout with Paystack</p>
+          </footer>
+        )}
+      </aside>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -16,6 +17,9 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-sans",
   display: "swap",
 });
+
+const vogue = localFont({ src: "../../public/fonts/Vogue-Regular.otf", variable: "--font-vogue", display: "swap" });
+const alhambra = localFont({ src: "../../public/fonts/alhambra.ttf", variable: "--font-alhambra", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Aura & Aether Parfums | Artisanal Luxury Fragrances",
@@ -39,17 +43,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${jakarta.variable} h-full`}>
+    <html lang="en" className={`${playfair.variable} ${jakarta.variable} ${vogue.variable} ${alhambra.variable} h-full`}>
       <body className="min-h-full flex flex-col font-sans-clean bg-[#FCFBF9] text-[#1C1917] selection:bg-[#EADBC8] selection:text-[#1C1917]">
         <AuthProvider>
           <CartProvider>
             <SiteChrome />
             <main className="flex-1">{children}</main>
             <StorefrontFooter />
+            {modal}
           </CartProvider>
         </AuthProvider>
       </body>

@@ -105,6 +105,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems([]);
   }, []);
 
+  const openCart = useCallback(() => setIsCartOpen(true), []);
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
+  const toggleCart = useCallback(() => setIsCartOpen((prev) => !prev), []);
+
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryFee = 0;
@@ -123,9 +127,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         deliveryFee,
         total,
         isCartOpen,
-        openCart: () => setIsCartOpen(true),
-        closeCart: () => setIsCartOpen(false),
-        toggleCart: () => setIsCartOpen((prev) => !prev),
+        openCart,
+        closeCart,
+        toggleCart,
       }}
     >
       {children}

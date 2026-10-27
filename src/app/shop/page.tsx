@@ -1,8 +1,8 @@
-import React from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { getProducts, getCategories, prisma } from "@/lib/db";
-import { SlidersHorizontal } from "lucide-react";
+import ShopSort from "@/components/ShopSort";
+import ShopCategoryFilter from "@/components/ShopCategoryFilter";
+import { getProducts, getCategories } from "@/lib/db";
 
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const currentSort = params.sort || "newest";
   const searchQuery = params.search || "";
 
-  const [categories, products, settingsRows] = await Promise.all([
+  const [categories, products] = await Promise.all([
     getCategories(),
     getProducts({
       category: currentCategory || undefined,
@@ -28,101 +28,55 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       search: searchQuery || undefined,
       giftSets: false,
     }),
-    prisma.siteSetting.findMany().catch(() => []),
   ]);
-  const settings = Object.fromEntries(settingsRows.map((row) => [row.key, row.value])) as Record<string, string>;
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9] py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C827A] block mb-2">
-            {settings.shopEyebrow || "THE COLLECTION"}
-          </span>
-          <h1 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1C1917]">
-            {settings.shopTitle || "Find your fragrance."}
-          </h1>
-          <p className="mt-3 text-sm text-[#6B635B] font-light leading-relaxed">
-            {settings.shopDescription || "Explore scents for every mood, moment, and personal signature."}
-          </p>
-        </div>
-
-        {/* Filter and Sorting Controls */}
-        <div className="bg-white border border-[#EFE9E2] rounded-2xl p-4 mb-10 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Category Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+    <div className="bg-white pb-8 pt-28 sm:pb-10 sm:pt-32 lg:pt-36">
+      <div className="px-4 sm:px-6 lg:px-[4vw]">
+        <div className="mb-7 flex flex-row items-center justify-between gap-3 border-b border-[#D9D9D1] pb-5 sm:gap-5">
+          <ShopCategoryFilter categories={categories} currentCategory={currentCategory} sort={currentSort} />
+          <nav aria-label="Fragrance categories" className="hidden flex-wrap items-center gap-x-7 gap-y-3 sm:flex">
             <Link
-              href="/shop"
-              className={`text-xs px-4 py-2 rounded-full font-medium transition-colors ${
-                !currentCategory
-                  ? "bg-[#1C1917] text-[#FAF8F5]"
-                  : "bg-[#FAF7F5] text-[#5C554F] hover:bg-[#F2ECE4] hover:text-[#1C1917]"
-              }`}
+              href={`/shop?sort=${currentSort}`}
+              aria-current={!currentCategory ? "page" : undefined}
+              className={`text-xs transition-colors ${!currentCategory ? "font-semibold text-[#222a37]" : "text-[#252522] hover:text-[#222a37]"}`}
             >
               All Fragrances
             </Link>
             {categories
-              .filter((c) => c.slug !== "gift-sets")
-              .map((cat) => {
-                const isSelected = currentCategory === cat.slug;
+              .filter((category) => category.slug !== "gift-sets")
+              .map((category) => {
+                const isSelected = currentCategory === category.slug;
                 return (
                   <Link
-                    key={cat.id}
-                    href={`/shop?category=${cat.slug}&sort=${currentSort}`}
-                    className={`text-xs px-4 py-2 rounded-full font-medium transition-colors ${
-                      isSelected
-                        ? "bg-[#1C1917] text-[#FAF8F5]"
-                        : "bg-[#FAF7F5] text-[#5C554F] hover:bg-[#F2ECE4] hover:text-[#1C1917]"
-                    }`}
+                    key={category.id}
+                    href={`/shop?category=${category.slug}&sort=${currentSort}`}
+                    aria-current={isSelected ? "page" : undefined}
+                    className={`text-xs transition-colors ${isSelected ? "font-semibold text-[#222a37]" : "text-[#252522] hover:text-[#222a37]"}`}
                   >
-                    {cat.name}
+                    {category.name}
                   </Link>
                 );
               })}
-          </div>
+          </nav>
 
-          {/* Sort Selector */}
-          <div className="flex items-center gap-2 self-end md:self-auto text-xs text-[#5C554F]">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#8C827A]" />
-            <span className="font-medium">Sort:</span>
-            <div className="flex items-center gap-1">
-              {[
-                { label: "Newest", value: "newest" },
-                { label: "Price: Low to High", value: "price-asc" },
-                { label: "Price: High to Low", value: "price-desc" },
-                { label: "A - Z", value: "name" },
-              ].map((sortOption) => (
-                <Link
-                  key={sortOption.value}
-                  href={`/shop?${currentCategory ? `category=${currentCategory}&` : ""}sort=${sortOption.value}`}
-                  className={`px-2.5 py-1 rounded-md text-[11px] transition-colors ${
-                    currentSort === sortOption.value
-                      ? "font-bold text-[#1C1917] bg-[#F2ECE4]"
-                      : "text-[#78716C] hover:text-[#1C1917]"
-                  }`}
-                >
-                  {sortOption.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+          <ShopSort category={currentCategory} search={searchQuery} sort={currentSort} />
         </div>
 
         {/* Results Counter */}
-        <div className="mb-6 flex justify-between items-center text-xs text-[#8C827A]">
+        <div className="mb-5 flex justify-between items-center text-xs text-[#77776F]">
           <p>
-            Showing <strong className="text-[#1C1917]">{products.length}</strong> handcrafted perfumes
+            <strong className="text-[#252522]">{products.length}</strong> fragrances
             {searchQuery && ` for "${searchQuery}"`}
           </p>
-          <Link href="/gift-sets" className="text-[#9B7036] hover:underline font-medium">
-            Looking for gift sets? Browse coffrets →
+          <Link href="/gift-sets" className="text-[#5B514F] hover:text-[#222a37] hover:underline">
+            Gift sets →
           </Link>
         </div>
 
         {/* Product Grid */}
         {products.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-[#ECE5DD] p-8">
+          <div className="text-center py-20 bg-white/60 p-8">
             <h3 className="font-serif-luxury text-2xl font-normal text-[#1C1917] mb-2">
               No fragrances found
             </h3>
@@ -131,13 +85,13 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             </p>
             <Link
               href="/shop"
-              className="inline-block px-6 py-3 rounded-full bg-[#1C1917] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#38332E]"
+              className="inline-block px-6 py-3 bg-[#222a37] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#773B44]"
             >
               Reset Filters
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-9 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-6 lg:gap-x-5 lg:gap-y-10">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
